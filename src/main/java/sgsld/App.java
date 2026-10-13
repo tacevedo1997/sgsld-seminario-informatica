@@ -12,14 +12,19 @@ import sgsld.controlador.Controladores;
 import sgsld.controlador.JugadorController;
 import sgsld.controlador.KinesiologoController;
 import sgsld.controlador.LoginController;
+import sgsld.controlador.RegistroLesionController;
 import sgsld.controlador.SelectorJugador;
+import sgsld.controlador.TratamientoController;
 import sgsld.dao.FabricaDAO;
 import sgsld.dao.memoria.DatosDePrueba;
 import sgsld.dao.memoria.FabricaDAOMemoria;
 import sgsld.servicio.AutenticacionService;
 import sgsld.servicio.CategoriaService;
+import sgsld.servicio.ConsultaService;
 import sgsld.servicio.JugadorService;
 import sgsld.servicio.KinesiologoService;
+import sgsld.servicio.LesionService;
+import sgsld.servicio.TratamientoService;
 import sgsld.util.Fechas;
 import sgsld.vista.MenuPrincipal;
 import sgsld.vista.consola.Consola;
@@ -70,14 +75,24 @@ public final class App {
         CategoriaService categoriaService = new CategoriaService(fabrica.getCategoriaDAO());
         KinesiologoService kinesiologoService = new KinesiologoService(fabrica.getKinesiologoDAO(),
                 fabrica.getUsuarioDAO());
+        LesionService lesionService = new LesionService(fabrica.getLesionDAO(), fabrica.getJugadorDAO(),
+                fabrica.getZonaCorporalDAO(), fabrica.getTipoLesionDAO(), reloj);
+        TratamientoService tratamientoService = new TratamientoService(fabrica.getTratamientoDAO(),
+                fabrica.getLesionDAO(), fabrica.getKinesiologoDAO(), fabrica.getEvolucionDAO(), reloj);
+        ConsultaService consultaService = new ConsultaService(fabrica.getEstadoJugadorDAO(), fabrica.getJugadorDAO(),
+                lesionService);
 
         Consola consola = new Consola(Boolean.getBoolean("sgsld.eco"));
         SelectorJugador selector = new SelectorJugador(consola, jugadorService);
+        TratamientoController tratamientoController = new TratamientoController(consola, tratamientoService,
+                lesionService, kinesiologoService, consultaService, selector);
         Controladores controladores = new Controladores(
                 new LoginController(consola, autenticacion),
                 new JugadorController(consola, jugadorService, categoriaService, selector),
                 new CategoriaController(consola, categoriaService),
-                new KinesiologoController(consola, kinesiologoService));
+                new KinesiologoController(consola, kinesiologoService),
+                new RegistroLesionController(consola, lesionService, selector, tratamientoController),
+                tratamientoController);
 
         MenuPrincipal menu = new MenuPrincipal(consola, controladores);
         menu.mostrarPantallaInicial(avisos);
