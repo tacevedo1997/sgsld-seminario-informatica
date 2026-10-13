@@ -3,6 +3,7 @@ package sgsld.vista;
 import java.util.List;
 
 import sgsld.controlador.Controladores;
+import sgsld.util.SgsldException;
 import sgsld.vista.consola.Consola;
 
 /** Menú del Cuerpo Técnico: solo consulta la disponibilidad, sin información clínica. */
@@ -28,7 +29,7 @@ public class MenuCuerpoTecnico extends Menu {
 
     @Override
     protected List<String> getOpciones() {
-        return List.of();
+        return List.of("Estado actual de disponibilidad");
     }
 
     @Override
@@ -37,7 +38,10 @@ public class MenuCuerpoTecnico extends Menu {
     }
 
     @Override
-    protected void ejecutarOpcion(int opcion) {
-        throw new IllegalArgumentException("Opción inexistente: " + opcion);
+    protected void ejecutarOpcion(int opcion) throws SgsldException {
+        switch (opcion) {
+            case 1 -> controladores.estadoActual().consultarEstado();
+            default -> throw new IllegalArgumentException("Opción inexistente: " + opcion);
+        }
     }
 }

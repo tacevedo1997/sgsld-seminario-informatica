@@ -1,5 +1,7 @@
 package sgsld.servicio;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
@@ -31,6 +33,7 @@ public class ConsultaService {
     private final EstadoJugadorDAO estados;
     private final JugadorDAO jugadores;
     private final LesionService lesiones;
+    private final Clock reloj;
 
     /**
      * Crea el servicio.
@@ -38,11 +41,22 @@ public class ConsultaService {
      * @param estados   DAO del estado de disponibilidad
      * @param jugadores DAO de jugadores
      * @param lesiones  servicio de lesiones, para el historial de la ficha
+     * @param reloj     reloj que define la fecha actual (edad y días transcurridos de la ficha)
      */
-    public ConsultaService(EstadoJugadorDAO estados, JugadorDAO jugadores, LesionService lesiones) {
+    public ConsultaService(EstadoJugadorDAO estados, JugadorDAO jugadores, LesionService lesiones, Clock reloj) {
         this.estados = estados;
         this.jugadores = jugadores;
         this.lesiones = lesiones;
+        this.reloj = reloj;
+    }
+
+    /**
+     * Fecha actual según el reloj del servicio.
+     *
+     * @return la fecha de hoy
+     */
+    public LocalDate hoy() {
+        return LocalDate.now(reloj);
     }
 
     /**

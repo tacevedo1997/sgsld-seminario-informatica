@@ -3,9 +3,10 @@ package sgsld.vista;
 import java.util.List;
 
 import sgsld.controlador.Controladores;
+import sgsld.util.SgsldException;
 import sgsld.vista.consola.Consola;
 
-/** Menú del Coordinador: administración de jugadores, categorías y kinesiólogos. */
+/** Menú del Coordinador: administración, ficha individual y reportes. */
 public class MenuCoordinador extends Menu {
 
     private final Controladores controladores;
@@ -28,7 +29,8 @@ public class MenuCoordinador extends Menu {
 
     @Override
     protected List<String> getOpciones() {
-        return List.of("Gestionar jugadores", "Gestionar categorías", "Gestionar kinesiólogos");
+        return List.of("Gestionar jugadores", "Gestionar categorías", "Gestionar kinesiólogos",
+                "Consultar ficha individual", "Reportes estadísticos");
     }
 
     @Override
@@ -37,11 +39,13 @@ public class MenuCoordinador extends Menu {
     }
 
     @Override
-    protected void ejecutarOpcion(int opcion) {
+    protected void ejecutarOpcion(int opcion) throws SgsldException {
         switch (opcion) {
             case 1 -> new MenuJugadores(getConsola(), controladores.jugadores()).mostrar();
             case 2 -> new MenuCategorias(getConsola(), controladores.categorias()).mostrar();
             case 3 -> new MenuKinesiologos(getConsola(), controladores.kinesiologos()).mostrar();
+            case 4 -> controladores.fichas().consultarFicha();
+            case 5 -> controladores.reportes().generarReportes();
             default -> throw new IllegalArgumentException("Opción inexistente: " + opcion);
         }
     }

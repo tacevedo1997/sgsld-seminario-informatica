@@ -9,10 +9,13 @@ import java.util.NoSuchElementException;
 
 import sgsld.controlador.CategoriaController;
 import sgsld.controlador.Controladores;
+import sgsld.controlador.EstadoActualController;
+import sgsld.controlador.FichaJugadorController;
 import sgsld.controlador.JugadorController;
 import sgsld.controlador.KinesiologoController;
 import sgsld.controlador.LoginController;
 import sgsld.controlador.RegistroLesionController;
+import sgsld.controlador.ReporteController;
 import sgsld.controlador.SelectorJugador;
 import sgsld.controlador.TratamientoController;
 import sgsld.dao.FabricaDAO;
@@ -24,6 +27,7 @@ import sgsld.servicio.ConsultaService;
 import sgsld.servicio.JugadorService;
 import sgsld.servicio.KinesiologoService;
 import sgsld.servicio.LesionService;
+import sgsld.servicio.ReporteService;
 import sgsld.servicio.TratamientoService;
 import sgsld.util.Fechas;
 import sgsld.vista.MenuPrincipal;
@@ -80,7 +84,8 @@ public final class App {
         TratamientoService tratamientoService = new TratamientoService(fabrica.getTratamientoDAO(),
                 fabrica.getLesionDAO(), fabrica.getKinesiologoDAO(), fabrica.getEvolucionDAO(), reloj);
         ConsultaService consultaService = new ConsultaService(fabrica.getEstadoJugadorDAO(), fabrica.getJugadorDAO(),
-                lesionService);
+                lesionService, reloj);
+        ReporteService reporteService = new ReporteService(fabrica.getReporteDAO(), reloj);
 
         Consola consola = new Consola(Boolean.getBoolean("sgsld.eco"));
         SelectorJugador selector = new SelectorJugador(consola, jugadorService);
@@ -92,7 +97,10 @@ public final class App {
                 new CategoriaController(consola, categoriaService),
                 new KinesiologoController(consola, kinesiologoService),
                 new RegistroLesionController(consola, lesionService, selector, tratamientoController),
-                tratamientoController);
+                tratamientoController,
+                new FichaJugadorController(consola, consultaService, selector),
+                new EstadoActualController(consola, consultaService),
+                new ReporteController(consola, reporteService));
 
         MenuPrincipal menu = new MenuPrincipal(consola, controladores);
         menu.mostrarPantallaInicial(avisos);

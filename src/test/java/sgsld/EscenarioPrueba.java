@@ -61,7 +61,7 @@ public final class EscenarioPrueba {
                 fabrica.getZonaCorporalDAO(), fabrica.getTipoLesionDAO(), RELOJ);
         tratamientos = new TratamientoService(fabrica.getTratamientoDAO(), fabrica.getLesionDAO(),
                 fabrica.getKinesiologoDAO(), fabrica.getEvolucionDAO(), RELOJ);
-        consultas = new ConsultaService(fabrica.getEstadoJugadorDAO(), fabrica.getJugadorDAO(), lesiones);
+        consultas = new ConsultaService(fabrica.getEstadoJugadorDAO(), fabrica.getJugadorDAO(), lesiones, RELOJ);
         reportes = new ReporteService(fabrica.getReporteDAO(), RELOJ);
     }
 
