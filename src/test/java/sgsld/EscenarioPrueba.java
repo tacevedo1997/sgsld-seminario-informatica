@@ -16,6 +16,7 @@ import sgsld.servicio.ConsultaService;
 import sgsld.servicio.JugadorService;
 import sgsld.servicio.KinesiologoService;
 import sgsld.servicio.LesionService;
+import sgsld.servicio.ReporteService;
 import sgsld.servicio.TratamientoService;
 import sgsld.util.Fechas;
 import sgsld.util.SesionUsuario;
@@ -47,6 +48,7 @@ public final class EscenarioPrueba {
     private final LesionService lesiones;
     private final TratamientoService tratamientos;
     private final ConsultaService consultas;
+    private final ReporteService reportes;
 
     /** Crea el escenario con el lote cargado y sin sesión iniciada. */
     public EscenarioPrueba() {
@@ -60,6 +62,7 @@ public final class EscenarioPrueba {
         tratamientos = new TratamientoService(fabrica.getTratamientoDAO(), fabrica.getLesionDAO(),
                 fabrica.getKinesiologoDAO(), fabrica.getEvolucionDAO(), RELOJ);
         consultas = new ConsultaService(fabrica.getEstadoJugadorDAO(), fabrica.getJugadorDAO(), lesiones);
+        reportes = new ReporteService(fabrica.getReporteDAO(), RELOJ);
     }
 
     /**
@@ -124,6 +127,10 @@ public final class EscenarioPrueba {
 
     public ConsultaService consultas() {
         return consultas;
+    }
+
+    public ReporteService reportes() {
+        return reportes;
     }
 
     /**
