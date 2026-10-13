@@ -6,10 +6,17 @@ import java.time.LocalDate;
 import sgsld.dao.FabricaDAO;
 import sgsld.dao.memoria.DatosDePrueba;
 import sgsld.dao.memoria.FabricaDAOMemoria;
+import sgsld.modelo.Jugador;
+import sgsld.modelo.Kinesiologo;
+import sgsld.modelo.TipoLesion;
+import sgsld.modelo.ZonaCorporal;
 import sgsld.servicio.AutenticacionService;
 import sgsld.servicio.CategoriaService;
+import sgsld.servicio.ConsultaService;
 import sgsld.servicio.JugadorService;
 import sgsld.servicio.KinesiologoService;
+import sgsld.servicio.LesionService;
+import sgsld.servicio.TratamientoService;
 import sgsld.util.Fechas;
 import sgsld.util.SesionUsuario;
 
@@ -37,6 +44,9 @@ public final class EscenarioPrueba {
     private final JugadorService jugadores;
     private final CategoriaService categorias;
     private final KinesiologoService kinesiologos;
+    private final LesionService lesiones;
+    private final TratamientoService tratamientos;
+    private final ConsultaService consultas;
 
     /** Crea el escenario con el lote cargado y sin sesión iniciada. */
     public EscenarioPrueba() {
@@ -45,6 +55,11 @@ public final class EscenarioPrueba {
         jugadores = new JugadorService(fabrica.getJugadorDAO(), fabrica.getCategoriaDAO(), RELOJ);
         categorias = new CategoriaService(fabrica.getCategoriaDAO());
         kinesiologos = new KinesiologoService(fabrica.getKinesiologoDAO(), fabrica.getUsuarioDAO());
+        lesiones = new LesionService(fabrica.getLesionDAO(), fabrica.getJugadorDAO(),
+                fabrica.getZonaCorporalDAO(), fabrica.getTipoLesionDAO(), RELOJ);
+        tratamientos = new TratamientoService(fabrica.getTratamientoDAO(), fabrica.getLesionDAO(),
+                fabrica.getKinesiologoDAO(), fabrica.getEvolucionDAO(), RELOJ);
+        consultas = new ConsultaService(fabrica.getEstadoJugadorDAO(), fabrica.getJugadorDAO(), lesiones);
     }
 
     /**
@@ -97,6 +112,58 @@ public final class EscenarioPrueba {
 
     public KinesiologoService kinesiologos() {
         return kinesiologos;
+    }
+
+    public LesionService lesiones() {
+        return lesiones;
+    }
+
+    public TratamientoService tratamientos() {
+        return tratamientos;
+    }
+
+    public ConsultaService consultas() {
+        return consultas;
+    }
+
+    /**
+     * Devuelve un jugador del lote por DNI, sin pasar por el control de acceso.
+     *
+     * @param dni DNI del jugador
+     * @return el jugador
+     */
+    public Jugador jugador(String dni) {
+        return fabrica.getJugadorDAO().buscarPorDni(dni).orElseThrow();
+    }
+
+    /**
+     * Devuelve una zona corporal del catálogo.
+     *
+     * @param id identificador (1 Isquiotibiales, 3 Tobillo...)
+     * @return la zona
+     */
+    public ZonaCorporal zona(int id) {
+        return fabrica.getZonaCorporalDAO().buscarPorId(id).orElseThrow();
+    }
+
+    /**
+     * Devuelve un tipo de lesión del catálogo.
+     *
+     * @param id identificador (1 Muscular, 2 Ligamentaria...)
+     * @return el tipo
+     */
+    public TipoLesion tipo(int id) {
+        return fabrica.getTipoLesionDAO().buscarPorId(id).orElseThrow();
+    }
+
+    /**
+     * Devuelve un kinesiólogo del lote.
+     *
+     * @param id identificador (1 Fernández, 2 Sosa, 3 Ruiz)
+     * @return el kinesiólogo
+     */
+    public Kinesiologo kinesiologo(int id) {
+        return fabrica.getKinesiologoDAO().buscarPorId(id).orElseThrow();
     }
 
     private EscenarioPrueba iniciarComo(String nombreUsuario) {
