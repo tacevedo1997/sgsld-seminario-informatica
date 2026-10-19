@@ -1,0 +1,171 @@
+========================================================================
+SGSLD - Sistema de Gestión y Seguimiento de Lesiones Deportivas
+========================================================================
+Prototipo (entrega 3): datos de prueba en memoria; los cambios no se conservan al salir.
+Fecha del sistema fijada en 26/09/2026.
+
+========================================================================
+SGSLD
+Sin sesión iniciada
+------------------------------------------------------------------------
+  1. Iniciar sesión
+  0. Salir
+Opción: 1
+
+Inicio de sesión
+----------------
+Usuario: mlopez
+[AVISO] No hay una terminal interactiva: la contraseña será visible al escribirla.
+Contraseña: ********
+[ERROR] Usuario o contraseña incorrectos
+¿Desea reintentar? (S/N): S
+Usuario: noexiste
+Contraseña: ********
+[ERROR] Usuario o contraseña incorrectos
+¿Desea reintentar? (S/N): S
+Usuario: mlopez
+Contraseña: ********
+[OK] Sesión iniciada: mlopez (Coordinador).
+
+========================================================================
+SGSLD > Coordinador
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Gestionar jugadores
+  2. Gestionar categorías
+  3. Gestionar kinesiólogos
+  4. Consultar ficha individual
+  5. Reportes estadísticos
+  0. Cerrar sesión
+Opción: abc
+[ERROR] Ingrese un número válido
+Opción: 9
+[ERROR] Ingrese un número entre 0 y 5
+Opción: 5
+
+Reportes estadísticos
+---------------------
+Desde [Enter = 01/01/2026]: 2026-01-01
+[ERROR] Fecha inválida. Use el formato dd/mm/aaaa (por ejemplo, 26/09/2026)
+Desde [Enter = 01/01/2026]: 31/02/2026
+[ERROR] Fecha inválida. Use el formato dd/mm/aaaa (por ejemplo, 26/09/2026)
+Desde [Enter = 01/01/2026]: 01/01/2026
+Hasta [Enter = 26/09/2026]: 
+Reportes disponibles:
+   1. Lesiones por categoría
+   2. Lesiones por zona corporal
+   3. Lesiones por tipo
+   4. Lesiones por mes
+   5. Duración promedio de tratamientos finalizados por tipo de lesión
+   6. Tratamientos en curso y finalizados
+   0. Cancelar
+Opción: 0
+
+========================================================================
+SGSLD > Coordinador
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Gestionar jugadores
+  2. Gestionar categorías
+  3. Gestionar kinesiólogos
+  4. Consultar ficha individual
+  5. Reportes estadísticos
+  0. Cerrar sesión
+Opción: 1
+
+========================================================================
+SGSLD > Coordinador > Jugadores
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Listar
+  2. Buscar (DNI o apellido)
+  3. Alta
+  4. Modificar
+  5. Baja lógica
+  0. Volver
+Opción: 2
+Buscar por:
+  1. DNI (búsqueda binaria en el índice por DNI)
+  2. Apellido (búsqueda secuencial, coincidencia parcial)
+  0. Cancelar
+Opción: x
+[ERROR] Ingrese un número válido
+Opción: 1
+DNI (sin puntos): 12345678
+[AVISO] No se encontraron resultados. No se encontró un jugador con DNI 12345678.
+
+========================================================================
+SGSLD > Coordinador > Jugadores
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Listar
+  2. Buscar (DNI o apellido)
+  3. Alta
+  4. Modificar
+  5. Baja lógica
+  0. Volver
+Opción: 0
+
+========================================================================
+SGSLD > Coordinador
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Gestionar jugadores
+  2. Gestionar categorías
+  3. Gestionar kinesiólogos
+  4. Consultar ficha individual
+  5. Reportes estadísticos
+  0. Cerrar sesión
+Opción: 2
+
+========================================================================
+SGSLD > Coordinador > Categorías
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Listar
+  2. Alta
+  3. Modificar
+  0. Volver
+Opción: 2
+
+Alta de categoría
+-----------------
+Nombre: primera
+Edad mínima (0 a 99): 25
+Edad máxima (0 a 99): 20
+[ERROR] Ya existe una categoría con el nombre Primera.
+[ERROR] La edad mínima no puede ser mayor que la edad máxima.
+¿Desea corregir los datos? (S/N): N
+Operación cancelada.
+
+========================================================================
+SGSLD > Coordinador > Categorías
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Listar
+  2. Alta
+  3. Modificar
+  0. Volver
+Opción: 0
+
+========================================================================
+SGSLD > Coordinador
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Gestionar jugadores
+  2. Gestionar categorías
+  3. Gestionar kinesiólogos
+  4. Consultar ficha individual
+  5. Reportes estadísticos
+  0. Cerrar sesión
+Opción: 0
+[OK] Sesión cerrada.
+
+========================================================================
+SGSLD
+Sin sesión iniciada
+------------------------------------------------------------------------
+  1. Iniciar sesión
+  0. Salir
+Opción: 0
+Hasta luego.

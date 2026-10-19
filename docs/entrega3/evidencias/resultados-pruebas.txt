@@ -1,0 +1,185 @@
+SGSLD - Resultados de las pruebas automatizadas
+Comando: mvn -B clean package (compila con -Xlint:all y failOnWarning, ejecuta las pruebas y genera target/sgsld.jar)
+Fecha de ejecución: 13/10/2026 22:21
+Entorno: java version "23" 2024-09-17 | Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)
+
+1. Salida de Maven (extracto: clases de prueba, totales y tiempos de CPS02)
+
+[INFO] Running DatosDePrueba · verificación de la carga (como el SELECT COUNT del script)
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.066 s -- in DatosDePrueba · verificación de la carga (como el SELECT COUNT del script)
+[INFO] Running JugadorDAOMemoria · índice ordenado por DNI
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s -- in JugadorDAOMemoria · índice ordenado por DNI
+[INFO] Running CPI01 · Autenticación
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.161 s -- in CPI01 · Autenticación
+[INFO] Running CPS01 · Control de acceso y B1 · baja lógica
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in CPS01 · Control de acceso y B1 · baja lógica
+[INFO] Running CPI02 · Historial
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s -- in CPI02 · Historial
+[INFO] Running Recurrencia · CPC01, CPC02, fin de mes y oráculo C2
+[INFO] Running Recurrencia · CPC01, CPC02, fin de mes y oráculo C2 Oráculo C2 con el lote de prueba
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in Recurrencia · CPC01, CPC02, fin de mes y oráculo C2 Oráculo C2 con el lote de prueba
+[INFO] Running Recurrencia · CPC01, CPC02, fin de mes y oráculo C2 Fin de mes (sección 11.4): minusMonths equivale a DATE_SUB
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s -- in Recurrencia · CPC01, CPC02, fin de mes y oráculo C2 Fin de mes (sección 11.4): minusMonths equivale a DATE_SUB
+[INFO] Running Recurrencia · CPC01, CPC02, fin de mes y oráculo C2 CPC02 · Valores límite (antecedente 01/12/2025, tratamiento finalizado el 15/01/2026)
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in Recurrencia · CPC01, CPC02, fin de mes y oráculo C2 CPC02 · Valores límite (antecedente 01/12/2025, tratamiento finalizado el 15/01/2026)
+[INFO] Running Recurrencia · CPC01, CPC02, fin de mes y oráculo C2 CPC01 · Caminos independientes de verificarRecurrencia (V(G) = 6)
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in Recurrencia · CPC01, CPC02, fin de mes y oráculo C2 CPC01 · Caminos independientes de verificarRecurrencia (V(G) = 6)
+[INFO] Tests run: 0, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.030 s -- in Recurrencia · CPC01, CPC02, fin de mes y oráculo C2
+[INFO] Running CPS02 · Rendimiento de los reportes
+CPS02 · Lesiones por categoría: máximo 7,0 ms en 10 ejecuciones
+CPS02 · Lesiones por zona corporal: máximo 1,0 ms en 10 ejecuciones
+CPS02 · Lesiones por tipo: máximo 1,0 ms en 10 ejecuciones
+CPS02 · Lesiones por mes: máximo 3,6 ms en 10 ejecuciones
+CPS02 · Duración promedio de tratamientos finalizados por tipo de lesión: máximo 3,9 ms en 10 ejecuciones
+CPS02 · Tratamientos en curso y finalizados: máximo 0,5 ms en 10 ejecuciones
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.086 s -- in CPS02 · Rendimiento de los reportes
+[INFO] Running CPI03 · Reportes contra el oráculo (01/01/2026 a 26/09/2026)
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in CPI03 · Reportes contra el oráculo (01/01/2026 a 26/09/2026)
+[INFO] Running CPC04 / CPC05 · Tratamientos
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in CPC04 / CPC05 · Tratamientos
+[INFO] Running CPC06 · Unicidad
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.053 s -- in CPC06 · Unicidad
+[INFO] Running CPC03 · Validación de lesiones
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.015 s -- in CPC03 · Validación de lesiones
+[INFO] Running Algoritmos · ordenamiento por inserción y búsqueda binaria
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.009 s -- in Algoritmos · ordenamiento por inserción y búsqueda binaria
+[INFO] Running Fechas · formato dd/MM/aaaa y descripción de períodos
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.010 s -- in Fechas · formato dd/MM/aaaa y descripción de períodos
+[INFO] Running HashContrasena · PBKDF2-HMAC-SHA256
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.311 s -- in HashContrasena · PBKDF2-HMAC-SHA256
+[INFO] Tests run: 97, Failures: 0, Errors: 0, Skipped: 0
+[INFO] Building jar: C:\Users\tomi_\Documents\sgsld-seminario-informatica\target\sgsld.jar
+[INFO] BUILD SUCCESS
+
+2. Detalle por prueba (informes de Surefire en target/surefire-reports)
+
+DatosDePrueba · verificación de la carga (como el SELECT COUNT del script) (3 pruebas, 0 fallas)
+  [OK]    Cantidad de registros por tabla
+  [OK]    Tratamientos 7 y 9 en curso; el resto finalizados con su fecha de fin
+  [OK]    Vista de estado: 8 jugadores activos, Gómez y Herrera en tratamiento
+
+JugadorDAOMemoria · índice ordenado por DNI (4 pruebas, 0 fallas)
+  [OK]    Al modificar el DNI, el jugador se reubica en el índice
+  [OK]    El alta se ubica en el índice y un DNI repetido se rechaza
+  [OK]    Encuentra cada DNI del lote y no encuentra uno inexistente
+  [OK]    La búsqueda por apellido es parcial y no distingue mayúsculas ni tildes
+
+CPI01 · Autenticación (5 pruebas, 0 fallas)
+  [OK]    CPI01-1 · lfernandez con la contraseña correcta inicia sesión como Kinesiólogo
+  [OK]    CPI01-2 · lfernandez con una contraseña incorrecta: CredencialesInvalidasException
+  [OK]    CPI01-3 · Usuario inexistente: mismo mensaje genérico
+  [OK]    CPI01-4 · Los cuatro hashes del lote verifican con Sgsld2026!
+  [OK]    CPI01-5 · Un usuario inactivo no puede iniciar sesión
+
+CPS01 · Control de acceso y B1 · baja lógica (5 pruebas, 0 fallas)
+  [OK]    B1 · Tras la baja lógica de DNI 39874521 hay 7 filas y Molina ya no aparece
+  [OK]    CPS01-1 · Cuerpo Técnico: consultarFicha lanza AccesoDenegadoException
+  [OK]    CPS01-2 · Cuerpo Técnico: estado actual con las 8 filas de la consulta C3, en orden
+  [OK]    CPS01-3 · Cuerpo Técnico: tampoco accede a historial, jugadores ni registro de lesiones
+  [OK]    CPS01-4 · Kinesiólogo no administra; Coordinador no registra lesiones; sin sesión, nada
+
+CPI02 · Historial (4 pruebas, 0 fallas)
+  [OK]    CPI02-1 · Pedro Gómez: 2 lesiones y 7 evoluciones en orden cronológico
+  [OK]    CPI02-2 · Juan Pérez: 1 lesión
+  [OK]    CPI02-3 · Una lesión registrada después con fecha anterior queda primera
+  [OK]    CPI02-4 · Jugador sin lesiones (Lucas Molina): historial vacío
+
+Recurrencia · CPC01, CPC02, fin de mes y oráculo C2 CPC01 · Caminos independientes de verificarRecurrencia (V(G) = 6) (6 pruebas, 0 fallas)
+  [OK]    CPC01-1 · Historial vacío: sin alerta
+  [OK]    CPC01-2 · Antecedente en otra zona: sin alerta
+  [OK]    CPC01-3 · Misma zona sin tratamiento: alerta
+  [OK]    CPC01-4 · Misma zona con tratamiento en curso: alerta
+  [OK]    CPC01-5 · Finalizado dentro de la ventana de seis meses: alerta
+  [OK]    CPC01-6 · Finalizado fuera de la ventana de seis meses: sin alerta
+
+Recurrencia · CPC01, CPC02, fin de mes y oráculo C2 Fin de mes (sección 11.4): minusMonths equivale a DATE_SUB (2 pruebas, 0 fallas)
+  [OK]    31/08/2026 menos seis meses es 28/02/2026
+  [OK]    Lesión del 31/08/2026: alerta si el alta fue el 28/02/2026, no si fue el 27/02/2026
+
+Recurrencia · CPC01, CPC02, fin de mes y oráculo C2 Oráculo C2 con el lote de prueba (3 pruebas, 0 fallas)
+  [OK]    C2 caso A · Pedro Gómez, isquiotibiales, 15/06/2026: antecedente lesión 2 (fin 20/02/2026, límite 15/12/2025)
+  [OK]    C2 caso B · Franco Acosta, isquiotibiales, 01/07/2026: sin alerta
+  [OK]    C2 · Pedro Gómez, isquiotibiales, 26/09/2026: antecedente lesión 7 (tratamiento en curso)
+
+Recurrencia · CPC01, CPC02, fin de mes y oráculo C2 CPC02 · Valores límite (antecedente 01/12/2025, tratamiento finalizado el 15/01/2026) (9 pruebas, 0 fallas)
+  [OK]    CPC02-1 · Nueva lesión el 10/01/2026: alerta
+  [OK]    CPC02-2 · Nueva lesión el 15/01/2026 (día del alta): alerta
+  [OK]    CPC02-3 · Nueva lesión el 14/07/2026 (un día antes del límite): alerta
+  [OK]    CPC02-4 · Exactamente seis meses (límite incluido): alerta
+  [OK]    CPC02-5 · Seis meses y un día (16/07/2026): sin alerta
+  [OK]    CPC02-6 · Otra zona (tobillo, 15/07/2026): sin alerta
+  [OK]    CPC02-7 · Tratamiento anterior en curso (20/09/2026): alerta
+  [OK]    CPC02-8 · Jugador sin antecedentes: sin alerta
+  [OK]    CPC02-9 · Otro jugador (15/07/2026): sin alerta
+
+CPC04 / CPC05 · Tratamientos (9 pruebas, 0 fallas)
+  [OK]    CPC04-1 · Lesión sin tratamientos: queda En curso
+  [OK]    CPC04-2 · Lesión con el tratamiento anterior finalizado: queda En curso
+  [OK]    CPC04-3 · Lesión 7 (ya tiene uno en curso): rechazo
+  [OK]    CPC04-4 · Inicio anterior a la lesión o futuro: rechazo
+  [OK]    CPC05-1 · Fin un día antes del inicio: rechazo
+  [OK]    CPC05-2 · Fin igual al inicio: finalizado con 0 días
+  [OK]    CPC05-3 · Evolución registrada sin confirmar la finalización: sigue En curso (6a)
+  [OK]    CU-06 3a · Evolución con fecha fuera de rango (antes del inicio o futura): rechazo
+  [OK]    CU-06 · Evolución en un tratamiento finalizado: rechazo
+
+CPC06 · Unicidad (6 pruebas, 0 fallas)
+  [OK]    CPC06-1 · DNI 42587634 duplicado: rechazo
+  [OK]    CPC06-2 · Matrícula MP-10234 duplicada: rechazo
+  [OK]    CPC06-3 · Categoría Primera duplicada, sin distinguir mayúsculas CPC06-3 · Categoría "PRIMERA" duplicada: rechazo
+  [OK]    CPC06-3 · Categoría Primera duplicada, sin distinguir mayúsculas CPC06-3 · Categoría "Primera" duplicada: rechazo
+  [OK]    CPC06-3 · Categoría Primera duplicada, sin distinguir mayúsculas CPC06-3 · Categoría "primera" duplicada: rechazo
+  [OK]    CPC06-4 · Modificar un jugador conservando su propio DNI no es duplicado
+
+CPC03 · Validación de lesiones (6 pruebas, 0 fallas)
+  [OK]    CPC03-1 · Fecha 26/09/2026 (hoy): se registra
+  [OK]    CPC03-2 · Fecha 27/09/2026 (futura): rechazo
+  [OK]    CPC03-3 · Fecha vacía: rechazo
+  [OK]    CPC03-4 · Zona sin seleccionar: rechazo
+  [OK]    CPC03-5 · Descripción de 501 caracteres: rechazo (500 se acepta)
+  [OK]    CPC03-6 · Varios errores a la vez: se informan todos juntos
+
+CPS02 · Rendimiento de los reportes (1 prueba, 0 fallas)
+  [OK]    CPS02 · 10 ejecuciones de cada reporte, todas en menos de 3 segundos
+
+CPI03 · Reportes contra el oráculo (01/01/2026 a 26/09/2026) (10 pruebas, 0 fallas)
+  [OK]    CPI03-0 · Seis reportes disponibles, en el orden del menú
+  [OK]    CPI03-1 · Por categoría (C4): Sub-17 3 · Primera 2 · Reserva 2 · Sub-15 1
+  [OK]    CPI03-2 · Por zona (C5): Isquiotibiales 3 · Aductores 1 · Cuádriceps 1 · Hombro 1 · Rodilla 1 · Tobillo 1
+  [OK]    CPI03-3 · Por tipo (C6): Muscular 5 · Contusión 2 · Ligamentaria 1
+  [OK]    CPI03-4 · Por mes (C7): 2026-01 1 · 2026-03 1 · ... · 2026-08 2
+  [OK]    CPI03-5 · Duración promedio (C8): Muscular 4 tratamientos, 31,5 días · Contusión 2, 12,0 días
+  [OK]    CPI03-6 · Por estado (C9): En curso 2 · Finalizado 8 (foto actual, sin período)
+  [OK]    CPI03-7 · Total de lesiones del período en los conteos: 8
+  [OK]    CU-07 5a · Período sin datos: resultado vacío
+  [OK]    CU-07 · Período invertido (desde posterior a hasta): rechazo
+
+Algoritmos · ordenamiento por inserción y búsqueda binaria (8 pruebas, 0 fallas)
+  [OK]    Búsqueda binaria · clave encontrada
+  [OK]    Búsqueda binaria · clave no encontrada y punto de inserción
+  [OK]    Búsqueda binaria · por clave extraída (DNI como texto)
+  [OK]    Ordenamiento estable · los iguales conservan su orden relativo
+  [OK]    Ordenamiento · criterio descendente y alfabético con tildes
+  [OK]    Ordenamiento · lista invertida (peor caso)
+  [OK]    Ordenamiento · lista vacía y de un elemento
+  [OK]    Ordenamiento · lista ya ordenada
+
+Fechas · formato dd/MM/aaaa y descripción de períodos (9 pruebas, 0 fallas)
+  [OK]    Figura 11 · 20/02/2026 a 15/06/2026 = "3 meses y 26 días"
+  [OK]    Misma fecha · "0 días"
+  [OK]    Período invertido · IllegalArgumentException
+  [OK]    Singular · "1 mes y 1 día", "1 mes" y "1 día"
+  [OK]    Solo días · "26 días"
+  [OK]    Solo meses · "2 meses" y, sin años, "14 meses"
+  [OK]    parsear · acepta 26/09/2026 y formatear lo reconstruye
+  [OK]    parsear · rechaza el formato ISO 2026-09-26
+  [OK]    parsear · rechaza la fecha inexistente 31/02/2026
+
+HashContrasena · PBKDF2-HMAC-SHA256 (7 pruebas, 0 fallas)
+  [OK]    Compatibilidad con los hashes de sgsld_script.sql Hash del script verifica con Sgsld2026! · pbkdf2_sha256$600000$26N3kgXnzRtg4Rwns5UpCg==$FSrI8YsD/HSvjMnXMkMJB4OT9D2educQw/LVTVkHqJw=
+  [OK]    Compatibilidad con los hashes de sgsld_script.sql Hash del script verifica con Sgsld2026! · pbkdf2_sha256$600000$9tMaGR8tPF6YEDLEVayIyw==$LZeYsYJMJVj/3d6krUtBIQSx6tWji/r21RIlOAEdnJc=
+  [OK]    Compatibilidad con los hashes de sgsld_script.sql Hash del script verifica con Sgsld2026! · pbkdf2_sha256$600000$nAQW/lf9vCWoJjBOB3UjQA==$y4j/gFkevLA1cR2HKsCKuAAycral/gvBPuzwDVANuYs=
+  [OK]    Compatibilidad con los hashes de sgsld_script.sql Hash del script verifica con Sgsld2026! · pbkdf2_sha256$600000$zzhls+mk8j3ECd3FpaymwA==$r2jHjIAQ4SLnyPBe9r1FbFnVvbo4R05+z0cPHJZ4VNY=
+  [OK]    Dos hashes de la misma contraseña difieren por la sal
+  [OK]    Un hash con formato inválido no verifica
+  [OK]    Un hash generado verifica con su contraseña y no con otra

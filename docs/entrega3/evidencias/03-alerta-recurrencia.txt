@@ -1,0 +1,272 @@
+========================================================================
+SGSLD - Sistema de Gestión y Seguimiento de Lesiones Deportivas
+========================================================================
+Prototipo (entrega 3): datos de prueba en memoria; los cambios no se conservan al salir.
+Fecha del sistema fijada en 26/09/2026.
+
+========================================================================
+SGSLD
+Sin sesión iniciada
+------------------------------------------------------------------------
+  1. Iniciar sesión
+  0. Salir
+Opción: 1
+
+Inicio de sesión
+----------------
+Usuario: lfernandez
+[AVISO] No hay una terminal interactiva: la contraseña será visible al escribirla.
+Contraseña: ********
+[OK] Sesión iniciada: lfernandez (Kinesiólogo).
+
+========================================================================
+SGSLD > Kinesiólogo
+Usuario: lfernandez | Rol: Kinesiólogo
+------------------------------------------------------------------------
+  1. Consultar jugadores
+  2. Consultar ficha individual
+  3. Registrar lesión
+  4. Registrar tratamiento
+  5. Registrar evolución / finalizar tratamiento
+  0. Cerrar sesión
+Opción: 3
+
+Registro de lesión
+------------------
+Buscar jugador por:
+  1. DNI
+  2. Apellido
+  3. Lista de jugadores
+  0. Cancelar
+Opción: 1
+DNI (sin puntos): 41236587
+Jugador: Pérez, Juan - DNI 41236587 - Primera
+
+Historial de Pérez, Juan
+------------------------
++----+------------+---------+--------------+----------+--------------------------+
+| N° | Fecha      | Zona    | Tipo         | Gravedad | Estado                   |
++----+------------+---------+--------------+----------+--------------------------+
+|  1 | 20/09/2025 | Tobillo | Ligamentaria | Moderada | Finalizado el 05/11/2025 |
++----+------------+---------+--------------+----------+--------------------------+
+Tipo de lesión:
+   1. Muscular
+   2. Ligamentaria
+   3. Tendinosa
+   4. Ósea
+   5. Contusión
+   0. Cancelar
+Opción: 2
+Zona corporal:
+   1. Isquiotibiales (Miembro inferior)
+   2. Cuádriceps (Miembro inferior)
+   3. Tobillo (Miembro inferior)
+   4. Rodilla (Miembro inferior)
+   5. Aductores (Miembro inferior)
+   6. Hombro (Miembro superior)
+   7. Zona lumbar (Tronco)
+   0. Cancelar
+Opción: 3
+Gravedad:
+   1. Leve
+   2. Moderada
+   3. Grave
+   0. Cancelar
+Opción: 1
+Fecha de la lesión [Enter = 26/09/2026]: 
+Descripción (opcional): Torcedura de tobillo en el entrenamiento
+[OK] Lesión registrada con el N° 11.
+¿Registrar el tratamiento ahora? (S/N): N
+
+========================================================================
+SGSLD > Kinesiólogo
+Usuario: lfernandez | Rol: Kinesiólogo
+------------------------------------------------------------------------
+  1. Consultar jugadores
+  2. Consultar ficha individual
+  3. Registrar lesión
+  4. Registrar tratamiento
+  5. Registrar evolución / finalizar tratamiento
+  0. Cerrar sesión
+Opción: 3
+
+Registro de lesión
+------------------
+Buscar jugador por:
+  1. DNI
+  2. Apellido
+  3. Lista de jugadores
+  0. Cancelar
+Opción: 1
+DNI (sin puntos): 42587634
+Jugador: Gómez, Pedro - DNI 42587634 - Primera
+
+Historial de Gómez, Pedro
+-------------------------
++----+------------+----------------+----------+----------+--------------------------+
+| N° | Fecha      | Zona           | Tipo     | Gravedad | Estado                   |
++----+------------+----------------+----------+----------+--------------------------+
+|  2 | 10/01/2026 | Isquiotibiales | Muscular | Moderada | Finalizado el 20/02/2026 |
+|  7 | 15/06/2026 | Isquiotibiales | Muscular | Grave    | Tratamiento en curso     |
++----+------------+----------------+----------+----------+--------------------------+
+Tipo de lesión:
+   1. Muscular
+   2. Ligamentaria
+   3. Tendinosa
+   4. Ósea
+   5. Contusión
+   0. Cancelar
+Opción: 1
+Zona corporal:
+   1. Isquiotibiales (Miembro inferior)
+   2. Cuádriceps (Miembro inferior)
+   3. Tobillo (Miembro inferior)
+   4. Rodilla (Miembro inferior)
+   5. Aductores (Miembro inferior)
+   6. Hombro (Miembro superior)
+   7. Zona lumbar (Tronco)
+   0. Cancelar
+Opción: 1
+Gravedad:
+   1. Leve
+   2. Moderada
+   3. Grave
+   0. Cancelar
+Opción: 2
+Fecha de la lesión [Enter = 26/09/2026]: 
+Descripción (opcional): Molestia en isquiotibiales al acelerar
+
+[ALERTA] Posible lesión recurrente
+El jugador registra una lesión anterior en la misma zona corporal:
+Isquiotibiales - 15/06/2026, tratamiento en curso
+La alerta es informativa y no constituye un diagnóstico médico. Puede continuar con el registro.
+Presione ENTER para continuar...
+[OK] Lesión registrada con el N° 12.
+¿Registrar el tratamiento ahora? (S/N): N
+
+========================================================================
+SGSLD > Kinesiólogo
+Usuario: lfernandez | Rol: Kinesiólogo
+------------------------------------------------------------------------
+  1. Consultar jugadores
+  2. Consultar ficha individual
+  3. Registrar lesión
+  4. Registrar tratamiento
+  5. Registrar evolución / finalizar tratamiento
+  0. Cerrar sesión
+Opción: 3
+
+Registro de lesión
+------------------
+Buscar jugador por:
+  1. DNI
+  2. Apellido
+  3. Lista de jugadores
+  0. Cancelar
+Opción: 1
+DNI (sin puntos): 42587634
+Jugador: Gómez, Pedro - DNI 42587634 - Primera
+
+Historial de Gómez, Pedro
+-------------------------
++----+------------+----------------+----------+----------+--------------------------+
+| N° | Fecha      | Zona           | Tipo     | Gravedad | Estado                   |
++----+------------+----------------+----------+----------+--------------------------+
+|  2 | 10/01/2026 | Isquiotibiales | Muscular | Moderada | Finalizado el 20/02/2026 |
+|  7 | 15/06/2026 | Isquiotibiales | Muscular | Grave    | Tratamiento en curso     |
+| 12 | 26/09/2026 | Isquiotibiales | Muscular | Moderada | Sin tratamiento          |
++----+------------+----------------+----------+----------+--------------------------+
+Tipo de lesión:
+   1. Muscular
+   2. Ligamentaria
+   3. Tendinosa
+   4. Ósea
+   5. Contusión
+   0. Cancelar
+Opción: 1
+Zona corporal:
+   1. Isquiotibiales (Miembro inferior)
+   2. Cuádriceps (Miembro inferior)
+   3. Tobillo (Miembro inferior)
+   4. Rodilla (Miembro inferior)
+   5. Aductores (Miembro inferior)
+   6. Hombro (Miembro superior)
+   7. Zona lumbar (Tronco)
+   0. Cancelar
+Opción: 1
+Gravedad:
+   1. Leve
+   2. Moderada
+   3. Grave
+   0. Cancelar
+Opción: 3
+Fecha de la lesión [Enter = 26/09/2026]: 15/06/2026
+Descripción (opcional): Dolor agudo en sprint (reproduce la Figura 11)
+
+[ALERTA] Posible lesión recurrente
+El jugador registra una lesión anterior en la misma zona corporal:
+Isquiotibiales - 10/01/2026, tratamiento finalizado el 20/02/2026
+(3 meses y 26 días antes de la nueva lesión).
+La alerta es informativa y no constituye un diagnóstico médico. Puede continuar con el registro.
+Presione ENTER para continuar...
+[OK] Lesión registrada con el N° 13.
+¿Registrar el tratamiento ahora? (S/N): N
+
+========================================================================
+SGSLD > Kinesiólogo
+Usuario: lfernandez | Rol: Kinesiólogo
+------------------------------------------------------------------------
+  1. Consultar jugadores
+  2. Consultar ficha individual
+  3. Registrar lesión
+  4. Registrar tratamiento
+  5. Registrar evolución / finalizar tratamiento
+  0. Cerrar sesión
+Opción: 4
+
+Registro de tratamiento
+-----------------------
+Buscar jugador por:
+  1. DNI
+  2. Apellido
+  3. Lista de jugadores
+  0. Cancelar
+Opción: 1
+DNI (sin puntos): 42587634
+Jugador: Gómez, Pedro - DNI 42587634 - Primera
+Lesiones de Gómez, Pedro:
+   1. N° 2 - 10/01/2026 - Isquiotibiales (Muscular) - Moderada - Finalizado el 20/02/2026
+   2. N° 7 - 15/06/2026 - Isquiotibiales (Muscular) - Grave - Tratamiento en curso
+   3. N° 13 - 15/06/2026 - Isquiotibiales (Muscular) - Grave - Sin tratamiento
+   4. N° 12 - 26/09/2026 - Isquiotibiales (Muscular) - Moderada - Sin tratamiento
+   0. Cancelar
+Opción: 2
+Tratamiento para la lesión N° 7: 15/06/2026 - Isquiotibiales (Muscular) - Grave
+Responsable: Fernández, Laura (MP-10234). ¿Mantener? (S/N): S
+Fecha de inicio [Enter = 26/09/2026]: 20/09/2026
+Tipo de tratamiento: Readaptacion funcional
+Observaciones (opcional): 
+[ERROR] La lesión N° 7 ya tiene un tratamiento en curso. Debe finalizarlo antes de registrar uno nuevo.
+No se registró el tratamiento.
+
+========================================================================
+SGSLD > Kinesiólogo
+Usuario: lfernandez | Rol: Kinesiólogo
+------------------------------------------------------------------------
+  1. Consultar jugadores
+  2. Consultar ficha individual
+  3. Registrar lesión
+  4. Registrar tratamiento
+  5. Registrar evolución / finalizar tratamiento
+  0. Cerrar sesión
+Opción: 0
+[OK] Sesión cerrada.
+
+========================================================================
+SGSLD
+Sin sesión iniciada
+------------------------------------------------------------------------
+  1. Iniciar sesión
+  0. Salir
+Opción: 0
+Hasta luego.

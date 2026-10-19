@@ -1,0 +1,177 @@
+========================================================================
+SGSLD - Sistema de Gestión y Seguimiento de Lesiones Deportivas
+========================================================================
+Prototipo (entrega 3): datos de prueba en memoria; los cambios no se conservan al salir.
+Fecha del sistema fijada en 26/09/2026.
+
+========================================================================
+SGSLD
+Sin sesión iniciada
+------------------------------------------------------------------------
+  1. Iniciar sesión
+  0. Salir
+Opción: 1
+
+Inicio de sesión
+----------------
+Usuario: mlopez
+[AVISO] No hay una terminal interactiva: la contraseña será visible al escribirla.
+Contraseña: ********
+[OK] Sesión iniciada: mlopez (Coordinador).
+
+========================================================================
+SGSLD > Coordinador
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Gestionar jugadores
+  2. Gestionar categorías
+  3. Gestionar kinesiólogos
+  4. Consultar ficha individual
+  5. Reportes estadísticos
+  0. Cerrar sesión
+Opción: 4
+
+Ficha individual del jugador
+----------------------------
+Buscar jugador por:
+  1. DNI
+  2. Apellido
+  3. Lista de jugadores
+  0. Cancelar
+Opción: 2
+Apellido (o parte): gomez
+Jugador: Gómez, Pedro - DNI 42587634 - Primera
+
+Ficha de Gómez, Pedro
+---------------------
+DNI:                 42587634
+Nombre:              Pedro Gómez
+Fecha de nacimiento: 22/07/2000 (26 años)
+Posición:            Mediocampista
+Camiseta:            5
+Categoría vigente:   Primera (18 a 40 años)
+Activo:              Sí
+Estado actual:       En tratamiento
+
+Historial de lesiones
+---------------------
++----+------------+----------------+----------+----------+--------------------------+
+| N° | Fecha      | Zona           | Tipo     | Gravedad | Estado                   |
++----+------------+----------------+----------+----------+--------------------------+
+|  2 | 10/01/2026 | Isquiotibiales | Muscular | Moderada | Finalizado el 20/02/2026 |
+|  7 | 15/06/2026 | Isquiotibiales | Muscular | Grave    | Tratamiento en curso     |
++----+------------+----------------+----------+----------+--------------------------+
+N° de lesión para ver tratamientos y evoluciones (0 = volver): 7
+
+Lesión N° 7: 15/06/2026 - Isquiotibiales (Muscular) - Grave
+-----------------------------------------------------------
+Descripción: Dolor agudo en sprint durante el partido
+
+Tratamiento N° 7: Fisioterapia y fortalecimiento excéntrico
+  Responsable:   Fernández, Laura (MP-10234)
+  Inicio:        16/06/2026   Fin: -
+  Estado:        En curso   Duración: 102 días transcurridos
+  Observaciones: Posible recurrencia alertada al registrar la lesión
++------------+--------------+------------------------------------+
+| Fecha      | Resultado    | Observación                        |
++------------+--------------+------------------------------------+
+| 30/06/2026 | Estable      | Dolor persistente en aceleraciones |
+| 20/07/2026 | Desfavorable | Molestia en trabajo excéntrico     |
+| 25/08/2026 | Favorable    | Mejora la fuerza excéntrica        |
+| 18/09/2026 | Favorable    | Inicia trabajo con pelota          |
++------------+--------------+------------------------------------+
+N° de lesión para ver tratamientos y evoluciones (0 = volver): 0
+
+========================================================================
+SGSLD > Coordinador
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Gestionar jugadores
+  2. Gestionar categorías
+  3. Gestionar kinesiólogos
+  4. Consultar ficha individual
+  5. Reportes estadísticos
+  0. Cerrar sesión
+Opción: 5
+
+Reportes estadísticos
+---------------------
+Desde [Enter = 01/01/2026]: 
+Hasta [Enter = 26/09/2026]: 
+Reportes disponibles:
+   1. Lesiones por categoría
+   2. Lesiones por zona corporal
+   3. Lesiones por tipo
+   4. Lesiones por mes
+   5. Duración promedio de tratamientos finalizados por tipo de lesión
+   6. Tratamientos en curso y finalizados
+   0. Cancelar
+Opción: 2
+
+Lesiones por zona corporal (01/01/2026 a 26/09/2026)
+----------------------------------------------------
++----------------+----------+
+| Zona corporal  | Lesiones |
++----------------+----------+
+| Isquiotibiales |        3 |
+| Aductores      |        1 |
+| Cuádriceps     |        1 |
+| Hombro         |        1 |
+| Rodilla        |        1 |
+| Tobillo        |        1 |
++----------------+----------+
+| Total          |        8 |
++----------------+----------+
+
+Isquiotibiales | ######################################## 3
+Aductores      | ############# 1
+Cuádriceps     | ############# 1
+Hombro         | ############# 1
+Rodilla        | ############# 1
+Tobillo        | ############# 1
+¿Generar otro reporte? (S/N): S
+¿Cambiar el período? (S/N): N
+Reportes disponibles:
+   1. Lesiones por categoría
+   2. Lesiones por zona corporal
+   3. Lesiones por tipo
+   4. Lesiones por mes
+   5. Duración promedio de tratamientos finalizados por tipo de lesión
+   6. Tratamientos en curso y finalizados
+   0. Cancelar
+Opción: 5
+
+Duración promedio de tratamientos finalizados por tipo de lesión (01/01/2026 a 26/09/2026)
+------------------------------------------------------------------------
++----------------+--------------------------+--------------------------+
+| Tipo de lesión | Tratamientos finalizados | Duración promedio (días) |
++----------------+--------------------------+--------------------------+
+| Muscular       |                        4 |                     31,5 |
+| Contusión      |                        2 |                     12,0 |
++----------------+--------------------------+--------------------------+
+
+Muscular  | ######################################## 31,5
+Contusión | ############### 12,0
+¿Generar otro reporte? (S/N): N
+
+========================================================================
+SGSLD > Coordinador
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Gestionar jugadores
+  2. Gestionar categorías
+  3. Gestionar kinesiólogos
+  4. Consultar ficha individual
+  5. Reportes estadísticos
+  0. Cerrar sesión
+Opción: 0
+[OK] Sesión cerrada.
+
+========================================================================
+SGSLD
+Sin sesión iniciada
+------------------------------------------------------------------------
+  1. Iniciar sesión
+  0. Salir
+Opción: 0
+Hasta luego.

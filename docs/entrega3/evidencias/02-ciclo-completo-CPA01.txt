@@ -1,0 +1,525 @@
+========================================================================
+SGSLD - Sistema de Gestión y Seguimiento de Lesiones Deportivas
+========================================================================
+Prototipo (entrega 3): datos de prueba en memoria; los cambios no se conservan al salir.
+Fecha del sistema fijada en 26/09/2026.
+
+========================================================================
+SGSLD
+Sin sesión iniciada
+------------------------------------------------------------------------
+  1. Iniciar sesión
+  0. Salir
+Opción: 1
+
+Inicio de sesión
+----------------
+Usuario: mlopez
+[AVISO] No hay una terminal interactiva: la contraseña será visible al escribirla.
+Contraseña: ********
+[OK] Sesión iniciada: mlopez (Coordinador).
+
+========================================================================
+SGSLD > Coordinador
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Gestionar jugadores
+  2. Gestionar categorías
+  3. Gestionar kinesiólogos
+  4. Consultar ficha individual
+  5. Reportes estadísticos
+  0. Cerrar sesión
+Opción: 1
+
+========================================================================
+SGSLD > Coordinador > Jugadores
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Listar
+  2. Buscar (DNI o apellido)
+  3. Alta
+  4. Modificar
+  5. Baja lógica
+  0. Volver
+Opción: 3
+
+Alta de jugador
+---------------
+DNI (7 u 8 dígitos, sin puntos): 43111222
+Nombre: Martin
+Apellido: Suarez
+Fecha de nacimiento (dd/mm/aaaa): 10/05/2001
+Número de camiseta (1 a 99, Enter = sin número): 6
+Posición: Defensor
+Categoría:
+   1. Primera (18 a 40 años)
+   2. Reserva (18 a 23 años)
+   3. Sub-17 (16 a 17 años)
+   4. Sub-15 (14 a 15 años)
+   0. Cancelar
+Opción: 1
+[OK] Jugador registrado con el N° 9: Suarez, Martin.
+
+========================================================================
+SGSLD > Coordinador > Jugadores
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Listar
+  2. Buscar (DNI o apellido)
+  3. Alta
+  4. Modificar
+  5. Baja lógica
+  0. Volver
+Opción: 1
+¿Incluir jugadores dados de baja? (S/N): N
+
+Jugadores activos
+-----------------
++----------+-----------------+------------+-----------+---------------+----------+
+| DNI      | Jugador         | Nacimiento | Categoría | Posición      | Camiseta |
++----------+-----------------+------------+-----------+---------------+----------+
+| 46078912 | Acosta, Franco  | 30/06/2005 | Reserva   | Delantero     |       11 |
+| 51347025 | Castro, Nicolás | 02/09/2011 | Sub-15    | Delantero     |        7 |
+| 45120398 | Díaz, Luis      | 10/02/2004 | Reserva   | Defensor      |        4 |
+| 42587634 | Gómez, Pedro    | 22/07/2000 | Primera   | Mediocampista |        5 |
+| 50214786 | Herrera, Tomás  | 25/01/2010 | Sub-17    | Defensor      |        3 |
+| 39874521 | Molina, Lucas   | 05/11/1996 | Primera   | Arquero       |        1 |
+| 41236587 | Pérez, Juan     | 14/03/1998 | Primera   | Delantero     |        9 |
+| 49365120 | Romero, Matías  | 18/04/2009 | Sub-17    | Mediocampista |       10 |
+| 43111222 | Suarez, Martin  | 10/05/2001 | Primera   | Defensor      |        6 |
++----------+-----------------+------------+-----------+---------------+----------+
+Total: 9 jugadores.
+
+========================================================================
+SGSLD > Coordinador > Jugadores
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Listar
+  2. Buscar (DNI o apellido)
+  3. Alta
+  4. Modificar
+  5. Baja lógica
+  0. Volver
+Opción: 0
+
+========================================================================
+SGSLD > Coordinador
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Gestionar jugadores
+  2. Gestionar categorías
+  3. Gestionar kinesiólogos
+  4. Consultar ficha individual
+  5. Reportes estadísticos
+  0. Cerrar sesión
+Opción: 0
+[OK] Sesión cerrada.
+
+========================================================================
+SGSLD
+Sin sesión iniciada
+------------------------------------------------------------------------
+  1. Iniciar sesión
+  0. Salir
+Opción: 1
+
+Inicio de sesión
+----------------
+Usuario: lfernandez
+Contraseña: ********
+[OK] Sesión iniciada: lfernandez (Kinesiólogo).
+
+========================================================================
+SGSLD > Kinesiólogo
+Usuario: lfernandez | Rol: Kinesiólogo
+------------------------------------------------------------------------
+  1. Consultar jugadores
+  2. Consultar ficha individual
+  3. Registrar lesión
+  4. Registrar tratamiento
+  5. Registrar evolución / finalizar tratamiento
+  0. Cerrar sesión
+Opción: 3
+
+Registro de lesión
+------------------
+Buscar jugador por:
+  1. DNI
+  2. Apellido
+  3. Lista de jugadores
+  0. Cancelar
+Opción: 1
+DNI (sin puntos): 43111222
+Jugador: Suarez, Martin - DNI 43111222 - Primera
+
+Historial de Suarez, Martin
+---------------------------
+Sin lesiones registradas.
+Tipo de lesión:
+   1. Muscular
+   2. Ligamentaria
+   3. Tendinosa
+   4. Ósea
+   5. Contusión
+   0. Cancelar
+Opción: 1
+Zona corporal:
+   1. Isquiotibiales (Miembro inferior)
+   2. Cuádriceps (Miembro inferior)
+   3. Tobillo (Miembro inferior)
+   4. Rodilla (Miembro inferior)
+   5. Aductores (Miembro inferior)
+   6. Hombro (Miembro superior)
+   7. Zona lumbar (Tronco)
+   0. Cancelar
+Opción: 2
+Gravedad:
+   1. Leve
+   2. Moderada
+   3. Grave
+   0. Cancelar
+Opción: 1
+Fecha de la lesión [Enter = 26/09/2026]: 20/09/2026
+Descripción (opcional): Sobrecarga en cuadriceps tras el entrenamiento
+[OK] Lesión registrada con el N° 11.
+¿Registrar el tratamiento ahora? (S/N): S
+Tratamiento para la lesión N° 11: 20/09/2026 - Cuádriceps (Muscular) - Leve
+Responsable: Fernández, Laura (MP-10234). ¿Mantener? (S/N): S
+Fecha de inicio [Enter = 26/09/2026]: 21/09/2026
+Tipo de tratamiento: Fisioterapia y elongacion
+Observaciones (opcional): Control dos veces por semana
+[OK] Tratamiento N° 11 registrado. Estado: En curso.
+
+========================================================================
+SGSLD > Kinesiólogo
+Usuario: lfernandez | Rol: Kinesiólogo
+------------------------------------------------------------------------
+  1. Consultar jugadores
+  2. Consultar ficha individual
+  3. Registrar lesión
+  4. Registrar tratamiento
+  5. Registrar evolución / finalizar tratamiento
+  0. Cerrar sesión
+Opción: 0
+[OK] Sesión cerrada.
+
+========================================================================
+SGSLD
+Sin sesión iniciada
+------------------------------------------------------------------------
+  1. Iniciar sesión
+  0. Salir
+Opción: 1
+
+Inicio de sesión
+----------------
+Usuario: ctecnico
+Contraseña: ********
+[OK] Sesión iniciada: ctecnico (Cuerpo Técnico).
+
+========================================================================
+SGSLD > Cuerpo Técnico
+Usuario: ctecnico | Rol: Cuerpo Técnico
+------------------------------------------------------------------------
+  1. Estado actual de disponibilidad
+  0. Cerrar sesión
+Opción: 1
+
+Estado actual de disponibilidad
+-------------------------------
+¿Filtrar por categoría? (S/N): N
+Filtrar por apellido (Enter = todos): suarez
++----------------+-----------+----------------+
+| Jugador        | Categoría | Estado         |
++----------------+-----------+----------------+
+| Suarez, Martin | Primera   | En tratamiento |
++----------------+-----------+----------------+
+Disponibles: 0 | En tratamiento: 1
+Vista de solo lectura. No se muestran lesiones, tratamientos, evoluciones ni diagnósticos (RF12, RNF13).
+
+========================================================================
+SGSLD > Cuerpo Técnico
+Usuario: ctecnico | Rol: Cuerpo Técnico
+------------------------------------------------------------------------
+  1. Estado actual de disponibilidad
+  0. Cerrar sesión
+Opción: 0
+[OK] Sesión cerrada.
+
+========================================================================
+SGSLD
+Sin sesión iniciada
+------------------------------------------------------------------------
+  1. Iniciar sesión
+  0. Salir
+Opción: 1
+
+Inicio de sesión
+----------------
+Usuario: lfernandez
+Contraseña: ********
+[OK] Sesión iniciada: lfernandez (Kinesiólogo).
+
+========================================================================
+SGSLD > Kinesiólogo
+Usuario: lfernandez | Rol: Kinesiólogo
+------------------------------------------------------------------------
+  1. Consultar jugadores
+  2. Consultar ficha individual
+  3. Registrar lesión
+  4. Registrar tratamiento
+  5. Registrar evolución / finalizar tratamiento
+  0. Cerrar sesión
+Opción: 5
+
+Registro de evolución
+---------------------
++----+----------------+---------------------------+------------------+------------+-------------+
+| N° | Jugador        | Lesión                    | Responsable      | Inicio     | Evoluciones |
++----+----------------+---------------------------+------------------+------------+-------------+
+|  7 | Gómez, Pedro   | Isquiotibiales 15/06/2026 | Fernández, Laura | 16/06/2026 |           4 |
+|  9 | Herrera, Tomás | Tobillo 02/08/2026        | Fernández, Laura | 03/08/2026 |           2 |
+| 11 | Suarez, Martin | Cuádriceps 20/09/2026     | Fernández, Laura | 21/09/2026 |           0 |
++----+----------------+---------------------------+------------------+------------+-------------+
+N° de tratamiento (0 = cancelar): 11
+Tratamiento N° 11: Fisioterapia y elongacion - Suarez, Martin - 20/09/2026 - Cuádriceps (Muscular) - Leve
+Sin evoluciones registradas.
+Fecha de la evolución [Enter = 26/09/2026]: 25/09/2026
+Observación: Sin dolor en la carrera continua
+Resultado:
+   1. Favorable
+   2. Estable
+   3. Desfavorable
+   0. Cancelar
+Opción: 1
+[OK] Evolución N° 12 registrada.
+¿Finalizar el tratamiento? (S/N): S
+Fecha de fin [Enter = 25/09/2026]: 26/09/2026
+¿Confirma la finalización del tratamiento N° 11 con fecha 26/09/2026? (S/N): S
+[OK] Tratamiento N° 11 finalizado. Duración: 5 días.
+Estado actual de Suarez, Martin: Disponible.
+
+========================================================================
+SGSLD > Kinesiólogo
+Usuario: lfernandez | Rol: Kinesiólogo
+------------------------------------------------------------------------
+  1. Consultar jugadores
+  2. Consultar ficha individual
+  3. Registrar lesión
+  4. Registrar tratamiento
+  5. Registrar evolución / finalizar tratamiento
+  0. Cerrar sesión
+Opción: 0
+[OK] Sesión cerrada.
+
+========================================================================
+SGSLD
+Sin sesión iniciada
+------------------------------------------------------------------------
+  1. Iniciar sesión
+  0. Salir
+Opción: 1
+
+Inicio de sesión
+----------------
+Usuario: ctecnico
+Contraseña: ********
+[OK] Sesión iniciada: ctecnico (Cuerpo Técnico).
+
+========================================================================
+SGSLD > Cuerpo Técnico
+Usuario: ctecnico | Rol: Cuerpo Técnico
+------------------------------------------------------------------------
+  1. Estado actual de disponibilidad
+  0. Cerrar sesión
+Opción: 1
+
+Estado actual de disponibilidad
+-------------------------------
+¿Filtrar por categoría? (S/N): N
+Filtrar por apellido (Enter = todos): suarez
++----------------+-----------+------------+
+| Jugador        | Categoría | Estado     |
++----------------+-----------+------------+
+| Suarez, Martin | Primera   | Disponible |
++----------------+-----------+------------+
+Disponibles: 1 | En tratamiento: 0
+Vista de solo lectura. No se muestran lesiones, tratamientos, evoluciones ni diagnósticos (RF12, RNF13).
+
+========================================================================
+SGSLD > Cuerpo Técnico
+Usuario: ctecnico | Rol: Cuerpo Técnico
+------------------------------------------------------------------------
+  1. Estado actual de disponibilidad
+  0. Cerrar sesión
+Opción: 0
+[OK] Sesión cerrada.
+
+========================================================================
+SGSLD
+Sin sesión iniciada
+------------------------------------------------------------------------
+  1. Iniciar sesión
+  0. Salir
+Opción: 1
+
+Inicio de sesión
+----------------
+Usuario: mlopez
+Contraseña: ********
+[OK] Sesión iniciada: mlopez (Coordinador).
+
+========================================================================
+SGSLD > Coordinador
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Gestionar jugadores
+  2. Gestionar categorías
+  3. Gestionar kinesiólogos
+  4. Consultar ficha individual
+  5. Reportes estadísticos
+  0. Cerrar sesión
+Opción: 4
+
+Ficha individual del jugador
+----------------------------
+Buscar jugador por:
+  1. DNI
+  2. Apellido
+  3. Lista de jugadores
+  0. Cancelar
+Opción: 1
+DNI (sin puntos): 43111222
+Jugador: Suarez, Martin - DNI 43111222 - Primera
+
+Ficha de Suarez, Martin
+-----------------------
+DNI:                 43111222
+Nombre:              Martin Suarez
+Fecha de nacimiento: 10/05/2001 (25 años)
+Posición:            Defensor
+Camiseta:            6
+Categoría vigente:   Primera (18 a 40 años)
+Activo:              Sí
+Estado actual:       Disponible
+
+Historial de lesiones
+---------------------
++----+------------+------------+----------+----------+--------------------------+
+| N° | Fecha      | Zona       | Tipo     | Gravedad | Estado                   |
++----+------------+------------+----------+----------+--------------------------+
+| 11 | 20/09/2026 | Cuádriceps | Muscular | Leve     | Finalizado el 26/09/2026 |
++----+------------+------------+----------+----------+--------------------------+
+N° de lesión para ver tratamientos y evoluciones (0 = volver): 11
+
+Lesión N° 11: 20/09/2026 - Cuádriceps (Muscular) - Leve
+-------------------------------------------------------
+Descripción: Sobrecarga en cuadriceps tras el entrenamiento
+
+Tratamiento N° 11: Fisioterapia y elongacion
+  Responsable:   Fernández, Laura (MP-10234)
+  Inicio:        21/09/2026   Fin: 26/09/2026
+  Estado:        Finalizado   Duración: 5 días
+  Observaciones: Control dos veces por semana
++------------+-----------+----------------------------------+
+| Fecha      | Resultado | Observación                      |
++------------+-----------+----------------------------------+
+| 25/09/2026 | Favorable | Sin dolor en la carrera continua |
++------------+-----------+----------------------------------+
+N° de lesión para ver tratamientos y evoluciones (0 = volver): 0
+
+========================================================================
+SGSLD > Coordinador
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Gestionar jugadores
+  2. Gestionar categorías
+  3. Gestionar kinesiólogos
+  4. Consultar ficha individual
+  5. Reportes estadísticos
+  0. Cerrar sesión
+Opción: 5
+
+Reportes estadísticos
+---------------------
+Desde [Enter = 01/01/2026]: 
+Hasta [Enter = 26/09/2026]: 
+Reportes disponibles:
+   1. Lesiones por categoría
+   2. Lesiones por zona corporal
+   3. Lesiones por tipo
+   4. Lesiones por mes
+   5. Duración promedio de tratamientos finalizados por tipo de lesión
+   6. Tratamientos en curso y finalizados
+   0. Cancelar
+Opción: 2
+
+Lesiones por zona corporal (01/01/2026 a 26/09/2026)
+----------------------------------------------------
++----------------+----------+
+| Zona corporal  | Lesiones |
++----------------+----------+
+| Isquiotibiales |        3 |
+| Cuádriceps     |        2 |
+| Aductores      |        1 |
+| Hombro         |        1 |
+| Rodilla        |        1 |
+| Tobillo        |        1 |
++----------------+----------+
+| Total          |        9 |
++----------------+----------+
+
+Isquiotibiales | ######################################## 3
+Cuádriceps     | ########################### 2
+Aductores      | ############# 1
+Hombro         | ############# 1
+Rodilla        | ############# 1
+Tobillo        | ############# 1
+¿Generar otro reporte? (S/N): S
+¿Cambiar el período? (S/N): N
+Reportes disponibles:
+   1. Lesiones por categoría
+   2. Lesiones por zona corporal
+   3. Lesiones por tipo
+   4. Lesiones por mes
+   5. Duración promedio de tratamientos finalizados por tipo de lesión
+   6. Tratamientos en curso y finalizados
+   0. Cancelar
+Opción: 6
+
+Tratamientos en curso y finalizados (situación actual)
+------------------------------------------------------
++------------+--------------+
+| Estado     | Tratamientos |
++------------+--------------+
+| En curso   |            2 |
+| Finalizado |            9 |
++------------+--------------+
+| Total      |           11 |
++------------+--------------+
+
+En curso   | ######### 2
+Finalizado | ######################################## 9
+¿Generar otro reporte? (S/N): N
+
+========================================================================
+SGSLD > Coordinador
+Usuario: mlopez | Rol: Coordinador
+------------------------------------------------------------------------
+  1. Gestionar jugadores
+  2. Gestionar categorías
+  3. Gestionar kinesiólogos
+  4. Consultar ficha individual
+  5. Reportes estadísticos
+  0. Cerrar sesión
+Opción: 0
+[OK] Sesión cerrada.
+
+========================================================================
+SGSLD
+Sin sesión iniciada
+------------------------------------------------------------------------
+  1. Iniciar sesión
+  0. Salir
+Opción: 0
+Hasta luego.
