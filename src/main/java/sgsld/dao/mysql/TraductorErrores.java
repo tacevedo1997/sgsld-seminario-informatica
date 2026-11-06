@@ -137,7 +137,7 @@ public final class TraductorErrores {
             case TIEMPO_AGOTADO:
                 return "La base de datos no respondió a tiempo. Intente nuevamente.";
             default:
-                return "No se pudo " + operacion + " por un error de la base de datos. "
+                return "Ocurrió un error de la base de datos al " + operacion + ". "
                         + "El detalle quedó en el registro técnico.";
         }
     }

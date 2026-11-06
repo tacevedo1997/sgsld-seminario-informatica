@@ -107,7 +107,7 @@ class TraductorErroresTest {
     void otroError() {
         PersistenciaException error = traducir("You have an error in your SQL syntax", "42000", 1064);
         assertEquals(Motivo.OTRO, error.getMotivo());
-        assertEquals("No se pudo registrar el jugador por un error de la base de datos. "
+        assertEquals("Ocurrió un error de la base de datos al registrar el jugador. "
                 + "El detalle quedó en el registro técnico.", error.getMessage());
     }
 }

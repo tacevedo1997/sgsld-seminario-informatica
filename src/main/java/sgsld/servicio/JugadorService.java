@@ -126,7 +126,12 @@ public class JugadorService {
         }
         validar(jugador, errores);
         ValidacionException.lanzarSiHayErrores(errores);
-        return jugadores.insertar(jugador);
+        try {
+            return jugadores.insertar(jugador);
+        } catch (PersistenciaException e) {
+            lanzarSiDniDuplicado(e, jugador.getDni());
+            throw e;
+        }
     }
 
     /**
@@ -153,7 +158,12 @@ public class JugadorService {
         actual.setNumeroCamiseta(cambios.getNumeroCamiseta());
         actual.setPosicion(cambios.getPosicion());
         actual.setCategoria(cambios.getCategoria());
-        jugadores.actualizar(actual);
+        try {
+            jugadores.actualizar(actual);
+        } catch (PersistenciaException e) {
+            lanzarSiDniDuplicado(e, cambios.getDni());
+            throw e;
+        }
     }
 
     /**
@@ -194,12 +204,27 @@ public class JugadorService {
         if (!Texto.estaVacio(jugador.getDni())) {
             Optional<Jugador> mismoDni = jugadores.buscarPorDni(jugador.getDni().trim());
             if (mismoDni.isPresent() && mismoDni.get().getId() != jugador.getId()) {
-                errores.add("Ya existe un jugador con DNI " + jugador.getDni().trim() + ".");
+                errores.add(mensajeDniDuplicado(jugador.getDni()));
             }
         }
         Categoria categoria = jugador.getCategoria();
         if (categoria != null && categorias.buscarPorId(categoria.getId()).isEmpty()) {
             errores.add("La categoría seleccionada no existe.");
+        }
+    }
+
+    private static String mensajeDniDuplicado(String dni) {
+        return "Ya existe un jugador con DNI " + dni.trim() + ".";
+    }
+
+    /**
+     * Si la base rechazó el DNI por el índice único {@code uq_jugador_dni} (por
+     * ejemplo, otro puesto lo registró entre la validación y el guardado),
+     * lanza el mismo error de validación que el control previo.
+     */
+    private static void lanzarSiDniDuplicado(PersistenciaException error, String dni) throws ValidacionException {
+        if (error.esClaveDuplicada()) {
+            throw new ValidacionException(mensajeDniDuplicado(dni));
         }
     }
 }

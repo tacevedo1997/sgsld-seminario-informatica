@@ -215,7 +215,6 @@ public class TratamientoController {
     }
 
     private Optional<Evolucion> pedirEvolucion(Tratamiento tratamiento)
-
             throws AccesoDenegadoException, PersistenciaException {
         Evolucion base = null;
         while (true) {
@@ -249,7 +248,6 @@ public class TratamientoController {
     }
 
     private void finalizar(Tratamiento tratamiento, LocalDate fechaEvolucion)
-
             throws AccesoDenegadoException, PersistenciaException {
         LocalDate fin = consola.leerFecha("Fecha de fin ", fechaEvolucion);
         if (!consola.leerSiNo("¿Confirma la finalización del tratamiento N° " + tratamiento.getId() + " con fecha "

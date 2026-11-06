@@ -16,7 +16,7 @@ public class FabricaDAOMemoria extends FabricaDAO {
     private final JugadorDAOMemoria jugadorDAO = new JugadorDAOMemoria();
     private final CategoriaDAOMemoria categoriaDAO = new CategoriaDAOMemoria();
     private final UsuarioDAOMemoria usuarioDAO = new UsuarioDAOMemoria();
-    private final KinesiologoDAOMemoria kinesiologoDAO = new KinesiologoDAOMemoria();
+    private final KinesiologoDAOMemoria kinesiologoDAO = new KinesiologoDAOMemoria(usuarioDAO);
     private final ZonaCorporalDAOMemoria zonaCorporalDAO = new ZonaCorporalDAOMemoria();
     private final TipoLesionDAOMemoria tipoLesionDAO = new TipoLesionDAOMemoria();
     private final LesionDAOMemoria lesionDAO = new LesionDAOMemoria();

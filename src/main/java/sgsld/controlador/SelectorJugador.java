@@ -84,7 +84,6 @@ public class SelectorJugador {
     }
 
     private Optional<Jugador> porApellido(boolean soloActivos)
-
             throws AccesoDenegadoException, PersistenciaException {
         String apellido = consola.leerTexto("Apellido (o parte): ", true, Persona.MAX_NOMBRE);
         List<Jugador> encontrados = new ArrayList<>();
@@ -105,7 +104,6 @@ public class SelectorJugador {
     }
 
     private Optional<Jugador> deLaLista(boolean soloActivos)
-
             throws AccesoDenegadoException, PersistenciaException {
         return consola.elegirDeLista("Jugadores:", jugadores.listar(!soloActivos), SelectorJugador::describir);
     }

@@ -151,6 +151,17 @@ public final class ConfiguracionBD {
         return parametros < 0 ? base : base.substring(0, parametros);
     }
 
+    /**
+     * Copia la configuración con otra URL y los mismos usuario y clave (por
+     * ejemplo, para probar el mensaje de una base o un puerto inexistentes).
+     *
+     * @param otraUrl URL JDBC de MySQL
+     * @return la nueva configuración
+     */
+    ConfiguracionBD conUrl(String otraUrl) {
+        return new ConfiguracionBD(origen, otraUrl, usuario, clave);
+    }
+
     /** Muestra la configuración sin la clave. */
     @Override
     public String toString() {

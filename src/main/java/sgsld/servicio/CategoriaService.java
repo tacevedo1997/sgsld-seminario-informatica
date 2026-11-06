@@ -66,7 +66,12 @@ public class CategoriaService {
             throws AccesoDenegadoException, ValidacionException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR);
         ValidacionException.lanzarSiHayErrores(validar(categoria));
-        return categorias.insertar(categoria);
+        try {
+            return categorias.insertar(categoria);
+        } catch (PersistenciaException e) {
+            lanzarSiNombreDuplicado(e, categoria.getNombre());
+            throw e;
+        }
     }
 
     /**
@@ -87,7 +92,12 @@ public class CategoriaService {
         actual.setNombre(cambios.getNombre());
         actual.setEdadMin(cambios.getEdadMin());
         actual.setEdadMax(cambios.getEdadMax());
-        categorias.actualizar(actual);
+        try {
+            categorias.actualizar(actual);
+        } catch (PersistenciaException e) {
+            lanzarSiNombreDuplicado(e, cambios.getNombre());
+            throw e;
+        }
     }
 
     /** Nombre obligatorio, único y de hasta 40 caracteres; rango 0 a 99 con mínimo no mayor que máximo. */
@@ -96,7 +106,7 @@ public class CategoriaService {
         Validaciones.texto(errores, categoria.getNombre(), "nombre", true, Categoria.MAX_NOMBRE);
         Optional<Categoria> mismoNombre = categorias.buscarPorNombre(categoria.getNombre());
         if (mismoNombre.isPresent() && mismoNombre.get().getId() != categoria.getId()) {
-            errores.add("Ya existe una categoría con el nombre " + mismoNombre.get().getNombre() + ".");
+            errores.add(mensajeNombreDuplicado(mismoNombre.get().getNombre()));
         }
         if (fueraDeRango(categoria.getEdadMin()) || fueraDeRango(categoria.getEdadMax())) {
             errores.add("Las edades deben estar entre " + Categoria.EDAD_MINIMA + " y "
@@ -110,5 +120,21 @@ public class CategoriaService {
 
     private static boolean fueraDeRango(int edad) {
         return edad < Categoria.EDAD_MINIMA || edad > Categoria.EDAD_MAXIMA;
+    }
+
+    private static String mensajeNombreDuplicado(String nombre) {
+        return "Ya existe una categoría con el nombre " + nombre.trim() + ".";
+    }
+
+    /**
+     * Si la base rechazó el nombre por el índice único {@code uq_categoria_nombre}
+     * (otro puesto lo registró entre la validación y el guardado), lanza el
+     * mismo error de validación que el control previo.
+     */
+    private static void lanzarSiNombreDuplicado(PersistenciaException error, String nombre)
+            throws ValidacionException {
+        if (error.esClaveDuplicada()) {
+            throw new ValidacionException(mensajeNombreDuplicado(nombre));
+        }
     }
 }

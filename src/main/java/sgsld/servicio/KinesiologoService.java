@@ -117,12 +117,16 @@ public class KinesiologoService {
             validarUsuarioNuevo(nombreUsuario, contrasena, errores);
         }
         ValidacionException.lanzarSiHayErrores(errores);
-        if (nombreUsuario != null) {
+        try {
+            if (nombreUsuario == null) {
+                return kinesiologos.insertar(kinesiologo);
+            }
             Usuario usuario = new Usuario(nombreUsuario.trim(), HashContrasena.generar(contrasena), Rol.KINESIOLOGO);
-            usuarios.insertar(usuario);
-            kinesiologo.setUsuario(usuario);
+            return kinesiologos.insertarConUsuario(kinesiologo, usuario);
+        } catch (PersistenciaException e) {
+            lanzarSiDuplicado(e, kinesiologo.getMatricula(), nombreUsuario);
+            throw e;
         }
-        return kinesiologos.insertar(kinesiologo);
     }
 
     /**
@@ -143,27 +147,56 @@ public class KinesiologoService {
         actual.setNombre(cambios.getNombre());
         actual.setApellido(cambios.getApellido());
         actual.setMatricula(cambios.getMatricula());
-        kinesiologos.actualizar(actual);
+        try {
+            kinesiologos.actualizar(actual);
+        } catch (PersistenciaException e) {
+            lanzarSiDuplicado(e, cambios.getMatricula(), null);
+            throw e;
+        }
     }
 
     private List<String> validar(Kinesiologo kinesiologo) throws PersistenciaException {
         List<String> errores = new ArrayList<>(kinesiologo.validar());
         Optional<Kinesiologo> mismaMatricula = kinesiologos.buscarPorMatricula(kinesiologo.getMatricula());
         if (mismaMatricula.isPresent() && mismaMatricula.get().getId() != kinesiologo.getId()) {
-            errores.add("Ya existe un kinesiólogo con matrícula " + mismaMatricula.get().getMatricula() + ".");
+            errores.add(mensajeMatriculaDuplicada(mismaMatricula.get().getMatricula()));
         }
         return errores;
     }
 
     private void validarUsuarioNuevo(String nombreUsuario, char[] contrasena, List<String> errores)
-
             throws PersistenciaException {
         Validaciones.texto(errores, nombreUsuario, "nombre de usuario", true, Usuario.MAX_NOMBRE_USUARIO);
         if (!Texto.estaVacio(nombreUsuario) && usuarios.buscarPorNombreUsuario(nombreUsuario.trim()).isPresent()) {
-            errores.add("Ya existe un usuario con el nombre " + nombreUsuario.trim() + ".");
+            errores.add(mensajeUsuarioDuplicado(nombreUsuario));
         }
         if (contrasena == null || contrasena.length < MIN_CONTRASENA) {
             errores.add("La contraseña debe tener al menos " + MIN_CONTRASENA + " caracteres.");
         }
+    }
+
+    private static String mensajeMatriculaDuplicada(String matricula) {
+        return "Ya existe un kinesiólogo con matrícula " + matricula.trim() + ".";
+    }
+
+    private static String mensajeUsuarioDuplicado(String nombreUsuario) {
+        return "Ya existe un usuario con el nombre " + nombreUsuario.trim() + ".";
+    }
+
+    /**
+     * Si la base rechazó los datos por un índice único (otro puesto los
+     * registró entre la validación y el guardado), lanza el mismo error de
+     * validación que el control previo: {@code uq_usuario_nombre} para el
+     * nombre de usuario y {@code uq_kinesiologo_matricula} para la matrícula.
+     */
+    private static void lanzarSiDuplicado(PersistenciaException error, String matricula, String nombreUsuario)
+            throws ValidacionException {
+        if (!error.esClaveDuplicada()) {
+            return;
+        }
+        if ("uq_usuario_nombre".equals(error.getRestriccion()) && nombreUsuario != null) {
+            throw new ValidacionException(mensajeUsuarioDuplicado(nombreUsuario));
+        }
+        throw new ValidacionException(mensajeMatriculaDuplicada(matricula));
     }
 }
