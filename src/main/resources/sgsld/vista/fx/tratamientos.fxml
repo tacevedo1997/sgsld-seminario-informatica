@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Registrar tratamiento (CU-05). -->
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="sgsld.vista.fx.TratamientosController" styleClass="pantalla">
+    <Label text="Tratamientos" styleClass="titulo-pantalla"/>
+    <VBox styleClass="campo">
+        <Label text="Jugador" styleClass="etiqueta-campo"/>
+        <ComboBox fx:id="comboJugador" prefWidth="545" promptText="Elegir jugador…"/>
+    </VBox>
+    <Label text="LESIONES DEL JUGADOR (ELIJA LA LESIÓN A TRATAR)" styleClass="subtitulo"/>
+    <TableView fx:id="tablaLesiones"/>
+    <HBox styleClass="encabezado-formulario">
+        <Label fx:id="tituloDatos" styleClass="subtitulo" minWidth="-Infinity"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="etiquetaResultado" styleClass="mensaje-ok" visible="false"/>
+    </HBox>
+    <GridPane styleClass="formulario">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="36"/>
+            <ColumnConstraints percentWidth="24"/>
+            <ColumnConstraints percentWidth="40"/>
+        </columnConstraints>
+        <VBox styleClass="campo" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label text="Responsable *" styleClass="etiqueta-campo"/>
+            <ComboBox fx:id="comboResponsable" maxWidth="Infinity" promptText="Elegir…"/>
+        </VBox>
+        <VBox styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <Label text="Fecha de inicio *" styleClass="etiqueta-campo"/>
+            <DatePicker fx:id="campoInicio" maxWidth="Infinity"/>
+        </VBox>
+        <VBox styleClass="campo" GridPane.columnIndex="2" GridPane.rowIndex="0">
+            <Label text="Tipo de tratamiento *" styleClass="etiqueta-campo"/>
+            <TextField fx:id="campoTipo" promptText="Fisioterapia, readaptación funcional…"/>
+        </VBox>
+    </GridPane>
+    <VBox styleClass="campo">
+        <Label text="Observaciones" styleClass="etiqueta-campo"/>
+        <TextArea fx:id="campoObservaciones" prefRowCount="2" wrapText="true" maxWidth="680"/>
+    </VBox>
+    <HBox styleClass="fila-botones">
+        <Button fx:id="botonRegistrar" text="Registrar tratamiento" styleClass="boton-primario" minWidth="-Infinity"
+                onAction="#registrar"/>
+        <Button text="Cancelar" styleClass="boton-secundario" minWidth="-Infinity" onAction="#limpiar"/>
+        <Label text="* Campos obligatorios. No se admiten fechas futuras." styleClass="nota"/>
+    </HBox>
+</VBox>

@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.stage.Window;
 
@@ -19,6 +20,8 @@ final class Dialogos {
     static final ButtonType ACEPTAR = new ButtonType("Aceptar", ButtonData.OK_DONE);
     static final ButtonType SI = new ButtonType("Sí", ButtonData.YES);
     static final ButtonType NO = new ButtonType("No", ButtonData.NO);
+    /** Ancho de los diálogos, para que los textos largos se corten en renglones y no con puntos suspensivos. */
+    static final double ANCHO = 500;
 
     private Dialogos() {
     }
@@ -44,7 +47,27 @@ final class Dialogos {
         alerta.setHeaderText(encabezado);
         alerta.getDialogPane().getStylesheets().add(ContextoFX.hojaDeEstilo());
         alerta.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+        alerta.getDialogPane().setPrefWidth(ANCHO);
         return alerta;
+    }
+
+    /**
+     * Etiqueta de varios renglones para el contenido de un diálogo propio.
+     *
+     * @param texto  texto
+     * @param ancho  ancho disponible
+     * @param estilo clase de estilo (o {@code null})
+     * @return la etiqueta
+     */
+    static Label parrafo(String texto, double ancho, String estilo) {
+        Label parrafo = new Label(texto);
+        parrafo.setWrapText(true);
+        parrafo.setPrefWidth(ancho);
+        parrafo.setMinHeight(Region.USE_PREF_SIZE);
+        if (estilo != null) {
+            parrafo.getStyleClass().add(estilo);
+        }
+        return parrafo;
     }
 
     static Alert crearError(Window duenio, String mensaje) {

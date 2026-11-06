@@ -203,6 +203,20 @@ public final class ContextoFX {
         return pantallaActual;
     }
 
+    /**
+     * Abre otra opción del menú lateral (por ejemplo, Tratamientos después de
+     * registrar una lesión).
+     *
+     * @param archivoFxml pantalla de la opción
+     * @return su controlador, o {@code null} si no hay ventana principal o el rol no tiene esa opción
+     */
+    ControladorPantalla abrirOpcion(String archivoFxml) {
+        if (pantallaActual != null && pantallaActual.controlador() instanceof PrincipalController principal) {
+            return principal.abrir(archivoFxml);
+        }
+        return null;
+    }
+
     /** Muestra la pantalla de inicio de sesión. */
     public void mostrarLogin() {
         mostrar("login.fxml");

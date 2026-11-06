@@ -85,6 +85,21 @@ public class PrincipalController extends ControladorPantalla {
     }
 
     /**
+     * Abre la opción habilitada que muestra esa pantalla.
+     *
+     * @param archivoFxml pantalla buscada
+     * @return el controlador de la pantalla, o {@code null} si el rol no tiene esa opción
+     */
+    ControladorPantalla abrir(String archivoFxml) {
+        for (OpcionMenu opcion : opcionesHabilitadas()) {
+            if (opcion.archivoFxml().equals(archivoFxml)) {
+                return abrir(opcion);
+            }
+        }
+        return null;
+    }
+
+    /**
      * Marca la opción como activa, carga su pantalla en el área de contenido y
      * le pide que cargue sus datos.
      *

@@ -6,16 +6,20 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 
 import javax.imageio.ImageIO;
 
 import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Alert;
@@ -26,14 +30,22 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
 
 import sgsld.App;
+import sgsld.modelo.Gravedad;
+import sgsld.modelo.Jugador;
+import sgsld.modelo.ResultadoEvolucion;
+import sgsld.modelo.TipoLesion;
+import sgsld.modelo.Tratamiento;
+import sgsld.modelo.ZonaCorporal;
 import sgsld.util.SgsldException;
 import sgsld.util.Texto;
 
@@ -74,7 +86,11 @@ public final class Capturador {
     private ContextoFX contexto;
     private Stage ventana;
     private int numero = 1;
-    private String nombreDialogo = "dialogo";
+    /** Diálogos que se esperan, en orden: nombre de la imagen y botón a elegir ({@code null}: el por defecto). */
+    private final Deque<DialogoEsperado> esperados = new ArrayDeque<>();
+
+    private record DialogoEsperado(String nombre, ButtonType respuesta) {
+    }
 
     private Capturador(Path destino) {
         this.destino = destino;
@@ -141,6 +157,11 @@ public final class Capturador {
         escenarioJugadores();
         escenarioCategorias();
         escenarioKinesiologos();
+        cerrarSesion();
+
+        iniciarSesion("lfernandez");
+        escenarioRegistroLesion();
+        escenarioEvoluciones();
         cerrarSesion();
         ventana.close();
         return guardadas;
@@ -237,6 +258,77 @@ public final class Capturador {
         guardar("kinesiologos-alta-correcta");
     }
 
+    /**
+     * CU-04, CU-11 y CU-05: el caso de la Figura 11 (Pedro Gómez, isquiotibiales,
+     * 15/06/2026) muestra la alerta por la lesión del 10/01/2026; luego se
+     * registra el tratamiento desde "¿Registrar el tratamiento ahora?".
+     */
+    private void escenarioRegistroLesion() throws SgsldException {
+        abrir("Registrar lesión");
+        elegirEn("comboJugador", jugador -> jugador instanceof Jugador j && j.getDni().equals("42587634"));
+        esperarTareas();
+        exigir(tablaContiene("tablaHistorial", "Fisioterapia y readaptación"), "no se cargó el historial de Gómez");
+        elegirEn("comboTipo", tipo -> tipo instanceof TipoLesion t && t.getNombre().equals("Muscular"));
+        elegirEn("comboZona", zona -> zona instanceof ZonaCorporal z && z.getNombre().equals("Isquiotibiales"));
+        elegirEn("comboGravedad", gravedad -> gravedad == Gravedad.GRAVE);
+        escribirFecha("campoFecha", "15/06/2026");
+        escribir("campoDescripcion", "Dolor agudo en sprint durante el partido. Dificultad para la marcha.");
+        guardar("lfernandez-registrar-lesion-figura-11");
+        presionarConDialogos("botonRegistrar", new DialogoEsperado("lfernandez-alerta-recurrencia", null),
+                new DialogoEsperado("lfernandez-registrar-tratamiento-ahora", null));
+        exigir(dialogos.get(dialogos.size() - 2).contains("Isquiotibiales · 10/01/2026, tratamiento finalizado el "
+                + "20/02/2026\n(3 meses y 26 días antes de la nueva lesión)."), "la alerta no coincide con la Figura 11:\n"
+                + dialogos.get(dialogos.size() - 2));
+        exigirDialogo("Lesión N° 11 registrada", "¿Registrar el tratamiento ahora?");
+
+        exigir(textoDe("tituloDatos").contains("LESIÓN N° 11"), "Tratamientos no recibió la lesión recién registrada");
+        guardar("lfernandez-tratamientos-desde-la-lesion");
+        escribir("campoTipo", "Fisioterapia y fortalecimiento excéntrico");
+        presionar("botonRegistrar");
+        esperarTareas();
+        exigir(textoDe("etiquetaResultado").equals("Tratamiento N° 11 registrado (En curso)."),
+                "falta el mensaje del tratamiento registrado");
+        exigir(tablaContiene("tablaLesiones", "Tratamiento en curso"), "la lesión no quedó con tratamiento en curso");
+        guardar("lfernandez-tratamientos-alta-correcta");
+        escribir("campoTipo", "Readaptación funcional");
+        presionarConDialogos("botonRegistrar", new DialogoEsperado("lfernandez-tratamientos-segundo-en-curso", null));
+        exigirDialogo("La lesión N° 11 ya tiene un tratamiento en curso.");
+    }
+
+    /**
+     * CU-06: evolución simple (el tratamiento sigue en curso), "Registrar y
+     * finalizar" cancelado (no se guarda nada) y confirmado (una transacción).
+     */
+    private void escenarioEvoluciones() {
+        abrir("Evoluciones");
+        elegirFila("tablaTratamientos", fila -> fila instanceof Tratamiento t && t.getId() == 7);
+        escribirFecha("campoFecha", "25/09/2026");
+        elegirEn("comboResultado", resultado -> resultado == ResultadoEvolucion.FAVORABLE);
+        escribir("campoObservacion", "Completa trabajo con pelota");
+        presionar("botonRegistrar");
+        esperarTareas();
+        exigir(textoDe("etiquetaResultado").endsWith("El tratamiento N° 7 sigue En curso."), "falta el mensaje");
+        exigir(buscar("tablaEvoluciones", TableView.class).getItems().size() == 5, "no aparece la evolución nueva");
+        guardar("lfernandez-evoluciones-registrada");
+
+        elegirFila("tablaTratamientos", fila -> fila instanceof Tratamiento t && t.getId() == 9);
+        escribirFecha("campoFecha", "20/09/2026");
+        elegirEn("comboResultado", resultado -> resultado == ResultadoEvolucion.FAVORABLE);
+        escribir("campoObservacion", "Estabilidad articular completa; alta deportiva");
+        presionarConDialogos("botonFinalizar",
+                new DialogoEsperado("lfernandez-finalizar-cancelado", DialogoFinalizacion.CANCELAR));
+        exigir(textoDe("etiquetaResultado").startsWith("No se guardó nada"), "falta el aviso de cancelación");
+        exigir(buscar("tablaEvoluciones", TableView.class).getItems().size() == 2, "se guardó la evolución cancelada");
+        exigir(tablaContiene("tablaTratamientos", "Herrera, Tomás"), "el tratamiento cancelado dejó de estar en curso");
+
+        guardar("lfernandez-evoluciones-registrar-y-finalizar");
+        presionarConDialogos("botonFinalizar", new DialogoEsperado("lfernandez-confirmar-finalizacion", null),
+                new DialogoEsperado("lfernandez-tratamiento-finalizado", null));
+        exigirDialogo("Duración: 48 días", "Estado actual de Herrera, Tomás: Disponible.");
+        exigir(!tablaContiene("tablaTratamientos", "Herrera, Tomás"), "el tratamiento finalizado sigue en curso");
+        guardar("lfernandez-evoluciones-despues-de-finalizar");
+    }
+
     // ---------- Acciones de usuario ----------
 
     private PrincipalController iniciarSesion(String usuario) throws SgsldException {
@@ -303,14 +395,48 @@ public final class Capturador {
         return buscar(id, Label.class).getText();
     }
 
+    /** Elige en el combo el primer elemento que cumple la condición. */
+    private void elegirEn(String id, Predicate<Object> condicion) {
+        ComboBox<?> combo = buscar(id, ComboBox.class);
+        for (int i = 0; i < combo.getItems().size(); i++) {
+            if (condicion.test(combo.getItems().get(i))) {
+                combo.getSelectionModel().select(i);
+                return;
+            }
+        }
+        throw new IllegalStateException("#" + id + " no tiene el elemento buscado");
+    }
+
+    /** Selecciona en la tabla la primera fila que cumple la condición. */
+    private void elegirFila(String id, Predicate<Object> condicion) {
+        TableView<?> tabla = buscar(id, TableView.class);
+        for (int i = 0; i < tabla.getItems().size(); i++) {
+            if (condicion.test(tabla.getItems().get(i))) {
+                tabla.getSelectionModel().select(i);
+                return;
+            }
+        }
+        throw new IllegalStateException("#" + id + " no tiene la fila buscada");
+    }
+
     /** Presiona el botón, procesa las tareas y guarda la imagen del diálogo que aparezca. */
     private void guardarConDialogo(String idBoton, String nombre) {
+        presionarConDialogos(idBoton, new DialogoEsperado(nombre, null));
+    }
+
+    /**
+     * Presiona el botón y procesa las tareas; verifica que aparezcan los
+     * diálogos esperados, en orden, y los responde.
+     */
+    private void presionarConDialogos(String idBoton, DialogoEsperado... dialogosEsperados) {
         int vistos = dialogos.size();
-        nombreDialogo = nombre;
+        esperados.addAll(List.of(dialogosEsperados));
         presionar(idBoton);
         esperarTareas();
-        nombreDialogo = "dialogo";
-        exigir(dialogos.size() > vistos, "no apareció el diálogo esperado (" + nombre + ")");
+        exigir(esperados.isEmpty(), "no apareció el diálogo esperado (" + (esperados.isEmpty() ? ""
+                : esperados.peekFirst().nombre()) + ")");
+        exigir(dialogos.size() == vistos + dialogosEsperados.length, "apareció un diálogo de más:\n"
+                + dialogos.get(dialogos.size() - 1));
     }
 
     private void exigirDialogo(String... fragmentos) {
@@ -321,7 +447,11 @@ public final class Capturador {
     }
 
     private boolean tablaContiene(String texto) {
-        TableView<?> tabla = buscar("tabla", TableView.class);
+        return tablaContiene("tabla", texto);
+    }
+
+    private boolean tablaContiene(String id, String texto) {
+        TableView<?> tabla = buscar(id, TableView.class);
         for (int fila = 0; fila < tabla.getItems().size(); fila++) {
             for (var columna : tabla.getColumns()) {
                 Object valor = columna.getCellData(fila);
@@ -344,9 +474,10 @@ public final class Capturador {
      * responde con el botón por defecto (Aceptar, Sí, Reintentar...).
      */
     private Optional<ButtonType> presentar(Dialog<ButtonType> dialogo) {
+        DialogoEsperado esperado = esperados.pollFirst();
         dialogo.show();
-        dialogos.add(dialogo.getDialogPane().getHeaderText() + "\n" + dialogo.getDialogPane().getContentText());
-        guardar(dialogo, nombreDialogo);
+        dialogos.add(textoVisible(dialogo.getDialogPane()));
+        guardar(dialogo, esperado == null ? "dialogo-inesperado" : esperado.nombre());
         ButtonType respuesta = dialogo.getDialogPane().getButtonTypes().get(0);
         for (ButtonType boton : dialogo.getDialogPane().getButtonTypes()) {
             if (boton.getButtonData().isDefaultButton()) {
@@ -354,9 +485,28 @@ public final class Capturador {
                 break;
             }
         }
+        if (esperado != null && esperado.respuesta() != null) {
+            respuesta = esperado.respuesta();
+        }
         dialogo.setResult(respuesta);
         dialogo.close();
         return Optional.of(respuesta);
+    }
+
+    /** Todo el texto visible de un nodo (etiquetas y textos), en orden. */
+    private static String textoVisible(Node nodo) {
+        StringBuilder texto = new StringBuilder();
+        if (nodo instanceof Labeled etiqueta && etiqueta.getText() != null && !etiqueta.getText().isEmpty()) {
+            texto.append(etiqueta.getText()).append('\n');
+        } else if (nodo instanceof Text parte) {
+            texto.append(parte.getText());
+        }
+        if (nodo instanceof Parent padre) {
+            for (Node hijo : padre.getChildrenUnmodifiable()) {
+                texto.append(textoVisible(hijo));
+            }
+        }
+        return texto.toString();
     }
 
     /**

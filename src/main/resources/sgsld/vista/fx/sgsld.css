@@ -438,3 +438,44 @@
     -fx-text-fill: white;
     -fx-background-radius: 3;
 }
+
+/* ---------- Alerta de recurrencia (Figura 11) ---------- */
+
+.alerta-cabecera {
+    -fx-background-color: #FFF4E0;
+    -fx-padding: 14 22 14 22;
+    -fx-border-color: transparent transparent #F0D8AE transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.alerta-titulo {
+    -fx-text-fill: #8A4B0F;
+    -fx-font-size: 16.5px;
+    -fx-font-weight: bold;
+}
+
+.alerta-contenido {
+    -fx-spacing: 16;
+    -fx-padding: 18 22 10 22;
+}
+
+.alerta-texto,
+.alerta-destacado {
+    -fx-font-family: "Segoe UI", "DejaVu Sans", "Helvetica", sans-serif;
+    -fx-font-size: 15px;
+    -fx-fill: #1F2A2A;
+}
+
+.alerta-destacado {
+    -fx-font-weight: bold;
+}
+
+.alerta-recurrencia > .button-bar {
+    -fx-border-color: #E5E9E9 transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 12 10 4 0;
+}
+
+.dialogo-contenido {
+    -fx-spacing: 14;
+}

@@ -3,13 +3,18 @@ package sgsld.vista.fx;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.function.Function;
 
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.StringConverter;
 
+import sgsld.modelo.Entidad;
+import sgsld.modelo.Jugador;
 import sgsld.util.Fechas;
 import sgsld.util.Texto;
 
@@ -123,6 +128,60 @@ final class Campos {
      */
     static String leerTexto(TextField campo) {
         return campo.getText() == null ? "" : campo.getText().trim();
+    }
+
+    /**
+     * Define cómo se muestra cada elemento de un combo, en la lista y en el
+     * botón (que, vacío, muestra el texto de ayuda).
+     *
+     * @param combo combo
+     * @param texto texto de cada elemento
+     * @param <T>   tipo de los elementos
+     */
+    static <T> void mostrarCon(ComboBox<T> combo, Function<T, String> texto) {
+        combo.setCellFactory(lista -> new ListCell<>() {
+            @Override
+            protected void updateItem(T elemento, boolean vacia) {
+                super.updateItem(elemento, vacia);
+                setText(vacia || elemento == null ? null : texto.apply(elemento));
+            }
+        });
+        combo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(T elemento, boolean vacia) {
+                super.updateItem(elemento, vacia);
+                setText(vacia || elemento == null ? combo.getPromptText() : texto.apply(elemento));
+            }
+        });
+    }
+
+    /**
+     * Elige en el combo el elemento con ese número (tras releer, los objetos
+     * pueden ser otros).
+     *
+     * @param combo combo
+     * @param id    número buscado
+     * @param <T>   tipo de los elementos
+     * @return {@code true} si lo encontró
+     */
+    static <T extends Entidad> boolean elegirPorId(ComboBox<T> combo, int id) {
+        for (T elemento : combo.getItems()) {
+            if (elemento.getId() == id) {
+                combo.setValue(elemento);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Texto de un jugador en los combos, como en la Figura 11.
+     *
+     * @param jugador jugador
+     * @return por ejemplo "Gómez, Pedro — DNI 42587634 — Primera"
+     */
+    static String describirJugador(Jugador jugador) {
+        return jugador.getNombreCompleto() + " — DNI " + jugador.getDni() + " — " + jugador.getCategoria().getNombre();
     }
 
     private static LocalDate interpretar(String texto) {
