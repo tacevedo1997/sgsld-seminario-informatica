@@ -29,16 +29,16 @@ public class MenuPrincipal extends Menu {
     }
 
     /**
-     * Muestra la pantalla inicial con el nombre del sistema y los avisos.
+     * Muestra la pantalla inicial con el nombre del sistema y los avisos (modo
+     * de datos, fecha fijada...). Se muestra antes de conectar con la base.
      *
-     * @param avisos avisos de arranque (por ejemplo, la fecha fijada)
+     * @param consola consola de salida
+     * @param avisos  avisos de arranque
      */
-    public void mostrarPantallaInicial(List<String> avisos) {
-        Consola consola = getConsola();
+    public static void mostrarPantallaInicial(Consola consola, List<String> avisos) {
         consola.separador('=');
         consola.mostrar("SGSLD - Sistema de Gestión y Seguimiento de Lesiones Deportivas");
         consola.separador('=');
-        consola.mostrar("Prototipo (entrega 3): datos de prueba en memoria; los cambios no se conservan al salir.");
         for (String aviso : avisos) {
             consola.mostrar(aviso);
         }

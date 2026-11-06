@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Tag;
 
 import sgsld.dao.mysql.BaseDePruebasMySQL;
 import sgsld.dao.mysql.ConexionBD;
-import sgsld.dao.mysql.FabricaPruebaMySQL;
+import sgsld.dao.mysql.FabricaDAOMySQL;
 
 /**
  * Contrato de la persistencia con MySQL, sobre la base {@code sgsld_test}
@@ -26,12 +26,12 @@ class ContratoMySQLTest extends ContratoPersistenciaTest {
 
     @Override
     protected FabricaDAO fabrica() {
-        return new FabricaPruebaMySQL(conexion);
+        return new FabricaDAOMySQL(conexion);
     }
 
     /** Una fábrica nueva no comparte objetos con la anterior: lo releído viene de la base. */
     @Override
     protected FabricaDAO fabricaNueva() {
-        return new FabricaPruebaMySQL(conexion);
+        return new FabricaDAOMySQL(conexion);
     }
 }

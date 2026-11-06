@@ -31,6 +31,8 @@ public class PersistenciaException extends SgsldException {
         RESTRICCION,
         /** La operación superó el tiempo de espera. */
         TIEMPO_AGOTADO,
+        /** Otro puesto modificó los datos entre la lectura y el guardado. */
+        CONFLICTO,
         /** Falta el archivo de configuración o es inválido. */
         CONFIGURACION,
         /** Cualquier otro error. */

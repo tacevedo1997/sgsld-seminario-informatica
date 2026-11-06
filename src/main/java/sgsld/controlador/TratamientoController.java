@@ -256,11 +256,11 @@ public class TratamientoController {
             return;
         }
         try {
-            tratamientos.finalizarTratamiento(tratamiento.getId(), fin);
-            Jugador jugador = tratamiento.getLesion().getJugador();
+            Tratamiento finalizado = tratamientos.finalizarTratamiento(tratamiento.getId(), fin);
+            Jugador jugador = finalizado.getLesion().getJugador();
             EstadoDisponibilidad estado = consultas.consultarEstado(jugador.getId());
-            consola.mostrarOk("Tratamiento N° " + tratamiento.getId() + " finalizado. Duración: "
-                    + Formatos.dias(tratamiento.getDuracionDias()) + ".");
+            consola.mostrarOk("Tratamiento N° " + finalizado.getId() + " finalizado. Duración: "
+                    + Formatos.dias(finalizado.getDuracionDias()) + ".");
             consola.mostrar("Estado actual de " + jugador.getNombreCompleto() + ": " + estado + ".");
         } catch (ValidacionException e) {
             consola.mostrarErrores(e.getErrores());

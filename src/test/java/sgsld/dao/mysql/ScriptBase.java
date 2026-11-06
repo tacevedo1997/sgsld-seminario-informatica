@@ -10,7 +10,8 @@ import java.util.List;
 /**
  * Lectura de los scripts SQL del repositorio para las pruebas: extrae las
  * secciones 1 a 3 de {@code sgsld_script.sql} (creación de la base, tablas,
- * vista y lote de prueba), que son las que se ejecutan para crear una base.
+ * vista y lote de prueba), que son las que se ejecutan para crear una base, y
+ * las consultas de la sección 4 (C3 a C9), que sirven de oráculo.
  */
 final class ScriptBase {
 
@@ -56,6 +57,53 @@ final class ScriptBase {
     static List<String> encabezado(String texto) {
         List<String> lineas = lineas(texto);
         return lineas.subList(0, inicioDelBloque(lineas));
+    }
+
+    /**
+     * Devuelve la sentencia de la sección 4 que sigue al comentario
+     * {@code -- <codigo>.} (por ejemplo, {@code C4}), sin comentarios ni el
+     * punto y coma final.
+     *
+     * @param texto  contenido del script
+     * @param codigo código de la consulta
+     * @return la sentencia SQL
+     */
+    static String consulta(String texto, String codigo) {
+        List<String> lineas = lineas(texto);
+        int comentario = posicion(lineas, "-- " + codigo + ". ");
+        if (comentario < 0) {
+            throw new IllegalStateException("El script no tiene la consulta " + codigo);
+        }
+        StringBuilder sql = new StringBuilder();
+        for (int i = comentario + 1; i < lineas.size(); i++) {
+            String linea = lineas.get(i).stripTrailing();
+            if (linea.startsWith("--")) {
+                continue;
+            }
+            if (linea.endsWith(";")) {
+                return sql.append(linea, 0, linea.length() - 1).toString();
+            }
+            sql.append(linea).append('\n');
+        }
+        throw new IllegalStateException("La consulta " + codigo + " no termina con punto y coma");
+    }
+
+    /**
+     * Devuelve la primera línea que empieza con el prefijo, sin el punto y coma
+     * final (por ejemplo, la que fija el período de los reportes).
+     *
+     * @param texto   contenido del script
+     * @param prefijo comienzo de la línea
+     * @return la línea
+     */
+    static String sentencia(String texto, String prefijo) {
+        List<String> lineas = lineas(texto);
+        int posicion = posicion(lineas, prefijo);
+        if (posicion < 0) {
+            throw new IllegalStateException("El script no tiene una línea que empiece con " + prefijo);
+        }
+        String linea = lineas.get(posicion).stripTrailing();
+        return linea.endsWith(";") ? linea.substring(0, linea.length() - 1) : linea;
     }
 
     private static int inicioDelBloque(List<String> lineas) {

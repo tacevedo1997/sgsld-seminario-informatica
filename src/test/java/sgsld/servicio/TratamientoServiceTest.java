@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +22,7 @@ import sgsld.modelo.ResultadoEvolucion;
 import sgsld.modelo.Tratamiento;
 import sgsld.util.ValidacionException;
 
-/** CPC04 y CPC05 · Registro, evolución y finalización de tratamientos (CU-05 y CU-06). */
+/** CPC04 y CPC05 · Registro, evolución y finalización de tratamientos (CU-05 y CU-06), y "Registrar y finalizar". */
 @DisplayName("CPC04 / CPC05 · Tratamientos")
 class TratamientoServiceTest {
 
@@ -142,5 +143,46 @@ class TratamientoServiceTest {
         ValidacionException error = assertThrows(ValidacionException.class, () -> escenario.tratamientos()
                 .registrarEvolucion(2, new Evolucion(LocalDate.of(2026, 9, 1), "Control", ResultadoEvolucion.ESTABLE)));
         assertTrue(error.getErrores().contains("Solo se registran evoluciones en tratamientos en curso."));
+    }
+
+    @Test
+    @DisplayName("CPC05-4 · Registrar y finalizar: evolución y fin en una operación; el jugador queda Disponible")
+    void registrarYFinalizar() throws Exception {
+        Evolucion ultima = new Evolucion(LocalDate.of(2026, 9, 20), "Estabilidad articular completa; alta",
+                ResultadoEvolucion.FAVORABLE);
+        int id = escenario.tratamientos().registrarEvolucionYFinalizar(9, ultima, LocalDate.of(2026, 9, 20));
+        assertEquals(12, id);
+        Tratamiento tratamiento9 = escenario.tratamientos().buscarPorId(9);
+        assertEquals(EstadoTratamiento.FINALIZADO, tratamiento9.getEstado());
+        assertEquals(48, tratamiento9.getDuracionDias());
+        assertSame(ultima, tratamiento9.getEvoluciones().get(2));
+        assertEquals(EstadoDisponibilidad.DISPONIBLE, escenario.consultas().consultarEstado(5));
+    }
+
+    @Test
+    @DisplayName("CPC05-5 · Registrar y finalizar con fin anterior al inicio y a la evolución: rechazo, nada cambia")
+    void registrarYFinalizarFinFueraDeRango() {
+        Evolucion evolucion = new Evolucion(LocalDate.of(2026, 9, 20), "Control", ResultadoEvolucion.ESTABLE);
+        ValidacionException error = assertThrows(ValidacionException.class, () -> escenario.tratamientos()
+                .registrarEvolucionYFinalizar(9, evolucion, LocalDate.of(2026, 8, 2)));
+        assertEquals(List.of("La fecha de fin debe estar entre el inicio del tratamiento (03/08/2026) y la fecha "
+                        + "actual (26/09/2026).",
+                "La fecha de fin no puede ser anterior a la fecha de la evolución (20/09/2026)."), error.getErrores());
+        Tratamiento tratamiento9 = lesionDelLote(9).getUltimoTratamiento();
+        assertTrue(tratamiento9.estaEnCurso());
+        assertEquals(2, tratamiento9.getCantidadEvoluciones());
+    }
+
+    @Test
+    @DisplayName("CPC05-6 · Registrar y finalizar en un tratamiento finalizado o sin fecha de fin: rechazo")
+    void registrarYFinalizarSinCondiciones() {
+        Evolucion evolucion = new Evolucion(LocalDate.of(2026, 9, 1), "Control", ResultadoEvolucion.ESTABLE);
+        ValidacionException finalizado = assertThrows(ValidacionException.class, () -> escenario.tratamientos()
+                .registrarEvolucionYFinalizar(2, evolucion, LocalDate.of(2026, 9, 1)));
+        assertTrue(finalizado.getErrores().contains("Solo se registran evoluciones en tratamientos en curso."));
+        ValidacionException sinFin = assertThrows(ValidacionException.class, () -> escenario.tratamientos()
+                .registrarEvolucionYFinalizar(9, evolucion, null));
+        assertEquals(1, sinFin.getErrores().size());
+        assertEquals(2, lesionDelLote(9).getUltimoTratamiento().getCantidadEvoluciones());
     }
 }

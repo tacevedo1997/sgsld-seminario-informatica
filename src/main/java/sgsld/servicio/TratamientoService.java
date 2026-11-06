@@ -26,8 +26,10 @@ import sgsld.util.ValidacionException;
  * <p>
  * Mantiene el grafo de objetos con los métodos del modelo
  * ({@code Lesion.agregarTratamiento}, {@code Tratamiento.agregarEvolucion},
- * {@code Tratamiento.finalizar}) y luego persiste con los DAO, como en el
- * diagrama de secuencia de CU-06.
+ * {@code Tratamiento.finalizar}) y persiste cada cambio con los DAO, como en
+ * el diagrama de secuencia de CU-06. Registrar la última evolución y finalizar
+ * el tratamiento es una sola transacción
+ * ({@link #registrarEvolucionYFinalizar(int, Evolucion, LocalDate)}).
  */
 public class TratamientoService {
 
@@ -73,8 +75,7 @@ public class TratamientoService {
         if (lesion == null || lesiones.buscarPorId(lesion.getId()).isEmpty()) {
             errores.add("Debe seleccionar una lesión registrada.");
         } else if (tratamientos.existeActivo(lesion.getId())) {
-            errores.add("La lesión N° " + lesion.getId() + " ya tiene un tratamiento en curso. "
-                    + "Debe finalizarlo antes de registrar uno nuevo.");
+            errores.add(mensajeTratamientoEnCurso(lesion.getId()));
         }
         if (tratamiento.getKinesiologo() == null
                 || kinesiologos.buscarPorId(tratamiento.getKinesiologo().getId()).isEmpty()) {
@@ -94,8 +95,19 @@ public class TratamientoService {
         Validaciones.texto(errores, tratamiento.getObservaciones(), "observaciones", false,
                 Tratamiento.MAX_OBSERVACIONES);
         ValidacionException.lanzarSiHayErrores(errores);
+        int id;
+        try {
+            id = tratamientos.insertar(tratamiento);
+        } catch (PersistenciaException e) {
+            if (e.esClaveDuplicada()) {
+                // Otro puesto registró un tratamiento en curso entre la validación y el guardado:
+                // lo rechazó el índice único uq_tratamiento_en_curso.
+                throw new ValidacionException(mensajeTratamientoEnCurso(lesion.getId()));
+            }
+            throw e;
+        }
         lesion.agregarTratamiento(tratamiento);
-        return tratamientos.insertar(tratamiento);
+        return id;
     }
 
     /**
@@ -114,33 +126,61 @@ public class TratamientoService {
         SesionUsuario.getInstancia().exigir(Rol.KINESIOLOGO);
         Tratamiento tratamiento = buscar(idTratamiento);
         List<String> errores = new ArrayList<>();
-        if (!tratamiento.estaEnCurso()) {
-            errores.add("Solo se registran evoluciones en tratamientos en curso.");
-        }
-        Validaciones.obligatorio(errores, evolucion.getFecha(), "fecha");
-        if (evolucion.getFecha() != null && fueraDeRango(evolucion.getFecha(), tratamiento)) {
-            errores.add("La fecha de la evolución debe estar entre el inicio del tratamiento ("
-                    + Fechas.formatear(tratamiento.getFechaInicio()) + ") y la fecha actual ("
-                    + Fechas.formatear(hoy()) + ").");
-        }
-        Validaciones.texto(errores, evolucion.getObservacion(), "observación", true, Evolucion.MAX_OBSERVACION);
-        Validaciones.obligatorio(errores, evolucion.getResultado(), "resultado");
+        validarEvolucion(tratamiento, evolucion, errores);
         ValidacionException.lanzarSiHayErrores(errores);
         tratamiento.agregarEvolucion(evolucion);
         return evoluciones.insertar(idTratamiento, evolucion);
     }
 
     /**
+     * Registra la última evolución de un tratamiento y lo finaliza en <b>una
+     * sola transacción</b>: se guardan las dos cosas o ninguna. Valida lo mismo
+     * que {@link #registrarEvolucion(int, Evolucion)} y
+     * {@link #finalizarTratamiento(int, LocalDate)}, y además que el fin no sea
+     * anterior a la evolución.
+     *
+     * @param idTratamiento número de tratamiento en curso
+     * @param evolucion     última evolución
+     * @param fechaFin      fecha de fin (la interfaz propone la de la evolución)
+     * @return el número de evolución asignado
+     * @throws AccesoDenegadoException      si el rol no es Kinesiólogo
+     * @throws EntidadNoEncontradaException si el tratamiento no existe
+     * @throws ValidacionException          con todos los errores encontrados
+     * @throws PersistenciaException        si falla el guardado (ya se deshizo todo)
+     */
+    public int registrarEvolucionYFinalizar(int idTratamiento, Evolucion evolucion, LocalDate fechaFin)
+            throws AccesoDenegadoException, EntidadNoEncontradaException, ValidacionException, PersistenciaException {
+        SesionUsuario.getInstancia().exigir(Rol.KINESIOLOGO);
+        Tratamiento tratamiento = buscar(idTratamiento);
+        List<String> errores = new ArrayList<>();
+        validarEvolucion(tratamiento, evolucion, errores);
+        validarFin(tratamiento, fechaFin, errores);
+        if (fechaFin != null && evolucion.getFecha() != null && fechaFin.isBefore(evolucion.getFecha())) {
+            errores.add("La fecha de fin no puede ser anterior a la fecha de la evolución ("
+                    + Fechas.formatear(evolucion.getFecha()) + ").");
+        }
+        ValidacionException.lanzarSiHayErrores(errores);
+        tratamiento.agregarEvolucion(evolucion);
+        tratamiento.finalizar(fechaFin);
+        return tratamientos.registrarEvolucionYFinalizar(idTratamiento, evolucion, fechaFin);
+    }
+
+    /**
      * Finaliza un tratamiento en curso. La fecha de fin debe estar entre el
      * inicio y hoy.
+     * <p>
+     * Devuelve el tratamiento finalizado: con MySQL cada lectura arma objetos
+     * nuevos, de modo que la vista no debe suponer que el objeto que tenía es
+     * el mismo que finalizó el servicio.
      *
      * @param idTratamiento número de tratamiento
      * @param fechaFin      fecha de fin
+     * @return el tratamiento finalizado (con su duración)
      * @throws AccesoDenegadoException      si el rol no es Kinesiólogo
      * @throws EntidadNoEncontradaException si el tratamiento no existe
      * @throws ValidacionException          con todos los errores encontrados
      */
-    public void finalizarTratamiento(int idTratamiento, LocalDate fechaFin)
+    public Tratamiento finalizarTratamiento(int idTratamiento, LocalDate fechaFin)
             throws AccesoDenegadoException, EntidadNoEncontradaException, ValidacionException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.KINESIOLOGO);
         Tratamiento tratamiento = buscar(idTratamiento);
@@ -148,15 +188,11 @@ public class TratamientoService {
         if (!tratamiento.estaEnCurso()) {
             errores.add("El tratamiento N° " + idTratamiento + " ya está finalizado.");
         }
-        Validaciones.obligatorio(errores, fechaFin, "fecha de fin");
-        if (fechaFin != null && fueraDeRango(fechaFin, tratamiento)) {
-            errores.add("La fecha de fin debe estar entre el inicio del tratamiento ("
-                    + Fechas.formatear(tratamiento.getFechaInicio()) + ") y la fecha actual ("
-                    + Fechas.formatear(hoy()) + ").");
-        }
+        validarFin(tratamiento, fechaFin, errores);
         ValidacionException.lanzarSiHayErrores(errores);
         tratamiento.finalizar(fechaFin);
         tratamientos.finalizar(idTratamiento, fechaFin);
+        return tratamiento;
     }
 
     /**
@@ -196,6 +232,36 @@ public class TratamientoService {
     private Tratamiento buscar(int idTratamiento) throws EntidadNoEncontradaException, PersistenciaException {
         return tratamientos.buscarPorId(idTratamiento).orElseThrow(
                 () -> new EntidadNoEncontradaException("No se encontró el tratamiento N° " + idTratamiento + "."));
+    }
+
+    private static String mensajeTratamientoEnCurso(int idLesion) {
+        return "La lesión N° " + idLesion + " ya tiene un tratamiento en curso. "
+                + "Debe finalizarlo antes de registrar uno nuevo.";
+    }
+
+    /** Tratamiento en curso; fecha entre el inicio y hoy (CU-06, 3a); observación y resultado obligatorios. */
+    private void validarEvolucion(Tratamiento tratamiento, Evolucion evolucion, List<String> errores) {
+        if (!tratamiento.estaEnCurso()) {
+            errores.add("Solo se registran evoluciones en tratamientos en curso.");
+        }
+        Validaciones.obligatorio(errores, evolucion.getFecha(), "fecha");
+        if (evolucion.getFecha() != null && fueraDeRango(evolucion.getFecha(), tratamiento)) {
+            errores.add("La fecha de la evolución debe estar entre el inicio del tratamiento ("
+                    + Fechas.formatear(tratamiento.getFechaInicio()) + ") y la fecha actual ("
+                    + Fechas.formatear(hoy()) + ").");
+        }
+        Validaciones.texto(errores, evolucion.getObservacion(), "observación", true, Evolucion.MAX_OBSERVACION);
+        Validaciones.obligatorio(errores, evolucion.getResultado(), "resultado");
+    }
+
+    /** Fecha de fin obligatoria, entre el inicio del tratamiento y hoy. */
+    private void validarFin(Tratamiento tratamiento, LocalDate fechaFin, List<String> errores) {
+        Validaciones.obligatorio(errores, fechaFin, "fecha de fin");
+        if (fechaFin != null && fueraDeRango(fechaFin, tratamiento)) {
+            errores.add("La fecha de fin debe estar entre el inicio del tratamiento ("
+                    + Fechas.formatear(tratamiento.getFechaInicio()) + ") y la fecha actual ("
+                    + Fechas.formatear(hoy()) + ").");
+        }
     }
 
     /** Indica si la fecha queda fuera del intervalo [inicio del tratamiento, hoy]. */

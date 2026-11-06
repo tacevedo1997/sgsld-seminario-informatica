@@ -1,6 +1,8 @@
 package sgsld.dao.mysql;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -20,11 +22,17 @@ import org.junit.jupiter.api.io.TempDir;
 
 import sgsld.EscenarioPrueba;
 import sgsld.dao.JugadorDAO;
+import sgsld.dao.TratamientoDAO;
+import sgsld.modelo.Evolucion;
 import sgsld.modelo.Jugador;
 import sgsld.modelo.Kinesiologo;
+import sgsld.modelo.Lesion;
+import sgsld.modelo.ResultadoEvolucion;
 import sgsld.modelo.Rol;
+import sgsld.modelo.Tratamiento;
 import sgsld.modelo.Usuario;
 import sgsld.servicio.JugadorService;
+import sgsld.servicio.TratamientoService;
 import sgsld.util.PersistenciaException;
 import sgsld.util.PersistenciaException.Motivo;
 import sgsld.util.SesionUsuario;
@@ -105,6 +113,84 @@ class PersistenciaMySQLTest {
     }
 
     /**
+     * Fuerza un error <b>después</b> de insertar la evolución: el fin
+     * 01/06/2026 es anterior al inicio del tratamiento 7 (16/06/2026), de modo
+     * que el {@code UPDATE} viola {@code ck_tratamiento_fechas} (error 3819,
+     * prueba P3 del script). Se llama al DAO directamente porque el servicio
+     * rechazaría esa fecha antes de llegar a la base.
+     */
+    @Test
+    @DisplayName("Rollback: registrar y finalizar con fin anterior al inicio (CHECK tras insertar la evolución) no deja nada")
+    void rollbackDeRegistrarEvolucionYFinalizar() throws Exception {
+        TratamientoDAOMySQL tratamientos = new TratamientoDAOMySQL(conexion);
+        Evolucion evolucion = new Evolucion(LocalDate.of(2026, 9, 20), "Evolución que el rollback debe deshacer",
+                ResultadoEvolucion.FAVORABLE);
+        PersistenciaException error = assertThrows(PersistenciaException.class,
+                () -> tratamientos.registrarEvolucionYFinalizar(7, evolucion, LocalDate.of(2026, 6, 1)));
+        assertEquals(Motivo.RESTRICCION, error.getMotivo());
+        assertEquals("ck_tratamiento_fechas", error.getRestriccion());
+        assertEquals(0, evolucion.getId());
+
+        Tratamiento tratamiento7 = tratamientos.buscarPorId(7).orElseThrow();
+        assertTrue(tratamiento7.estaEnCurso());
+        assertNull(tratamiento7.getFechaFin());
+        assertEquals(4, tratamiento7.getCantidadEvoluciones());
+        for (Evolucion guardada : new EvolucionDAOMySQL(conexion).buscarPorTratamiento(7)) {
+            assertNotEquals(evolucion.getObservacion(), guardada.getObservacion());
+        }
+    }
+
+    /**
+     * El tratamiento 2 ya está finalizado (como si otro puesto lo hubiera
+     * finalizado después de la validación): la evolución se inserta, el
+     * {@code UPDATE} no encuentra el tratamiento en curso y la excepción
+     * {@code CONFLICTO} también provoca el rollback.
+     */
+    @Test
+    @DisplayName("Rollback: registrar y finalizar un tratamiento ya finalizado (CONFLICTO tras insertar la evolución) no la deja")
+    void rollbackDeRegistrarEvolucionYFinalizarPorConflicto() throws Exception {
+        TratamientoDAOMySQL tratamientos = new TratamientoDAOMySQL(conexion);
+        Evolucion evolucion = new Evolucion(LocalDate.of(2026, 9, 1), "Evolución sobre un tratamiento ya finalizado",
+                ResultadoEvolucion.ESTABLE);
+        PersistenciaException error = assertThrows(PersistenciaException.class,
+                () -> tratamientos.registrarEvolucionYFinalizar(2, evolucion, LocalDate.of(2026, 9, 1)));
+        assertEquals(Motivo.CONFLICTO, error.getMotivo());
+        assertEquals(0, evolucion.getId());
+        assertEquals(3, new EvolucionDAOMySQL(conexion).buscarPorTratamiento(2).size());
+        assertEquals(LocalDate.of(2026, 2, 20), tratamientos.buscarPorId(2).orElseThrow().getFechaFin());
+    }
+
+    @Test
+    @DisplayName("Concurrencia: tratamiento en curso que otro puesto registró después de la validación → mismo ValidacionException")
+    void tratamientoEnCursoDetectadoPorLaBase() throws Exception {
+        SesionUsuario.getInstancia().iniciar(new Usuario(2, "lfernandez", "-", Rol.KINESIOLOGO, true));
+        LesionDAOMySQL lesiones = new LesionDAOMySQL(conexion);
+        KinesiologoDAOMySQL kinesiologos = new KinesiologoDAOMySQL(conexion);
+        TratamientoService servicio = new TratamientoService(
+                new TratamientoDAODesactualizado(new TratamientoDAOMySQL(conexion)), lesiones, kinesiologos,
+                new EvolucionDAOMySQL(conexion), EscenarioPrueba.RELOJ);
+        Lesion lesion7 = lesiones.buscarPorId(7).orElseThrow();
+        Tratamiento segundo = new Tratamiento(lesion7, kinesiologos.buscarPorId(1).orElseThrow(),
+                LocalDate.of(2026, 9, 20), "Readaptación funcional", null);
+        ValidacionException error = assertThrows(ValidacionException.class, () -> servicio.registrarTratamiento(segundo));
+        assertEquals(List.of("La lesión N° 7 ya tiene un tratamiento en curso. "
+                + "Debe finalizarlo antes de registrar uno nuevo."), error.getErrores());
+        assertEquals(0, segundo.getId());
+        assertEquals(1, lesion7.getTratamientos().size());
+        assertEquals(1, lesiones.buscarPorId(7).orElseThrow().getTratamientos().size());
+    }
+
+    @Test
+    @DisplayName("Concurrencia: finalizar un tratamiento que otro puesto ya finalizó → CONFLICTO y sin cambios")
+    void finalizarTratamientoYaFinalizado() throws Exception {
+        TratamientoDAOMySQL tratamientos = new TratamientoDAOMySQL(conexion);
+        PersistenciaException error = assertThrows(PersistenciaException.class,
+                () -> tratamientos.finalizar(2, LocalDate.of(2026, 9, 1)));
+        assertEquals(Motivo.CONFLICTO, error.getMotivo());
+        assertEquals(LocalDate.of(2026, 2, 20), tratamientos.buscarPorId(2).orElseThrow().getFechaFin());
+    }
+
+    /**
      * Simula la carrera entre dos puestos: la consulta previa por DNI no ve al
      * jugador (todavía no estaba), de modo que el servicio llega a insertar y es
      * el índice único {@code uq_jugador_dni} el que rechaza el alta.
@@ -149,6 +235,61 @@ class PersistenciaMySQLTest {
 
         @Override
         public List<Jugador> listarTodos() throws PersistenciaException {
+            return real.listarTodos();
+        }
+    }
+
+    /**
+     * Simula la carrera entre dos puestos al registrar un tratamiento: la
+     * consulta previa no ve el tratamiento en curso, de modo que es el índice
+     * único {@code uq_tratamiento_en_curso} el que rechaza el alta.
+     */
+    private static final class TratamientoDAODesactualizado implements TratamientoDAO {
+
+        private final TratamientoDAO real;
+
+        TratamientoDAODesactualizado(TratamientoDAO real) {
+            this.real = real;
+        }
+
+        @Override
+        public boolean existeActivo(int idLesion) {
+            return false;
+        }
+
+        @Override
+        public void finalizar(int idTratamiento, LocalDate fechaFin) throws PersistenciaException {
+            real.finalizar(idTratamiento, fechaFin);
+        }
+
+        @Override
+        public int registrarEvolucionYFinalizar(int idTratamiento, Evolucion evolucion, LocalDate fechaFin)
+                throws PersistenciaException {
+            return real.registrarEvolucionYFinalizar(idTratamiento, evolucion, fechaFin);
+        }
+
+        @Override
+        public List<Tratamiento> listarEnCurso() throws PersistenciaException {
+            return real.listarEnCurso();
+        }
+
+        @Override
+        public int insertar(Tratamiento tratamiento) throws PersistenciaException {
+            return real.insertar(tratamiento);
+        }
+
+        @Override
+        public void actualizar(Tratamiento tratamiento) throws PersistenciaException {
+            real.actualizar(tratamiento);
+        }
+
+        @Override
+        public Optional<Tratamiento> buscarPorId(int id) throws PersistenciaException {
+            return real.buscarPorId(id);
+        }
+
+        @Override
+        public List<Tratamiento> listarTodos() throws PersistenciaException {
             return real.listarTodos();
         }
     }

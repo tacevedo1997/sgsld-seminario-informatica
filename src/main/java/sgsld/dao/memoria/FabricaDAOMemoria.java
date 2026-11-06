@@ -21,7 +21,7 @@ public class FabricaDAOMemoria extends FabricaDAO {
     private final TipoLesionDAOMemoria tipoLesionDAO = new TipoLesionDAOMemoria();
     private final LesionDAOMemoria lesionDAO = new LesionDAOMemoria();
     private final EvolucionDAOMemoria evolucionDAO = new EvolucionDAOMemoria();
-    private final TratamientoDAOMemoria tratamientoDAO = new TratamientoDAOMemoria();
+    private final TratamientoDAOMemoria tratamientoDAO = new TratamientoDAOMemoria(evolucionDAO);
     private final EstadoJugadorDAOMemoria estadoJugadorDAO = new EstadoJugadorDAOMemoria(jugadorDAO, tratamientoDAO);
     private final ReporteDAOMemoria reporteDAO = new ReporteDAOMemoria(lesionDAO, tratamientoDAO);
 

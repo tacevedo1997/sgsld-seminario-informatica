@@ -3,6 +3,8 @@ package sgsld.dao.mysql;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import sgsld.util.PersistenciaException;
+
 /**
  * Operación con varias sentencias que se ejecuta dentro de una transacción con
  * {@link AccesoDatosMySQL#enTransaccion(String, OperacionTransaccional)}: todas
@@ -18,7 +20,8 @@ public interface OperacionTransaccional<R> {
      *
      * @param conexion conexión con {@code autoCommit} desactivado
      * @return el resultado de la operación
-     * @throws SQLException si falla una sentencia (provoca el rollback)
+     * @throws SQLException          si falla una sentencia (provoca el rollback)
+     * @throws PersistenciaException si la operación detecta un conflicto (también provoca el rollback)
      */
-    R ejecutar(Connection conexion) throws SQLException;
+    R ejecutar(Connection conexion) throws SQLException, PersistenciaException;
 }

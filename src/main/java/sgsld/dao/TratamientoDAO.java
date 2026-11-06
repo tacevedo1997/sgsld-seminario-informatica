@@ -3,6 +3,7 @@ package sgsld.dao;
 import java.time.LocalDate;
 import java.util.List;
 
+import sgsld.modelo.Evolucion;
 import sgsld.modelo.Tratamiento;
 import sgsld.util.PersistenciaException;
 
@@ -26,6 +27,19 @@ public interface TratamientoDAO extends DAO<Tratamiento> {
      * @param fechaFin      fecha de fin
      */
     void finalizar(int idTratamiento, LocalDate fechaFin) throws PersistenciaException;
+
+    /**
+     * Registra la última evolución de un tratamiento y lo finaliza en una sola
+     * transacción: se guardan las dos cosas o ninguna. Asigna el identificador
+     * de la evolución.
+     *
+     * @param idTratamiento identificador del tratamiento en curso
+     * @param evolucion     evolución nueva
+     * @param fechaFin      fecha de fin del tratamiento
+     * @return el identificador asignado a la evolución
+     */
+    int registrarEvolucionYFinalizar(int idTratamiento, Evolucion evolucion, LocalDate fechaFin)
+            throws PersistenciaException;
 
     /**
      * Lista los tratamientos en curso.

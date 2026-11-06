@@ -192,7 +192,7 @@ public abstract class AccesoDatosMySQL {
                 R resultado = sentencias.ejecutar(abierta);
                 abierta.commit();
                 return resultado;
-            } catch (SQLException | RuntimeException e) {
+            } catch (SQLException | PersistenciaException | RuntimeException e) {
                 deshacer(abierta, e);
                 throw e;
             } finally {

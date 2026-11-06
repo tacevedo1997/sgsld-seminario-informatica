@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import sgsld.modelo.Categoria;
+import sgsld.modelo.Evolucion;
 import sgsld.modelo.Jugador;
 import sgsld.modelo.Kinesiologo;
 import sgsld.modelo.TipoLesion;
@@ -42,6 +43,9 @@ final class Mapeos {
 
     static final String COLUMNAS_TIPO = "tl.id_tipo, tl.nombre AS tipo_nombre";
 
+    static final String COLUMNAS_EVOLUCION =
+            "e.id_evolucion, e.id_tratamiento, e.fecha AS evolucion_fecha, e.observacion, e.resultado";
+
     private Mapeos() {
     }
 
@@ -77,5 +81,10 @@ final class Mapeos {
 
     static TipoLesion tipo(ResultSet fila) throws SQLException {
         return new TipoLesion(fila.getInt("id_tipo"), fila.getString("tipo_nombre"));
+    }
+
+    static Evolucion evolucion(ResultSet fila) throws SQLException {
+        return new Evolucion(fila.getInt("id_evolucion"), AccesoDatosMySQL.fecha(fila, "evolucion_fecha"),
+                fila.getString("observacion"), ValoresEnum.resultado(fila.getString("resultado")));
     }
 }
