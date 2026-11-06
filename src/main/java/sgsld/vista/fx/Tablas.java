@@ -4,9 +4,14 @@ import java.util.function.Function;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -23,12 +28,52 @@ import sgsld.modelo.EstadoDisponibilidad;
  */
 final class Tablas {
 
-    /** Alto de cada fila, en píxeles. */
+    /** Alto de cada fila, en píxeles (como en la Figura 12). */
     static final double ALTO_FILA = 44;
+    /** Alto de fila de las tablas de administración, más compactas. */
+    static final double ALTO_FILA_COMPACTA = 34;
     /** Alto del encabezado (coincide con {@code sgsld.css}). */
     static final double ALTO_ENCABEZADO = 42;
 
     private Tablas() {
+    }
+
+    /**
+     * Reparte el ancho de la tabla entre sus columnas según los pesos (por
+     * ejemplo, anchos de referencia en píxeles). Descuenta la barra vertical
+     * solo mientras está visible, de modo que nunca aparece la horizontal.
+     *
+     * @param tabla tabla con las columnas ya agregadas
+     * @param pesos un peso por columna
+     */
+    static void distribuirAnchos(TableView<?> tabla, double... pesos) {
+        DoubleProperty anchoBarra = new SimpleDoubleProperty(0);
+        if (tabla.getSkin() != null) {
+            seguirBarraVertical(tabla, anchoBarra);
+        }
+        tabla.skinProperty().addListener((propiedad, anterior, piel) -> seguirBarraVertical(tabla, anchoBarra));
+        double total = 0;
+        for (double peso : pesos) {
+            total += peso;
+        }
+        for (int i = 0; i < pesos.length; i++) {
+            TableColumn<?, ?> columna = tabla.getColumns().get(i);
+            double fraccion = pesos[i] / total;
+            columna.setResizable(false);
+            columna.prefWidthProperty().bind(Bindings.createDoubleBinding(
+                    () -> Math.floor((tabla.getWidth() - 4 - anchoBarra.get()) * fraccion),
+                    tabla.widthProperty(), anchoBarra));
+        }
+    }
+
+    /** Vincula el ancho reservado con la barra vertical de la tabla (existe una vez creada la piel). */
+    private static void seguirBarraVertical(TableView<?> tabla, DoubleProperty anchoBarra) {
+        for (Node nodo : tabla.lookupAll(".scroll-bar")) {
+            if (nodo instanceof ScrollBar barra && barra.getOrientation() == Orientation.VERTICAL) {
+                anchoBarra.bind(Bindings.when(barra.visibleProperty()).then(barra.widthProperty()).otherwise(0.0));
+                return;
+            }
+        }
     }
 
     /**
@@ -108,9 +153,33 @@ final class Tablas {
      * @param filasMinimas filas visibles como mínimo
      */
     static void ajustarAltura(TableView<?> tabla, int filasMinimas) {
-        tabla.setFixedCellSize(ALTO_FILA);
-        DoubleBinding alto = Bindings.createDoubleBinding(
-                () -> ALTO_ENCABEZADO + ALTO_FILA * Math.max(filasMinimas, tabla.getItems().size()) + 2,
+        ajustarAltura(tabla, filasMinimas, Integer.MAX_VALUE);
+    }
+
+    /**
+     * Ajusta el alto de la tabla a sus filas, entre un mínimo y un máximo; con
+     * más filas que el máximo aparece la barra de desplazamiento de la tabla.
+     *
+     * @param tabla        tabla
+     * @param filasMinimas filas visibles como mínimo
+     * @param filasMaximas filas visibles como máximo
+     */
+    static void ajustarAltura(TableView<?> tabla, int filasMinimas, int filasMaximas) {
+        ajustarAltura(tabla, filasMinimas, filasMaximas, ALTO_FILA);
+    }
+
+    /**
+     * Ajusta el alto de la tabla a sus filas, con el alto de fila indicado.
+     *
+     * @param tabla        tabla
+     * @param filasMinimas filas visibles como mínimo
+     * @param filasMaximas filas visibles como máximo
+     * @param altoFila     alto de cada fila, en píxeles
+     */
+    static void ajustarAltura(TableView<?> tabla, int filasMinimas, int filasMaximas, double altoFila) {
+        tabla.setFixedCellSize(altoFila);
+        DoubleBinding alto = Bindings.createDoubleBinding(() -> ALTO_ENCABEZADO + altoFila
+                        * Math.min(filasMaximas, Math.max(filasMinimas, tabla.getItems().size())) + 4,
                 tabla.getItems());
         tabla.prefHeightProperty().bind(alto);
         tabla.minHeightProperty().bind(alto);

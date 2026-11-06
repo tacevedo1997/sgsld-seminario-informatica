@@ -38,14 +38,11 @@ public class EstadoActualController extends ControladorPantalla {
     private void initialize() {
         TableColumn<EstadoJugadorDTO, String> jugador = Tablas.columna(ENCABEZADOS[0], EstadoJugadorDTO::jugador);
         TableColumn<EstadoJugadorDTO, String> categoria = Tablas.columna(ENCABEZADOS[1], EstadoJugadorDTO::categoria);
-        jugador.setPrefWidth(490);
-        categoria.setPrefWidth(365);
         TableColumn<EstadoJugadorDTO, ?> estado = Tablas.columnaEstado(ENCABEZADOS[2], EstadoJugadorDTO::estado);
-        estado.setPrefWidth(605);
         tabla.getColumns().add(jugador);
         tabla.getColumns().add(categoria);
         tabla.getColumns().add(estado);
-        tabla.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        Tablas.distribuirAnchos(tabla, 490, 365, 605);
         tabla.setPlaceholder(new Label("No hay jugadores para los filtros seleccionados."));
         Tablas.ajustarAltura(tabla, 1);
         comboCategoria.getItems().add(TODAS);

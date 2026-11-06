@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Gestión de categorías (CU-02). -->
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="sgsld.vista.fx.CategoriasController" styleClass="pantalla">
+    <Label text="Categorías" styleClass="titulo-pantalla"/>
+    <HBox styleClass="fila-campos">
+        <VBox styleClass="campo">
+            <Label text="Buscar categoría" styleClass="etiqueta-campo"/>
+            <TextField fx:id="campoBusqueda" promptText="Nombre…" prefWidth="270"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="botonNuevo" text="Nueva categoría" styleClass="boton-secundario" minWidth="-Infinity"
+                onAction="#nuevo"/>
+    </HBox>
+    <TableView fx:id="tabla"/>
+    <HBox styleClass="encabezado-formulario">
+        <Label fx:id="tituloFormulario" styleClass="subtitulo" minWidth="-Infinity"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="etiquetaResultado" styleClass="mensaje-ok" visible="false"/>
+    </HBox>
+    <GridPane styleClass="formulario">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="34"/>
+            <ColumnConstraints percentWidth="22"/>
+            <ColumnConstraints percentWidth="22"/>
+            <ColumnConstraints percentWidth="22"/>
+        </columnConstraints>
+        <VBox styleClass="campo" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <Label text="Nombre *" styleClass="etiqueta-campo"/>
+            <TextField fx:id="campoNombre" promptText="Por ejemplo, Sub-19"/>
+        </VBox>
+        <VBox styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <Label text="Edad mínima *" styleClass="etiqueta-campo"/>
+            <TextField fx:id="campoEdadMinima" promptText="0 a 99"/>
+        </VBox>
+        <VBox styleClass="campo" GridPane.columnIndex="2" GridPane.rowIndex="0">
+            <Label text="Edad máxima *" styleClass="etiqueta-campo"/>
+            <TextField fx:id="campoEdadMaxima" promptText="0 a 99"/>
+        </VBox>
+    </GridPane>
+    <HBox styleClass="fila-botones">
+        <Button fx:id="botonGuardar" text="Guardar" styleClass="boton-primario" onAction="#guardar"/>
+        <Button text="Cancelar" styleClass="boton-secundario" onAction="#cancelar"/>
+        <Label text="* Campos obligatorios. El nombre no puede repetirse." styleClass="nota"/>
+    </HBox>
+</VBox>

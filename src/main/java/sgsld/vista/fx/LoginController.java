@@ -76,7 +76,8 @@ public class LoginController extends ControladorPantalla {
         }, sinResultado -> listo(), error -> {
             if (error instanceof PersistenciaException persistencia) {
                 etiquetaEstado.setText("Sin conexión con la base de datos.");
-                if (DialogoErrorConexion.preguntarReintentar(ventana(), persistencia.getMessage())) {
+                if (presentar(DialogoErrorConexion.crear(ventana(), persistencia.getMessage()))
+                        .filter(DialogoErrorConexion.REINTENTAR::equals).isPresent()) {
                     conectar();
                 } else {
                     Platform.exit();

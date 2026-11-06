@@ -89,8 +89,9 @@ public class PrincipalController extends ControladorPantalla {
      * le pide que cargue sus datos.
      *
      * @param opcion opción elegida
+     * @return el controlador de la pantalla abierta, o {@code null} si no se pudo abrir
      */
-    void abrir(OpcionMenu opcion) {
+    ControladorPantalla abrir(OpcionMenu opcion) {
         for (int i = 0; i < opciones.size(); i++) {
             botones.get(i).getStyleClass().remove(ACTIVA);
             if (opciones.get(i) == opcion) {
@@ -106,6 +107,7 @@ public class PrincipalController extends ControladorPantalla {
             tituloActual = pantalla.controlador().getTitulo();
             contexto().actualizarTitulo(tituloActual);
             pantalla.controlador().alMostrar();
+            return pantalla.controlador();
         } catch (IOException e) {
             RegistroTecnico.logger().log(Level.SEVERE, "No se pudo cargar " + opcion.archivoFxml(), e);
             Label aviso = new Label("No se pudo abrir la pantalla \"" + opcion.texto()
@@ -114,6 +116,7 @@ public class PrincipalController extends ControladorPantalla {
             contenido.getChildren().setAll(aviso);
             tituloActual = opcion.texto();
             contexto().actualizarTitulo(tituloActual);
+            return null;
         }
     }
 

@@ -5,7 +5,9 @@ import java.net.URL;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executor;
+import java.util.function.Function;
 import java.util.logging.Level;
 
 import javafx.application.Platform;
@@ -13,6 +15,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -46,6 +50,8 @@ public final class ContextoFX {
     private volatile Servicios servicios;
     private Pantalla pantallaActual;
     private int tareasEnCurso;
+    /** Cómo se muestran los diálogos: modales, salvo en el Capturador. */
+    private Function<Dialog<ButtonType>, Optional<ButtonType>> presentador = Dialog::showAndWait;
 
     /**
      * Crea el contexto y prepara la ventana: escena con la hoja de estilo y
@@ -165,6 +171,27 @@ public final class ContextoFX {
      */
     boolean hayTareasEnCurso() {
         return tareasEnCurso > 0;
+    }
+
+    /**
+     * Muestra un diálogo y devuelve el botón elegido. En la aplicación es
+     * modal ({@code showAndWait}).
+     *
+     * @param dialogo diálogo armado
+     * @return el botón elegido, o vacío si se cerró sin elegir
+     */
+    Optional<ButtonType> presentar(Dialog<ButtonType> dialogo) {
+        return presentador.apply(dialogo);
+    }
+
+    /**
+     * Cambia la forma de mostrar los diálogos (lo usa el Capturador, que los
+     * guarda como imagen y elige el botón por defecto sin esperar al usuario).
+     *
+     * @param presentador función que muestra el diálogo y devuelve la respuesta
+     */
+    void usarPresentador(Function<Dialog<ButtonType>, Optional<ButtonType>> presentador) {
+        this.presentador = presentador;
     }
 
     /**

@@ -11,7 +11,8 @@ import javafx.stage.Window;
 
 /**
  * Diálogos comunes de la interfaz, con la hoja de estilo de la aplicación y
- * botones en español (no dependen del idioma del sistema).
+ * botones en español (no dependen del idioma del sistema). Esta clase solo los
+ * arma; los muestra {@link ContextoFX#presentar(javafx.scene.control.Dialog)}.
  */
 final class Dialogos {
 
@@ -46,17 +47,18 @@ final class Dialogos {
         return alerta;
     }
 
-    static void error(Window duenio, String mensaje) {
-        crear(duenio, AlertType.ERROR, "Error", null, mensaje, ACEPTAR).showAndWait();
+    static Alert crearError(Window duenio, String mensaje) {
+        return crear(duenio, AlertType.ERROR, "Error", null, mensaje, ACEPTAR);
     }
 
     /**
-     * Muestra todos los errores de validación juntos, uno por línea.
+     * Diálogo con todos los errores de validación juntos, uno por línea.
      *
      * @param duenio  ventana dueña
      * @param errores errores encontrados
+     * @return el diálogo, sin mostrar
      */
-    static void errores(Window duenio, List<String> errores) {
+    static Alert crearErrores(Window duenio, List<String> errores) {
         StringBuilder texto = new StringBuilder();
         for (String error : errores) {
             if (texto.length() > 0) {
@@ -64,16 +66,26 @@ final class Dialogos {
             }
             texto.append("• ").append(error);
         }
-        crear(duenio, AlertType.WARNING, "Revise los datos", "Revise los datos ingresados:", texto.toString(),
-                ACEPTAR).showAndWait();
+        return crear(duenio, AlertType.WARNING, "Revise los datos", "Revise los datos ingresados:",
+                texto.toString(), ACEPTAR);
     }
 
-    static void info(Window duenio, String mensaje) {
-        crear(duenio, AlertType.INFORMATION, "Información", null, mensaje, ACEPTAR).showAndWait();
+    static Alert crearInfo(Window duenio, String mensaje) {
+        return crear(duenio, AlertType.INFORMATION, "Información", null, mensaje, ACEPTAR);
     }
 
-    static boolean confirmar(Window duenio, String pregunta) {
-        return crear(duenio, AlertType.CONFIRMATION, "Confirmar", null, pregunta, SI, NO).showAndWait()
-                .filter(SI::equals).isPresent();
+    static Alert crearConfirmacion(Window duenio, String pregunta) {
+        return crear(duenio, AlertType.CONFIRMATION, "Confirmar", null, pregunta, SI, NO);
+    }
+
+    /**
+     * Muestra un error y espera, fuera de una pantalla (por ejemplo, si no se
+     * pudo cargar un FXML o ante un error no previsto).
+     *
+     * @param duenio  ventana dueña
+     * @param mensaje texto del error
+     */
+    static void error(Window duenio, String mensaje) {
+        crearError(duenio, mensaje).showAndWait();
     }
 }

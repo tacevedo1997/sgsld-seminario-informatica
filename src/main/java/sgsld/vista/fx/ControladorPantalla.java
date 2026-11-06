@@ -2,12 +2,15 @@ package sgsld.vista.fx;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.concurrent.Task;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.stage.Window;
 
 import sgsld.modelo.Usuario;
@@ -171,15 +174,15 @@ public abstract class ControladorPantalla {
     }
 
     protected final void mostrarError(String mensaje) {
-        Dialogos.error(ventana(), mensaje);
+        presentar(Dialogos.crearError(ventana(), mensaje));
     }
 
     protected final void mostrarErrores(List<String> errores) {
-        Dialogos.errores(ventana(), errores);
+        presentar(Dialogos.crearErrores(ventana(), errores));
     }
 
     protected final void mostrarInfo(String mensaje) {
-        Dialogos.info(ventana(), mensaje);
+        presentar(Dialogos.crearInfo(ventana(), mensaje));
     }
 
     /**
@@ -189,7 +192,17 @@ public abstract class ControladorPantalla {
      * @return {@code true} si se eligió Sí
      */
     protected final boolean confirmar(String pregunta) {
-        return Dialogos.confirmar(ventana(), pregunta);
+        return presentar(Dialogos.crearConfirmacion(ventana(), pregunta)).filter(Dialogos.SI::equals).isPresent();
+    }
+
+    /**
+     * Muestra un diálogo modal y espera la respuesta.
+     *
+     * @param dialogo diálogo armado
+     * @return el botón elegido, o vacío si se cerró sin elegir
+     */
+    protected final Optional<ButtonType> presentar(Dialog<ButtonType> dialogo) {
+        return contexto.presentar(dialogo);
     }
 
     private void empezar() {

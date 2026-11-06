@@ -31,15 +31,4 @@ final class DialogoErrorConexion {
                 "No se pudo conectar con la base de datos",
                 mensaje + "\n\nPuede reintentar la conexión o salir de la aplicación.", REINTENTAR, SALIR);
     }
-
-    /**
-     * Muestra el diálogo y espera la respuesta.
-     *
-     * @param duenio  ventana dueña
-     * @param mensaje motivo del error
-     * @return {@code true} si se eligió Reintentar
-     */
-    static boolean preguntarReintentar(Window duenio, String mensaje) {
-        return crear(duenio, mensaje).showAndWait().filter(REINTENTAR::equals).isPresent();
-    }
 }

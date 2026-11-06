@@ -99,7 +99,7 @@
 }
 
 .pantalla {
-    -fx-padding: 22 26 26 26;
+    -fx-padding: 22 26 18 26;
     -fx-spacing: 12;
 }
 
@@ -135,6 +135,48 @@
 .nota {
     -fx-text-fill: texto-suave;
     -fx-font-size: 12.5px;
+}
+
+/* ---------- Formularios ---------- */
+
+.formulario {
+    -fx-hgap: 20;
+    -fx-vgap: 12;
+}
+
+.fila-botones {
+    -fx-spacing: 12;
+    -fx-alignment: center-left;
+    -fx-padding: 6 0 0 0;
+}
+
+.encabezado-formulario {
+    -fx-alignment: bottom-left;
+    -fx-spacing: 16;
+}
+
+.mensaje-ok {
+    -fx-text-fill: #1E7B55;
+    -fx-font-weight: bold;
+}
+
+.seccion-usuario {
+    -fx-spacing: 10;
+    -fx-padding: 4 0 0 0;
+}
+
+.casilla .box {
+    -fx-background-color: borde-campo, white;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 2, 1;
+}
+
+.casilla:selected .box {
+    -fx-background-color: verde, verde;
+}
+
+.casilla:selected .mark {
+    -fx-background-color: white;
 }
 
 /* ---------- Campos ---------- */
@@ -178,6 +220,18 @@
     -fx-background-color: white;
 }
 
+/* El editor del selector de fecha no lleva borde propio: lo da el selector. */
+.date-picker > .text-field,
+.date-picker > .text-field:focused {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.text-field:disabled,
+.password-field:disabled {
+    -fx-opacity: 0.55;
+}
+
 /* ---------- Botones ---------- */
 
 .boton-primario {
@@ -211,6 +265,25 @@
 
 .boton-secundario:hover {
     -fx-background-color: verde, #EEF7F5;
+}
+
+.boton-peligro {
+    -fx-background-color: #B3261E, white;
+    -fx-background-insets: 0, 1.5;
+    -fx-background-radius: 3, 2;
+    -fx-text-fill: #B3261E;
+    -fx-font-weight: bold;
+    -fx-font-size: 14.5px;
+    -fx-padding: 8 22 8 22;
+    -fx-cursor: hand;
+}
+
+.boton-peligro:hover {
+    -fx-background-color: #B3261E, #FCEEEE;
+}
+
+.boton-peligro:disabled {
+    -fx-opacity: 0.4;
 }
 
 /* ---------- Tablas ---------- */
@@ -279,6 +352,10 @@
 
 .table-row-cell:selected .table-cell {
     -fx-text-fill: texto;
+}
+
+.table-row-cell:dado-de-baja .table-cell {
+    -fx-text-fill: #8A9696;
 }
 
 .table-cell.columna-numero {
