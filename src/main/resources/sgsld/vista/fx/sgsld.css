@@ -319,7 +319,7 @@
     -fx-font-weight: bold;
     -fx-text-fill: texto;
     -fx-alignment: center-left;
-    -fx-padding: 0 12 0 12;
+    -fx-padding: 0 10 0 10;
     -fx-min-height: 41px;
     -fx-pref-height: 41px;
 }
@@ -343,7 +343,7 @@
 }
 
 .table-cell {
-    -fx-padding: 0 12 0 12;
+    -fx-padding: 0 10 0 10;
     -fx-alignment: center-left;
     -fx-border-color: transparent #EEEEEE transparent transparent;
     -fx-border-width: 0 1 0 0;
@@ -478,4 +478,112 @@
 
 .dialogo-contenido {
     -fx-spacing: 14;
+}
+
+/* ---------- Reportes (Figura 13) ---------- */
+
+.fila-filtros {
+    -fx-spacing: 14;
+    -fx-alignment: bottom-left;
+}
+
+.resultados-reporte {
+    -fx-spacing: 18;
+    -fx-alignment: top-left;
+}
+
+.tabla-reporte.encabezado-doble .column-header .label {
+    -fx-wrap-text: true;
+    -fx-min-height: 59px;
+    -fx-pref-height: 59px;
+}
+
+.table-row-cell:total .table-cell {
+    -fx-font-weight: bold;
+}
+
+.panel-grafico {
+    -fx-background-color: #DCE3E3, white;
+    -fx-background-insets: 0, 1;
+    -fx-padding: 14 16 8 14;
+    -fx-spacing: 6;
+}
+
+.titulo-grafico {
+    -fx-font-weight: bold;
+    -fx-font-size: 14.5px;
+    -fx-text-fill: texto;
+}
+
+.grafico-reporte {
+    -fx-padding: 4 18 0 0;
+}
+
+.grafico-reporte .chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.grafico-reporte .chart-bar {
+    -fx-background-color: verde;
+    -fx-background-radius: 0;
+}
+
+.grafico-reporte .axis {
+    -fx-tick-label-font-size: 13.5px;
+    -fx-tick-label-fill: #3A4747;
+}
+
+.grafico-reporte .axis:left {
+    -fx-border-color: transparent #9AA5A5 transparent transparent;
+}
+
+.grafico-reporte .axis:bottom {
+    -fx-border-color: transparent;
+}
+
+.grafico-valor {
+    -fx-font-size: 13.5px;
+    -fx-fill: #1F2A2A;
+}
+
+.sin-resultados {
+    -fx-text-fill: texto-suave;
+    -fx-font-size: 14.5px;
+    -fx-padding: 16 0 16 0;
+}
+
+/* ---------- Ficha del jugador ---------- */
+
+.panel-ficha {
+    -fx-spacing: 12;
+}
+
+.nombre-ficha {
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+    -fx-text-fill: texto;
+    -fx-padding: 6 0 0 0;
+}
+
+.datos-ficha {
+    -fx-background-color: #DCE3E3, white;
+    -fx-background-insets: 0, 1;
+    -fx-padding: 12 16 12 16;
+    -fx-hgap: 16;
+    -fx-vgap: 12;
+}
+
+.dato {
+    -fx-spacing: 2;
+}
+
+.dato-etiqueta {
+    -fx-text-fill: texto-suave;
+    -fx-font-size: 12.5px;
+}
+
+.dato-valor {
+    -fx-text-fill: texto;
+    -fx-font-size: 14.5px;
+    -fx-font-weight: bold;
 }

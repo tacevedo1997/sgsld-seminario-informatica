@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Ficha individual del jugador (CU-10, con el historial de CU-12). -->
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="sgsld.vista.fx.FichaJugadorController" styleClass="pantalla">
+    <Label text="Ficha del jugador" styleClass="titulo-pantalla"/>
+    <HBox styleClass="fila-filtros">
+        <VBox styleClass="campo" HBox.hgrow="ALWAYS">
+            <Label text="Jugador" styleClass="etiqueta-campo"/>
+            <ComboBox fx:id="comboJugador" maxWidth="Infinity" promptText="Elegir jugador…"/>
+        </VBox>
+        <VBox styleClass="campo">
+            <Label text="Buscar por DNI o apellido" styleClass="etiqueta-campo"/>
+            <TextField fx:id="campoBusqueda" promptText="DNI exacto o parte del apellido…" prefWidth="230"
+                       onAction="#buscar"/>
+        </VBox>
+        <Button fx:id="botonBuscar" text="Buscar" styleClass="boton-primario" minWidth="-Infinity" onAction="#buscar"/>
+    </HBox>
+    <VBox fx:id="panelFicha" styleClass="panel-ficha">
+        <Label fx:id="etiquetaNombre" styleClass="nombre-ficha"/>
+        <GridPane styleClass="datos-ficha">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="22"/>
+                <ColumnConstraints percentWidth="26"/>
+                <ColumnConstraints percentWidth="28"/>
+                <ColumnConstraints percentWidth="24"/>
+            </columnConstraints>
+            <VBox styleClass="dato" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label text="DNI" styleClass="dato-etiqueta"/>
+                <Label fx:id="datoDni" styleClass="dato-valor"/>
+            </VBox>
+            <VBox styleClass="dato" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Label text="Fecha de nacimiento" styleClass="dato-etiqueta"/>
+                <Label fx:id="datoNacimiento" styleClass="dato-valor"/>
+            </VBox>
+            <VBox styleClass="dato" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                <Label text="Categoría" styleClass="dato-etiqueta"/>
+                <Label fx:id="datoCategoria" styleClass="dato-valor"/>
+            </VBox>
+            <VBox styleClass="dato" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                <Label text="Estado actual" styleClass="dato-etiqueta"/>
+                <HBox fx:id="datoEstado"/>
+            </VBox>
+            <VBox styleClass="dato" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <Label text="Posición" styleClass="dato-etiqueta"/>
+                <Label fx:id="datoPosicion" styleClass="dato-valor"/>
+            </VBox>
+            <VBox styleClass="dato" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label text="N° de camiseta" styleClass="dato-etiqueta"/>
+                <Label fx:id="datoCamiseta" styleClass="dato-valor"/>
+            </VBox>
+            <VBox styleClass="dato" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.columnSpan="2">
+                <Label text="Situación" styleClass="dato-etiqueta"/>
+                <Label fx:id="datoSituacion" styleClass="dato-valor"/>
+            </VBox>
+        </GridPane>
+        <Label text="HISTORIAL DE LESIONES (CU-12)" styleClass="subtitulo"/>
+        <TableView fx:id="tablaHistorial"/>
+        <Label fx:id="tituloTratamientos" styleClass="subtitulo"/>
+        <TableView fx:id="tablaTratamientos"/>
+        <Label fx:id="tituloEvoluciones" styleClass="subtitulo"/>
+        <TableView fx:id="tablaEvoluciones"/>
+    </VBox>
+</VBox>

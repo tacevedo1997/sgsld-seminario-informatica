@@ -3,6 +3,7 @@ package sgsld.vista.fx;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Clock;
@@ -31,10 +32,12 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Transform;
 import javafx.stage.Stage;
@@ -46,6 +49,9 @@ import sgsld.modelo.ResultadoEvolucion;
 import sgsld.modelo.TipoLesion;
 import sgsld.modelo.Tratamiento;
 import sgsld.modelo.ZonaCorporal;
+import sgsld.servicio.reporte.Reporte;
+import sgsld.servicio.reporte.ReporteDuracionPromedio;
+import sgsld.servicio.reporte.ReporteTratamientosPorEstado;
 import sgsld.util.SgsldException;
 import sgsld.util.Texto;
 
@@ -144,6 +150,8 @@ public final class Capturador {
         ventana = new Stage();
         contexto = new ContextoFX(ventana, reloj, modo, avisos, Runnable::run);
         contexto.usarPresentador(this::presentar);
+        // Exportar CSV guarda en la carpeta de las capturas, con el nombre sugerido.
+        contexto.usarSelectorDeArchivos(selector -> destino.resolve(selector.getInitialFileName()).toFile());
         contexto.conectar();
 
         contexto.mostrarLogin();
@@ -157,6 +165,8 @@ public final class Capturador {
         escenarioJugadores();
         escenarioCategorias();
         escenarioKinesiologos();
+        escenarioReportes();
+        escenarioFicha();
         cerrarSesion();
 
         iniciarSesion("lfernandez");
@@ -256,6 +266,72 @@ public final class Capturador {
         esperarTareas();
         exigir(tablaContiene("arios"), "el kinesiólogo nuevo no aparece con su usuario");
         guardar("kinesiologos-alta-correcta");
+    }
+
+    /**
+     * CU-07 (Figura 13): reporte por zona con su gráfico y Total, exportación a
+     * CSV, promedio con decimales, reporte sin período, período sin datos y
+     * período invertido.
+     */
+    private void escenarioReportes() throws IOException {
+        abrir("Reportes");
+        exigir(tablaContiene("tabla", "Sub-17"), "no se generó el primer reporte al abrir la pantalla");
+        elegirEn("comboCriterio", reporte -> reporte instanceof Reporte r && r.getTitulo().equals("Lesiones por zona corporal"));
+        presionar("botonGenerar");
+        esperarTareas();
+        exigir(textoDe("tituloGrafico").equals("Lesiones por zona corporal · 01/01/2026 – 26/09/2026"),
+                "título del gráfico: " + textoDe("tituloGrafico"));
+        exigir(tablaContiene("tabla", "Isquiotibiales") && tablaContiene("tabla", "Total"), "falta la tabla por zona");
+        guardar("mlopez-reportes-figura-13");
+
+        presionarConDialogos("botonExportar", new DialogoEsperado("mlopez-reportes-csv-exportado", null));
+        Path csv = destino.resolve("reporte-lesiones-por-zona-corporal-2026-01-01-2026-09-26.csv");
+        String contenido = Files.readString(csv, StandardCharsets.UTF_8);
+        String esperado = (char) 0xFEFF + "Zona corporal;Lesiones\r\nIsquiotibiales;3\r\n";
+        exigir(contenido.startsWith(esperado) && contenido.endsWith("Total;8\r\n"),
+                "el CSV no tiene el formato esperado:\n" + contenido);
+        guardadas.add(csv);
+
+        elegirEn("comboCriterio", reporte -> reporte instanceof ReporteDuracionPromedio);
+        presionar("botonGenerar");
+        esperarTareas();
+        exigir(tablaContiene("tabla", "31,5"), "falta el promedio con coma decimal");
+        guardar("mlopez-reportes-duracion-promedio");
+
+        elegirEn("comboCriterio", reporte -> reporte instanceof ReporteTratamientosPorEstado);
+        exigir(buscar("campoDesde", DatePicker.class).isDisabled(), "el reporte sin período no deshabilita las fechas");
+        presionar("botonGenerar");
+        esperarTareas();
+        exigir(textoDe("tituloGrafico").endsWith("· situación actual"), "falta \"situación actual\" en el título");
+        guardar("mlopez-reportes-tratamientos-por-estado");
+
+        elegirEn("comboCriterio", reporte -> reporte instanceof Reporte r && r.getTitulo().equals("Lesiones por zona corporal"));
+        escribirFecha("campoDesde", "01/01/2024");
+        escribirFecha("campoHasta", "31/12/2024");
+        presionar("botonGenerar");
+        esperarTareas();
+        exigir(textoDe("etiquetaSinResultados").equals("No se encontraron resultados para los filtros seleccionados."),
+                "falta el mensaje de período sin datos");
+        guardar("mlopez-reportes-sin-resultados");
+
+        escribirFecha("campoDesde", "26/09/2026");
+        escribirFecha("campoHasta", "01/01/2026");
+        guardarConDialogo("botonGenerar", "mlopez-reportes-periodo-invertido");
+        exigirDialogo("La fecha desde no puede ser posterior a la fecha hasta.");
+    }
+
+    /** CU-10: búsqueda por apellido, datos con el chip de estado, historial, tratamientos y evoluciones. */
+    private void escenarioFicha() {
+        abrir("Consultar ficha");
+        escribir("campoBusqueda", "gomez");
+        presionar("botonBuscar");
+        esperarTareas();
+        exigir(textoDe("etiquetaNombre").equals("Gómez, Pedro"), "la búsqueda por apellido no mostró la ficha");
+        exigir(tablaContiene("tablaHistorial", "Distensión en isquiotibiales durante un sprint"), "falta el historial");
+        exigir(textoDe("tituloTratamientos").contains("LESIÓN N° 7"), "no quedó elegida la lesión más reciente");
+        exigir(buscar("tablaEvoluciones", TableView.class).getItems().size() == 4, "faltan las evoluciones");
+        guardar("mlopez-ficha-gomez");
+        guardarPagina("mlopez-ficha-gomez-completa");
     }
 
     /**
@@ -523,6 +599,20 @@ public final class Capturador {
 
     // ---------- Imágenes ----------
 
+    /** Guarda la pantalla completa aunque no entre en la ventana (el contenido del área desplazable). */
+    private void guardarPagina(String nombre) {
+        Node contenido = buscarPorClase("contenido-desplazable", ScrollPane.class).getContent();
+        guardarNodo(contenido, nombre, Color.web("#FAFBFB"));
+    }
+
+    private <T extends Node> T buscarPorClase(String clase, Class<T> tipo) {
+        Node nodo = ventana.getScene().lookup("." + clase);
+        if (!tipo.isInstance(nodo)) {
+            throw new IllegalStateException("No se encontró ." + clase);
+        }
+        return tipo.cast(nodo);
+    }
+
     private void guardar(String nombre) {
         Scene escena = ventana.getScene();
         guardarNodo(escena.getRoot(), nombre);
@@ -538,11 +628,16 @@ public final class Capturador {
         }
     }
 
-    /** Guarda la imagen del nodo en PNG, al doble de resolución, con un número correlativo. */
     private void guardarNodo(Node nodo, String nombre) {
+        guardarNodo(nodo, nombre, Color.WHITE);
+    }
+
+    /** Guarda la imagen del nodo en PNG, al doble de resolución, con un número correlativo. */
+    private void guardarNodo(Node nodo, String nombre, Color fondo) {
         Path archivo = destino.resolve(String.format("%02d-%s.png", numero++, nombre));
         SnapshotParameters parametros = new SnapshotParameters();
         parametros.setTransform(Transform.scale(ESCALA, ESCALA));
+        parametros.setFill(fondo);
         WritableImage imagen = nodo.snapshot(parametros, null);
         int ancho = (int) imagen.getWidth();
         int alto = (int) imagen.getHeight();

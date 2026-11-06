@@ -91,6 +91,43 @@ public abstract class Reporte {
     }
 
     /**
+     * Convierte las filas generadas en una matriz de textos (filas × columnas):
+     * la primera fila son los encabezados, luego una por fila del reporte con
+     * sus celdas y, si el reporte lo indica, la fila "Total" con la suma de las
+     * cantidades. La cantidad de filas y columnas se conoce al crearla, por eso
+     * es un arreglo bidimensional; la usan la tabla de la interfaz y la
+     * exportación a CSV.
+     *
+     * @param filas filas generadas por {@link #generar(LocalDate, LocalDate)}
+     * @return la matriz, con al menos la fila de encabezados
+     */
+    public String[][] aMatriz(List<FilaReporteDTO> filas) {
+        List<String> encabezados = getEncabezados();
+        int columnas = encabezados.size();
+        String[][] matriz = new String[1 + filas.size() + (muestraTotal() ? 1 : 0)][columnas];
+        for (int columna = 0; columna < columnas; columna++) {
+            matriz[0][columna] = encabezados.get(columna);
+        }
+        long total = 0;
+        for (int fila = 0; fila < filas.size(); fila++) {
+            List<String> celdas = getCeldas(filas.get(fila));
+            for (int columna = 0; columna < columnas; columna++) {
+                matriz[fila + 1][columna] = celdas.get(columna);
+            }
+            total += filas.get(fila).cantidad();
+        }
+        if (muestraTotal()) {
+            String[] filaTotal = matriz[matriz.length - 1];
+            filaTotal[0] = "Total";
+            filaTotal[1] = String.valueOf(total);
+            for (int columna = 2; columna < columnas; columna++) {
+                filaTotal[columna] = "";
+            }
+        }
+        return matriz;
+    }
+
+    /**
      * Da acceso a las consultas a las subclases.
      *
      * @return el DAO de reportes

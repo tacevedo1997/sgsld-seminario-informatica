@@ -15,6 +15,7 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 
 import sgsld.modelo.EstadoDisponibilidad;
 
@@ -87,6 +88,15 @@ final class Tablas {
     static <S> TableColumn<S, String> columna(String titulo, Function<S, String> valor) {
         TableColumn<S, String> columna = new TableColumn<>(titulo);
         columna.setCellValueFactory(celda -> new ReadOnlyStringWrapper(valor.apply(celda.getValue())));
+        // El texto completo aparece al pasar el mouse, por si la columna lo corta.
+        columna.setCellFactory(c -> new TableCell<>() {
+            @Override
+            protected void updateItem(String texto, boolean vacia) {
+                super.updateItem(texto, vacia);
+                setText(vacia ? null : texto);
+                setTooltip(vacia || texto == null || texto.isEmpty() ? null : new Tooltip(texto));
+            }
+        });
         columna.setSortable(false);
         columna.setReorderable(false);
         return columna;
@@ -177,8 +187,23 @@ final class Tablas {
      * @param altoFila     alto de cada fila, en píxeles
      */
     static void ajustarAltura(TableView<?> tabla, int filasMinimas, int filasMaximas, double altoFila) {
+        ajustarAltura(tabla, filasMinimas, filasMaximas, altoFila, ALTO_ENCABEZADO);
+    }
+
+    /**
+     * Ajusta el alto de la tabla a sus filas, con el alto de fila y de
+     * encabezado indicados (por ejemplo, encabezados de dos renglones).
+     *
+     * @param tabla          tabla
+     * @param filasMinimas   filas visibles como mínimo
+     * @param filasMaximas   filas visibles como máximo
+     * @param altoFila       alto de cada fila, en píxeles
+     * @param altoEncabezado alto del encabezado, en píxeles
+     */
+    static void ajustarAltura(TableView<?> tabla, int filasMinimas, int filasMaximas, double altoFila,
+                              double altoEncabezado) {
         tabla.setFixedCellSize(altoFila);
-        DoubleBinding alto = Bindings.createDoubleBinding(() -> ALTO_ENCABEZADO + altoFila
+        DoubleBinding alto = Bindings.createDoubleBinding(() -> altoEncabezado + altoFila
                         * Math.min(filasMaximas, Math.max(filasMinimas, tabla.getItems().size())) + 4,
                 tabla.getItems());
         tabla.prefHeightProperty().bind(alto);

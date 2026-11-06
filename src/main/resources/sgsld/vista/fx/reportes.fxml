@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Reportes estadísticos (CU-07, Figura 13). -->
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="sgsld.vista.fx.ReportesController" styleClass="pantalla">
+    <Label text="Reportes estadísticos" styleClass="titulo-pantalla"/>
+    <HBox styleClass="fila-filtros">
+        <VBox styleClass="campo">
+            <Label text="Desde" styleClass="etiqueta-campo"/>
+            <DatePicker fx:id="campoDesde" prefWidth="150"/>
+        </VBox>
+        <VBox styleClass="campo">
+            <Label text="Hasta" styleClass="etiqueta-campo"/>
+            <DatePicker fx:id="campoHasta" prefWidth="150"/>
+        </VBox>
+        <VBox styleClass="campo" HBox.hgrow="ALWAYS">
+            <Label text="Criterio" styleClass="etiqueta-campo"/>
+            <ComboBox fx:id="comboCriterio" prefWidth="300" maxWidth="Infinity"/>
+        </VBox>
+        <Button fx:id="botonGenerar" text="Generar" styleClass="boton-primario" minWidth="-Infinity"
+                onAction="#generar"/>
+    </HBox>
+    <Label fx:id="etiquetaSinResultados" styleClass="sin-resultados" visible="false"/>
+    <HBox fx:id="resultados" styleClass="resultados-reporte">
+        <TableView fx:id="tabla"/>
+        <VBox styleClass="panel-grafico" HBox.hgrow="ALWAYS">
+            <Label fx:id="tituloGrafico" styleClass="titulo-grafico" wrapText="true"/>
+            <StackPane fx:id="contenedorGrafico" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </HBox>
+    <HBox styleClass="fila-botones">
+        <Button fx:id="botonExportar" text="Exportar CSV" styleClass="boton-secundario" minWidth="-Infinity"
+                onAction="#exportar"/>
+        <Label text="UTF-8 con separador ; (se abre con Excel)." styleClass="nota"/>
+    </HBox>
+    <Label text="Criterios disponibles: categoría · zona corporal · tipo de lesión · período (mes) · tratamientos activos y finalizados · duración promedio de tratamientos por tipo de lesión."
+           styleClass="nota" wrapText="true"/>
+</VBox>

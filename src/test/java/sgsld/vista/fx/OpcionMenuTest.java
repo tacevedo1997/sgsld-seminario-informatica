@@ -1,6 +1,7 @@
 package sgsld.vista.fx;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,14 @@ class OpcionMenuTest {
     void kinesiologo() {
         assertEquals(List.of("Consultar ficha", "Registrar lesión", "Tratamientos", "Evoluciones",
                 "Reportes (sin acceso) [deshabilitada]"), menuDe(Rol.KINESIOLOGO));
+    }
+
+    @Test
+    @DisplayName("Cada opción del menú tiene su pantalla FXML")
+    void cadaOpcionTieneSuPantalla() {
+        for (OpcionMenu opcion : OpcionMenu.OPCIONES) {
+            assertNotNull(OpcionMenu.class.getResource(opcion.archivoFxml()), opcion.archivoFxml());
+        }
     }
 
     @Test

@@ -1,5 +1,6 @@
 package sgsld.vista.fx;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.Clock;
@@ -18,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import sgsld.App;
@@ -52,6 +54,8 @@ public final class ContextoFX {
     private int tareasEnCurso;
     /** Cómo se muestran los diálogos: modales, salvo en el Capturador. */
     private Function<Dialog<ButtonType>, Optional<ButtonType>> presentador = Dialog::showAndWait;
+    /** Cómo se elige dónde guardar un archivo: con el diálogo del sistema, salvo en el Capturador. */
+    private Function<FileChooser, File> selectorDeArchivos;
 
     /**
      * Crea el contexto y prepara la ventana: escena con la hoja de estilo y
@@ -69,6 +73,7 @@ public final class ContextoFX {
         this.modo = modo;
         this.avisos = List.copyOf(avisos);
         this.ejecutor = ejecutor;
+        this.selectorDeArchivos = selector -> selector.showSaveDialog(ventana);
         Scene escena = new Scene(new StackPane(), ANCHO_MINIMO, ALTO_MINIMO);
         escena.getStylesheets().add(hojaDeEstilo());
         ventana.setScene(escena);
@@ -192,6 +197,25 @@ public final class ContextoFX {
      */
     void usarPresentador(Function<Dialog<ButtonType>, Optional<ButtonType>> presentador) {
         this.presentador = presentador;
+    }
+
+    /**
+     * Pide dónde guardar un archivo.
+     *
+     * @param selector diálogo con el título, la carpeta y el nombre sugerido
+     * @return el archivo elegido, o {@code null} si se canceló
+     */
+    File elegirArchivoParaGuardar(FileChooser selector) {
+        return selectorDeArchivos.apply(selector);
+    }
+
+    /**
+     * Cambia la forma de elegir dónde guardar (lo usa el Capturador).
+     *
+     * @param selectorDeArchivos función que devuelve el archivo elegido
+     */
+    void usarSelectorDeArchivos(Function<FileChooser, File> selectorDeArchivos) {
+        this.selectorDeArchivos = selectorDeArchivos;
     }
 
     /**
