@@ -16,6 +16,7 @@ import sgsld.servicio.reporte.ReportePorTipo;
 import sgsld.servicio.reporte.ReportePorZona;
 import sgsld.servicio.reporte.ReporteTratamientosPorEstado;
 import sgsld.util.AccesoDenegadoException;
+import sgsld.util.PersistenciaException;
 import sgsld.util.SesionUsuario;
 import sgsld.util.Validaciones;
 import sgsld.util.ValidacionException;
@@ -66,7 +67,7 @@ public class ReporteService {
      * @throws ValidacionException     si el período es inválido
      */
     public List<FilaReporteDTO> generar(Reporte reporte, LocalDate desde, LocalDate hasta)
-            throws AccesoDenegadoException, ValidacionException {
+            throws AccesoDenegadoException, ValidacionException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR);
         if (reporte.usaPeriodo()) {
             List<String> errores = new ArrayList<>();

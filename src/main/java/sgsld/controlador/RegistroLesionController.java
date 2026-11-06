@@ -14,6 +14,7 @@ import sgsld.servicio.LesionService;
 import sgsld.util.AccesoDenegadoException;
 import sgsld.util.EntidadNoEncontradaException;
 import sgsld.util.Fechas;
+import sgsld.util.PersistenciaException;
 import sgsld.util.ValidacionException;
 import sgsld.vista.consola.Consola;
 import sgsld.vista.consola.TablaConsola;
@@ -54,7 +55,7 @@ public class RegistroLesionController {
      *
      * @throws AccesoDenegadoException si el rol no es Kinesiólogo
      */
-    public void registrarLesion() throws AccesoDenegadoException {
+    public void registrarLesion() throws AccesoDenegadoException, PersistenciaException {
         consola.titulo("Registro de lesión");
         Optional<Jugador> elegido = selector.seleccionar(true);
         if (elegido.isEmpty()) {
@@ -129,7 +130,7 @@ public class RegistroLesionController {
     }
 
     /** Historial del jugador, que se muestra automáticamente al elegirlo (RNF06). */
-    private void mostrarHistorial(Jugador jugador) throws AccesoDenegadoException {
+    private void mostrarHistorial(Jugador jugador) throws AccesoDenegadoException, PersistenciaException {
         consola.titulo("Historial de " + jugador.getNombreCompleto());
         try {
             List<Lesion> historial = lesiones.consultarHistorial(jugador.getId());

@@ -3,6 +3,7 @@ package sgsld.dao;
 import java.util.Optional;
 
 import sgsld.modelo.Usuario;
+import sgsld.util.PersistenciaException;
 
 /** Acceso a datos de usuarios. */
 public interface UsuarioDAO extends DAO<Usuario> {
@@ -14,5 +15,5 @@ public interface UsuarioDAO extends DAO<Usuario> {
      * @param nombreUsuario nombre de usuario
      * @return el usuario, o vacío si no existe
      */
-    Optional<Usuario> buscarPorNombreUsuario(String nombreUsuario);
+    Optional<Usuario> buscarPorNombreUsuario(String nombreUsuario) throws PersistenciaException;
 }

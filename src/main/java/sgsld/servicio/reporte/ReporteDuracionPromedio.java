@@ -13,6 +13,7 @@ import sgsld.dao.ReporteDAO;
 import sgsld.modelo.Tratamiento;
 import sgsld.modelo.dto.FilaReporteDTO;
 import sgsld.util.Algoritmos;
+import sgsld.util.PersistenciaException;
 import sgsld.util.Texto;
 
 /**
@@ -47,7 +48,7 @@ public class ReporteDuracionPromedio extends Reporte {
     }
 
     @Override
-    public List<FilaReporteDTO> generar(LocalDate desde, LocalDate hasta) {
+    public List<FilaReporteDTO> generar(LocalDate desde, LocalDate hasta) throws PersistenciaException {
         Map<String, Long> cantidades = new HashMap<>();
         Map<String, Long> diasTotales = new HashMap<>();
         for (Tratamiento tratamiento : getDatos().tratamientosFinalizadosEntre(desde, hasta)) {

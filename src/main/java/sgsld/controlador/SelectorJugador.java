@@ -9,6 +9,7 @@ import sgsld.modelo.Persona;
 import sgsld.servicio.JugadorService;
 import sgsld.util.AccesoDenegadoException;
 import sgsld.util.EntidadNoEncontradaException;
+import sgsld.util.PersistenciaException;
 import sgsld.vista.consola.Consola;
 
 /**
@@ -50,7 +51,8 @@ public class SelectorJugador {
      * @return el jugador elegido, o vacío si no hubo resultados o se canceló
      * @throws AccesoDenegadoException si el rol no puede consultar jugadores
      */
-    public Optional<Jugador> seleccionar(boolean soloActivos) throws AccesoDenegadoException {
+    public Optional<Jugador> seleccionar(boolean soloActivos)
+            throws AccesoDenegadoException, PersistenciaException {
         consola.mostrar("Buscar jugador por:");
         consola.mostrar("  1. DNI");
         consola.mostrar("  2. Apellido");
@@ -65,7 +67,7 @@ public class SelectorJugador {
         };
     }
 
-    private Optional<Jugador> porDni(boolean soloActivos) throws AccesoDenegadoException {
+    private Optional<Jugador> porDni(boolean soloActivos) throws AccesoDenegadoException, PersistenciaException {
         String dni = consola.leerTexto("DNI (sin puntos): ", true, 10);
         try {
             Jugador jugador = jugadores.buscarPorDni(dni);
@@ -81,7 +83,9 @@ public class SelectorJugador {
         }
     }
 
-    private Optional<Jugador> porApellido(boolean soloActivos) throws AccesoDenegadoException {
+    private Optional<Jugador> porApellido(boolean soloActivos)
+
+            throws AccesoDenegadoException, PersistenciaException {
         String apellido = consola.leerTexto("Apellido (o parte): ", true, Persona.MAX_NOMBRE);
         List<Jugador> encontrados = new ArrayList<>();
         for (Jugador jugador : jugadores.buscarPorApellido(apellido)) {
@@ -100,7 +104,9 @@ public class SelectorJugador {
         return consola.elegirDeLista("Coincidencias:", encontrados, SelectorJugador::describir);
     }
 
-    private Optional<Jugador> deLaLista(boolean soloActivos) throws AccesoDenegadoException {
+    private Optional<Jugador> deLaLista(boolean soloActivos)
+
+            throws AccesoDenegadoException, PersistenciaException {
         return consola.elegirDeLista("Jugadores:", jugadores.listar(!soloActivos), SelectorJugador::describir);
     }
 }

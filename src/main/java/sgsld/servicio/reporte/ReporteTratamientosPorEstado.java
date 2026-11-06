@@ -8,6 +8,7 @@ import sgsld.dao.ReporteDAO;
 import sgsld.modelo.EstadoTratamiento;
 import sgsld.modelo.Tratamiento;
 import sgsld.modelo.dto.FilaReporteDTO;
+import sgsld.util.PersistenciaException;
 
 /**
  * Tratamientos en curso y finalizados (consulta C9). Es una foto del momento:
@@ -48,7 +49,7 @@ public class ReporteTratamientosPorEstado extends Reporte {
 
     /** Ignora las fechas: cuenta todos los tratamientos según su estado actual. */
     @Override
-    public List<FilaReporteDTO> generar(LocalDate desde, LocalDate hasta) {
+    public List<FilaReporteDTO> generar(LocalDate desde, LocalDate hasta) throws PersistenciaException {
         List<Tratamiento> tratamientos = getDatos().listarTratamientos();
         List<FilaReporteDTO> filas = new ArrayList<>();
         for (EstadoTratamiento estado : EstadoTratamiento.values()) {

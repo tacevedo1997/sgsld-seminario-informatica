@@ -3,7 +3,6 @@ package sgsld;
 import java.time.Clock;
 import java.time.LocalDate;
 
-import sgsld.dao.FabricaDAO;
 import sgsld.dao.memoria.DatosDePrueba;
 import sgsld.dao.memoria.FabricaDAOMemoria;
 import sgsld.modelo.Jugador;
@@ -40,7 +39,7 @@ public final class EscenarioPrueba {
     /** Contraseña de todos los usuarios del lote. */
     public static final String CONTRASENA_LOTE = "Sgsld2026!";
 
-    private final FabricaDAO fabrica = new FabricaDAOMemoria();
+    private final FabricaDAOMemoria fabrica = new FabricaDAOMemoria();
     private final AutenticacionService autenticacion;
     private final JugadorService jugadores;
     private final CategoriaService categorias;
@@ -97,7 +96,7 @@ public final class EscenarioPrueba {
         SesionUsuario.getInstancia().cerrar();
     }
 
-    public FabricaDAO fabrica() {
+    public FabricaDAOMemoria fabrica() {
         return fabrica;
     }
 

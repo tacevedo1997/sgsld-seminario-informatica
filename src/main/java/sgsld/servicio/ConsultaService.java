@@ -15,6 +15,7 @@ import sgsld.modelo.dto.FichaJugadorDTO;
 import sgsld.util.AccesoDenegadoException;
 import sgsld.util.Algoritmos;
 import sgsld.util.EntidadNoEncontradaException;
+import sgsld.util.PersistenciaException;
 import sgsld.util.SesionUsuario;
 import sgsld.util.Texto;
 
@@ -66,7 +67,7 @@ public class ConsultaService {
      * @return una fila por jugador activo
      * @throws AccesoDenegadoException si no hay sesión iniciada
      */
-    public List<EstadoJugadorDTO> consultarEstadoActual() throws AccesoDenegadoException {
+    public List<EstadoJugadorDTO> consultarEstadoActual() throws AccesoDenegadoException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR, Rol.KINESIOLOGO, Rol.CUERPO_TECNICO);
         List<EstadoJugadorDTO> filas = estados.listarEstados();
         Algoritmos.ordenarPorInsercion(filas, POR_CATEGORIA_Y_JUGADOR);
@@ -80,7 +81,8 @@ public class ConsultaService {
      * @return su estado
      * @throws AccesoDenegadoException si no hay sesión iniciada
      */
-    public EstadoDisponibilidad consultarEstado(int idJugador) throws AccesoDenegadoException {
+    public EstadoDisponibilidad consultarEstado(int idJugador)
+            throws AccesoDenegadoException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR, Rol.KINESIOLOGO, Rol.CUERPO_TECNICO);
         return estados.estadoDe(idJugador);
     }
@@ -95,7 +97,7 @@ public class ConsultaService {
      * @throws EntidadNoEncontradaException si el jugador no existe
      */
     public FichaJugadorDTO consultarFicha(int idJugador)
-            throws AccesoDenegadoException, EntidadNoEncontradaException {
+            throws AccesoDenegadoException, EntidadNoEncontradaException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR, Rol.KINESIOLOGO);
         Jugador jugador = jugadores.buscarPorId(idJugador).orElseThrow(
                 () -> new EntidadNoEncontradaException("No se encontró el jugador N° " + idJugador + "."));

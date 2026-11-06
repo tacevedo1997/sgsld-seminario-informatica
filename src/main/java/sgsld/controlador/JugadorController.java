@@ -12,6 +12,7 @@ import sgsld.servicio.JugadorService;
 import sgsld.util.AccesoDenegadoException;
 import sgsld.util.EntidadNoEncontradaException;
 import sgsld.util.Fechas;
+import sgsld.util.PersistenciaException;
 import sgsld.util.ValidacionException;
 import sgsld.vista.consola.Consola;
 import sgsld.vista.consola.TablaConsola;
@@ -49,7 +50,7 @@ public class JugadorController {
      *
      * @throws AccesoDenegadoException si el rol no puede consultar jugadores
      */
-    public void listar() throws AccesoDenegadoException {
+    public void listar() throws AccesoDenegadoException, PersistenciaException {
         boolean incluirInactivos = consola.leerSiNo("¿Incluir jugadores dados de baja? (S/N): ");
         List<Jugador> lista = jugadores.listar(incluirInactivos);
         consola.titulo(incluirInactivos ? "Jugadores (activos y dados de baja)" : "Jugadores activos");
@@ -62,7 +63,7 @@ public class JugadorController {
      *
      * @throws AccesoDenegadoException si el rol no puede consultar jugadores
      */
-    public void buscar() throws AccesoDenegadoException {
+    public void buscar() throws AccesoDenegadoException, PersistenciaException {
         consola.mostrar("Buscar por:");
         consola.mostrar("  1. DNI (búsqueda binaria en el índice por DNI)");
         consola.mostrar("  2. Apellido (búsqueda secuencial, coincidencia parcial)");
@@ -92,7 +93,7 @@ public class JugadorController {
      *
      * @throws AccesoDenegadoException si el rol no es Coordinador
      */
-    public void alta() throws AccesoDenegadoException {
+    public void alta() throws AccesoDenegadoException, PersistenciaException {
         List<Categoria> disponibles = categorias.listar();
         if (disponibles.isEmpty()) {
             consola.mostrarError("Debe registrar al menos una categoría antes de dar de alta jugadores.");
@@ -127,7 +128,7 @@ public class JugadorController {
      *
      * @throws AccesoDenegadoException si el rol no es Coordinador
      */
-    public void modificar() throws AccesoDenegadoException {
+    public void modificar() throws AccesoDenegadoException, PersistenciaException {
         Optional<Jugador> elegido = selector.seleccionar(false);
         if (elegido.isEmpty()) {
             return;
@@ -162,7 +163,7 @@ public class JugadorController {
      *
      * @throws AccesoDenegadoException si el rol no es Coordinador
      */
-    public void darDeBaja() throws AccesoDenegadoException {
+    public void darDeBaja() throws AccesoDenegadoException, PersistenciaException {
         Optional<Jugador> elegido = selector.seleccionar(true);
         if (elegido.isEmpty()) {
             return;

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import sgsld.dao.EstadoJugadorDAO;
-import sgsld.dao.JugadorDAO;
-import sgsld.dao.TratamientoDAO;
 import sgsld.modelo.EstadoDisponibilidad;
 import sgsld.modelo.Jugador;
 import sgsld.modelo.Tratamiento;
@@ -19,16 +17,16 @@ import sgsld.modelo.dto.EstadoJugadorDTO;
  */
 public class EstadoJugadorDAOMemoria implements EstadoJugadorDAO {
 
-    private final JugadorDAO jugadores;
-    private final TratamientoDAO tratamientos;
+    private final JugadorDAOMemoria jugadores;
+    private final TratamientoDAOMemoria tratamientos;
 
     /**
-     * Crea la vista sobre las tablas de jugadores y tratamientos.
+     * Crea la vista sobre las tablas en memoria de jugadores y tratamientos.
      *
-     * @param jugadores    DAO de jugadores
-     * @param tratamientos DAO de tratamientos
+     * @param jugadores    DAO de jugadores en memoria
+     * @param tratamientos DAO de tratamientos en memoria
      */
-    public EstadoJugadorDAOMemoria(JugadorDAO jugadores, TratamientoDAO tratamientos) {
+    public EstadoJugadorDAOMemoria(JugadorDAOMemoria jugadores, TratamientoDAOMemoria tratamientos) {
         this.jugadores = jugadores;
         this.tratamientos = tratamientos;
     }

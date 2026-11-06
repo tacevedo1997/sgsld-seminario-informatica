@@ -18,7 +18,6 @@ import sgsld.controlador.RegistroLesionController;
 import sgsld.controlador.ReporteController;
 import sgsld.controlador.SelectorJugador;
 import sgsld.controlador.TratamientoController;
-import sgsld.dao.FabricaDAO;
 import sgsld.dao.memoria.DatosDePrueba;
 import sgsld.dao.memoria.FabricaDAOMemoria;
 import sgsld.servicio.AutenticacionService;
@@ -71,7 +70,7 @@ public final class App {
         List<String> avisos = new ArrayList<>();
         Clock reloj = crearReloj(avisos);
 
-        FabricaDAO fabrica = new FabricaDAOMemoria();
+        FabricaDAOMemoria fabrica = new FabricaDAOMemoria();
         DatosDePrueba.cargar(fabrica);
 
         AutenticacionService autenticacion = new AutenticacionService(fabrica.getUsuarioDAO());

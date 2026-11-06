@@ -6,6 +6,7 @@ import sgsld.dao.UsuarioDAO;
 import sgsld.modelo.Usuario;
 import sgsld.util.CredencialesInvalidasException;
 import sgsld.util.HashContrasena;
+import sgsld.util.PersistenciaException;
 import sgsld.util.SesionUsuario;
 
 /** Inicio y cierre de sesión (CU-09). No requiere sesión previa. */
@@ -40,7 +41,8 @@ public class AutenticacionService {
      * @throws CredencialesInvalidasException si el usuario no existe, está
      *         inactivo o la contraseña no coincide (mensaje genérico)
      */
-    public Usuario iniciarSesion(String nombreUsuario, char[] contrasena) throws CredencialesInvalidasException {
+    public Usuario iniciarSesion(String nombreUsuario, char[] contrasena)
+            throws CredencialesInvalidasException, PersistenciaException {
         Optional<Usuario> encontrado = nombreUsuario == null
                 ? Optional.empty()
                 : usuarios.buscarPorNombreUsuario(nombreUsuario.trim());

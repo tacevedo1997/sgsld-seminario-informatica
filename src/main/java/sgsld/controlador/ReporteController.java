@@ -9,6 +9,7 @@ import sgsld.servicio.ReporteService;
 import sgsld.servicio.reporte.Reporte;
 import sgsld.util.AccesoDenegadoException;
 import sgsld.util.Fechas;
+import sgsld.util.PersistenciaException;
 import sgsld.util.ValidacionException;
 import sgsld.vista.consola.Consola;
 import sgsld.vista.consola.GraficoConsola;
@@ -42,7 +43,7 @@ public class ReporteController {
      *
      * @throws AccesoDenegadoException si el rol no es Coordinador
      */
-    public void generarReportes() throws AccesoDenegadoException {
+    public void generarReportes() throws AccesoDenegadoException, PersistenciaException {
         consola.titulo("Reportes estadísticos");
         List<Reporte> disponibles = reportes.getReportesDisponibles();
         LocalDate hoy = reportes.hoy();

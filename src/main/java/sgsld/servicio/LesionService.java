@@ -21,6 +21,7 @@ import sgsld.util.AccesoDenegadoException;
 import sgsld.util.Algoritmos;
 import sgsld.util.EntidadNoEncontradaException;
 import sgsld.util.Fechas;
+import sgsld.util.PersistenciaException;
 import sgsld.util.SesionUsuario;
 import sgsld.util.Validaciones;
 import sgsld.util.ValidacionException;
@@ -73,7 +74,7 @@ public class LesionService {
      * @throws EntidadNoEncontradaException si el jugador no existe
      */
     public List<Lesion> consultarHistorial(int idJugador)
-            throws AccesoDenegadoException, EntidadNoEncontradaException {
+            throws AccesoDenegadoException, EntidadNoEncontradaException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.KINESIOLOGO, Rol.COORDINADOR);
         if (jugadores.buscarPorId(idJugador).isEmpty()) {
             throw new EntidadNoEncontradaException("No se encontró el jugador N° " + idJugador + ".");
@@ -95,7 +96,7 @@ public class LesionService {
      * @throws AccesoDenegadoException si el rol no es Kinesiólogo
      * @throws ValidacionException     con todos los errores encontrados
      */
-    public void validar(Lesion lesion) throws AccesoDenegadoException, ValidacionException {
+    public void validar(Lesion lesion) throws AccesoDenegadoException, ValidacionException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.KINESIOLOGO);
         List<String> errores = new ArrayList<>();
         Jugador jugador = lesion.getJugador();
@@ -128,7 +129,7 @@ public class LesionService {
      * @return los antecedentes en orden cronológico
      * @throws AccesoDenegadoException si el rol no es Kinesiólogo
      */
-    public List<Lesion> buscarAntecedentes(Lesion nueva) throws AccesoDenegadoException {
+    public List<Lesion> buscarAntecedentes(Lesion nueva) throws AccesoDenegadoException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.KINESIOLOGO);
         List<Lesion> antecedentes = new ArrayList<>();
         for (Lesion lesion : lesiones.buscarPorJugador(nueva.getJugador().getId())) {
@@ -177,7 +178,8 @@ public class LesionService {
      * @throws AccesoDenegadoException si el rol no es Kinesiólogo
      * @throws ValidacionException     con todos los errores encontrados
      */
-    public int registrarLesion(Lesion lesion) throws AccesoDenegadoException, ValidacionException {
+    public int registrarLesion(Lesion lesion)
+            throws AccesoDenegadoException, ValidacionException, PersistenciaException {
         validar(lesion);
         return lesiones.insertar(lesion);
     }
@@ -188,7 +190,7 @@ public class LesionService {
      * @return las zonas, en el orden del catálogo
      * @throws AccesoDenegadoException si el rol no es Kinesiólogo
      */
-    public List<ZonaCorporal> listarZonas() throws AccesoDenegadoException {
+    public List<ZonaCorporal> listarZonas() throws AccesoDenegadoException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.KINESIOLOGO);
         return zonas.listarTodos();
     }
@@ -199,7 +201,7 @@ public class LesionService {
      * @return los tipos, en el orden del catálogo
      * @throws AccesoDenegadoException si el rol no es Kinesiólogo
      */
-    public List<TipoLesion> listarTipos() throws AccesoDenegadoException {
+    public List<TipoLesion> listarTipos() throws AccesoDenegadoException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.KINESIOLOGO);
         return tipos.listarTodos();
     }

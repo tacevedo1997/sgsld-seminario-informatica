@@ -16,6 +16,7 @@ import sgsld.modelo.Tratamiento;
 import sgsld.util.AccesoDenegadoException;
 import sgsld.util.EntidadNoEncontradaException;
 import sgsld.util.Fechas;
+import sgsld.util.PersistenciaException;
 import sgsld.util.SesionUsuario;
 import sgsld.util.Validaciones;
 import sgsld.util.ValidacionException;
@@ -64,7 +65,8 @@ public class TratamientoService {
      * @throws AccesoDenegadoException si el rol no es Kinesiólogo
      * @throws ValidacionException     con todos los errores encontrados
      */
-    public int registrarTratamiento(Tratamiento tratamiento) throws AccesoDenegadoException, ValidacionException {
+    public int registrarTratamiento(Tratamiento tratamiento)
+            throws AccesoDenegadoException, ValidacionException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.KINESIOLOGO);
         List<String> errores = new ArrayList<>();
         Lesion lesion = tratamiento.getLesion();
@@ -108,7 +110,7 @@ public class TratamientoService {
      * @throws ValidacionException          con todos los errores encontrados
      */
     public int registrarEvolucion(int idTratamiento, Evolucion evolucion)
-            throws AccesoDenegadoException, EntidadNoEncontradaException, ValidacionException {
+            throws AccesoDenegadoException, EntidadNoEncontradaException, ValidacionException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.KINESIOLOGO);
         Tratamiento tratamiento = buscar(idTratamiento);
         List<String> errores = new ArrayList<>();
@@ -139,7 +141,7 @@ public class TratamientoService {
      * @throws ValidacionException          con todos los errores encontrados
      */
     public void finalizarTratamiento(int idTratamiento, LocalDate fechaFin)
-            throws AccesoDenegadoException, EntidadNoEncontradaException, ValidacionException {
+            throws AccesoDenegadoException, EntidadNoEncontradaException, ValidacionException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.KINESIOLOGO);
         Tratamiento tratamiento = buscar(idTratamiento);
         List<String> errores = new ArrayList<>();
@@ -163,7 +165,7 @@ public class TratamientoService {
      * @return los tratamientos en curso
      * @throws AccesoDenegadoException si el rol no es Kinesiólogo
      */
-    public List<Tratamiento> listarEnCurso() throws AccesoDenegadoException {
+    public List<Tratamiento> listarEnCurso() throws AccesoDenegadoException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.KINESIOLOGO);
         return tratamientos.listarEnCurso();
     }
@@ -176,7 +178,8 @@ public class TratamientoService {
      * @throws AccesoDenegadoException      si el rol no es Kinesiólogo
      * @throws EntidadNoEncontradaException si no existe
      */
-    public Tratamiento buscarPorId(int idTratamiento) throws AccesoDenegadoException, EntidadNoEncontradaException {
+    public Tratamiento buscarPorId(int idTratamiento)
+            throws AccesoDenegadoException, EntidadNoEncontradaException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.KINESIOLOGO);
         return buscar(idTratamiento);
     }
@@ -190,7 +193,7 @@ public class TratamientoService {
         return LocalDate.now(reloj);
     }
 
-    private Tratamiento buscar(int idTratamiento) throws EntidadNoEncontradaException {
+    private Tratamiento buscar(int idTratamiento) throws EntidadNoEncontradaException, PersistenciaException {
         return tratamientos.buscarPorId(idTratamiento).orElseThrow(
                 () -> new EntidadNoEncontradaException("No se encontró el tratamiento N° " + idTratamiento + "."));
     }

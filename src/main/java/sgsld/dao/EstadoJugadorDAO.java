@@ -4,6 +4,7 @@ import java.util.List;
 
 import sgsld.modelo.EstadoDisponibilidad;
 import sgsld.modelo.dto.EstadoJugadorDTO;
+import sgsld.util.PersistenciaException;
 
 /**
  * Estado de disponibilidad de los jugadores (equivale a la vista
@@ -18,7 +19,7 @@ public interface EstadoJugadorDAO {
      *
      * @return una fila por jugador activo (sin orden garantizado)
      */
-    List<EstadoJugadorDTO> listarEstados();
+    List<EstadoJugadorDTO> listarEstados() throws PersistenciaException;
 
     /**
      * Deriva el estado de un jugador.
@@ -26,5 +27,5 @@ public interface EstadoJugadorDAO {
      * @param idJugador identificador del jugador
      * @return su estado de disponibilidad
      */
-    EstadoDisponibilidad estadoDe(int idJugador);
+    EstadoDisponibilidad estadoDe(int idJugador) throws PersistenciaException;
 }

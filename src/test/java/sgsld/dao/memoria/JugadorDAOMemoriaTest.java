@@ -28,7 +28,7 @@ class JugadorDAOMemoriaTest {
     void cargar() {
         fabrica = new FabricaDAOMemoria();
         DatosDePrueba.cargar(fabrica);
-        jugadores = (JugadorDAOMemoria) fabrica.getJugadorDAO();
+        jugadores = fabrica.getJugadorDAO();
     }
 
     @Test

@@ -5,6 +5,7 @@ import java.util.List;
 
 import sgsld.modelo.Lesion;
 import sgsld.modelo.Tratamiento;
+import sgsld.util.PersistenciaException;
 
 /** Consultas de apoyo a los reportes estadísticos (CU-07). */
 public interface ReporteDAO {
@@ -16,7 +17,7 @@ public interface ReporteDAO {
      * @param hasta fecha final
      * @return lesiones con fecha entre {@code desde} y {@code hasta}
      */
-    List<Lesion> lesionesEntre(LocalDate desde, LocalDate hasta);
+    List<Lesion> lesionesEntre(LocalDate desde, LocalDate hasta) throws PersistenciaException;
 
     /**
      * Lista los tratamientos finalizados con fecha de fin en el período,
@@ -26,12 +27,12 @@ public interface ReporteDAO {
      * @param hasta fecha final
      * @return tratamientos finalizados en el período
      */
-    List<Tratamiento> tratamientosFinalizadosEntre(LocalDate desde, LocalDate hasta);
+    List<Tratamiento> tratamientosFinalizadosEntre(LocalDate desde, LocalDate hasta) throws PersistenciaException;
 
     /**
      * Lista todos los tratamientos, en curso y finalizados.
      *
      * @return todos los tratamientos
      */
-    List<Tratamiento> listarTratamientos();
+    List<Tratamiento> listarTratamientos() throws PersistenciaException;
 }

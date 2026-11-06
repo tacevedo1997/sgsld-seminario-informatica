@@ -1,0 +1,8 @@
+# SGSLD · Conexión de las pruebas con MySQL (ejemplo)
+# Copie este archivo como db-test.properties (en la raíz del proyecto) y
+# complete db.clave con la clave que eligió al ejecutar sql/usuario_pruebas.sql.
+# db-test.properties no se versiona. Las pruebas se niegan a ejecutar si la
+# URL no apunta a la base sgsld_test.
+db.url=jdbc:mysql://localhost:3306/sgsld_test?sslMode=REQUIRED&connectionTimeZone=America/Argentina/Cordoba&connectTimeout=5000
+db.usuario=sgsld_pruebas
+db.clave=

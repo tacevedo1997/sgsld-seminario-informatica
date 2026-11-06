@@ -3,6 +3,7 @@ package sgsld.dao;
 import java.util.List;
 
 import sgsld.modelo.Lesion;
+import sgsld.util.PersistenciaException;
 
 /** Acceso a datos de lesiones. */
 public interface LesionDAO extends DAO<Lesion> {
@@ -13,5 +14,5 @@ public interface LesionDAO extends DAO<Lesion> {
      * @param idJugador identificador del jugador
      * @return las lesiones del jugador (sin orden garantizado)
      */
-    List<Lesion> buscarPorJugador(int idJugador);
+    List<Lesion> buscarPorJugador(int idJugador) throws PersistenciaException;
 }

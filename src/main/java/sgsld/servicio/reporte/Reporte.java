@@ -5,6 +5,7 @@ import java.util.List;
 
 import sgsld.dao.ReporteDAO;
 import sgsld.modelo.dto.FilaReporteDTO;
+import sgsld.util.PersistenciaException;
 
 /**
  * Reporte estadístico (CU-07). Raíz de una jerarquía que permite tratar todos
@@ -63,8 +64,9 @@ public abstract class Reporte {
      * @param desde fecha inicial del período, inclusive
      * @param hasta fecha final del período, inclusive
      * @return las filas, ya ordenadas; vacía si no hay datos
+     * @throws PersistenciaException si falla la lectura de los datos
      */
-    public abstract List<FilaReporteDTO> generar(LocalDate desde, LocalDate hasta);
+    public abstract List<FilaReporteDTO> generar(LocalDate desde, LocalDate hasta) throws PersistenciaException;
 
     /**
      * Convierte una fila en las celdas de la tabla, en el orden de

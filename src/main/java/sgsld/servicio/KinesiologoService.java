@@ -13,6 +13,7 @@ import sgsld.util.AccesoDenegadoException;
 import sgsld.util.Algoritmos;
 import sgsld.util.EntidadNoEncontradaException;
 import sgsld.util.HashContrasena;
+import sgsld.util.PersistenciaException;
 import sgsld.util.SesionUsuario;
 import sgsld.util.Texto;
 import sgsld.util.Validaciones;
@@ -48,7 +49,7 @@ public class KinesiologoService {
      * @return los kinesiólogos
      * @throws AccesoDenegadoException si el rol no es Coordinador ni Kinesiólogo
      */
-    public List<Kinesiologo> listar() throws AccesoDenegadoException {
+    public List<Kinesiologo> listar() throws AccesoDenegadoException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR, Rol.KINESIOLOGO);
         List<Kinesiologo> lista = kinesiologos.listarTodos();
         Algoritmos.ordenarPorInsercion(lista, (a, b) -> Texto.comparar(a.getNombreCompleto(), b.getNombreCompleto()));
@@ -63,7 +64,8 @@ public class KinesiologoService {
      * @throws AccesoDenegadoException      si el rol no es Coordinador
      * @throws EntidadNoEncontradaException si no existe
      */
-    public Kinesiologo buscarPorId(int id) throws AccesoDenegadoException, EntidadNoEncontradaException {
+    public Kinesiologo buscarPorId(int id)
+            throws AccesoDenegadoException, EntidadNoEncontradaException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR);
         return kinesiologos.buscarPorId(id).orElseThrow(
                 () -> new EntidadNoEncontradaException("No se encontró el kinesiólogo N° " + id + "."));
@@ -76,7 +78,8 @@ public class KinesiologoService {
      * @return el kinesiólogo, o vacío si el usuario no corresponde a ninguno
      * @throws AccesoDenegadoException si el rol no es Coordinador ni Kinesiólogo
      */
-    public Optional<Kinesiologo> buscarPorUsuario(int idUsuario) throws AccesoDenegadoException {
+    public Optional<Kinesiologo> buscarPorUsuario(int idUsuario)
+            throws AccesoDenegadoException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR, Rol.KINESIOLOGO);
         return kinesiologos.buscarPorUsuario(idUsuario);
     }
@@ -89,7 +92,8 @@ public class KinesiologoService {
      * @throws AccesoDenegadoException si el rol no es Coordinador
      * @throws ValidacionException     con todos los errores de los datos
      */
-    public int registrar(Kinesiologo kinesiologo) throws AccesoDenegadoException, ValidacionException {
+    public int registrar(Kinesiologo kinesiologo)
+            throws AccesoDenegadoException, ValidacionException, PersistenciaException {
         return registrar(kinesiologo, null, null);
     }
 
@@ -106,7 +110,7 @@ public class KinesiologoService {
      * @throws ValidacionException     con todos los errores de los datos
      */
     public int registrar(Kinesiologo kinesiologo, String nombreUsuario, char[] contrasena)
-            throws AccesoDenegadoException, ValidacionException {
+            throws AccesoDenegadoException, ValidacionException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR);
         List<String> errores = validar(kinesiologo);
         if (nombreUsuario != null) {
@@ -131,7 +135,7 @@ public class KinesiologoService {
      * @throws ValidacionException          con todos los errores de los datos
      */
     public void modificar(Kinesiologo cambios)
-            throws AccesoDenegadoException, EntidadNoEncontradaException, ValidacionException {
+            throws AccesoDenegadoException, EntidadNoEncontradaException, ValidacionException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR);
         Kinesiologo actual = kinesiologos.buscarPorId(cambios.getId()).orElseThrow(
                 () -> new EntidadNoEncontradaException("No se encontró el kinesiólogo N° " + cambios.getId() + "."));
@@ -142,7 +146,7 @@ public class KinesiologoService {
         kinesiologos.actualizar(actual);
     }
 
-    private List<String> validar(Kinesiologo kinesiologo) {
+    private List<String> validar(Kinesiologo kinesiologo) throws PersistenciaException {
         List<String> errores = new ArrayList<>(kinesiologo.validar());
         Optional<Kinesiologo> mismaMatricula = kinesiologos.buscarPorMatricula(kinesiologo.getMatricula());
         if (mismaMatricula.isPresent() && mismaMatricula.get().getId() != kinesiologo.getId()) {
@@ -151,7 +155,9 @@ public class KinesiologoService {
         return errores;
     }
 
-    private void validarUsuarioNuevo(String nombreUsuario, char[] contrasena, List<String> errores) {
+    private void validarUsuarioNuevo(String nombreUsuario, char[] contrasena, List<String> errores)
+
+            throws PersistenciaException {
         Validaciones.texto(errores, nombreUsuario, "nombre de usuario", true, Usuario.MAX_NOMBRE_USUARIO);
         if (!Texto.estaVacio(nombreUsuario) && usuarios.buscarPorNombreUsuario(nombreUsuario.trim()).isPresent()) {
             errores.add("Ya existe un usuario con el nombre " + nombreUsuario.trim() + ".");

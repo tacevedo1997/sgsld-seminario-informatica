@@ -9,6 +9,7 @@ import sgsld.modelo.Categoria;
 import sgsld.modelo.Rol;
 import sgsld.util.AccesoDenegadoException;
 import sgsld.util.EntidadNoEncontradaException;
+import sgsld.util.PersistenciaException;
 import sgsld.util.SesionUsuario;
 import sgsld.util.Validaciones;
 import sgsld.util.ValidacionException;
@@ -33,7 +34,7 @@ public class CategoriaService {
      * @return las categorías
      * @throws AccesoDenegadoException si el rol no es Coordinador
      */
-    public List<Categoria> listar() throws AccesoDenegadoException {
+    public List<Categoria> listar() throws AccesoDenegadoException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR);
         return categorias.listarTodos();
     }
@@ -46,7 +47,8 @@ public class CategoriaService {
      * @throws AccesoDenegadoException      si el rol no es Coordinador
      * @throws EntidadNoEncontradaException si no existe
      */
-    public Categoria buscarPorId(int id) throws AccesoDenegadoException, EntidadNoEncontradaException {
+    public Categoria buscarPorId(int id)
+            throws AccesoDenegadoException, EntidadNoEncontradaException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR);
         return categorias.buscarPorId(id).orElseThrow(
                 () -> new EntidadNoEncontradaException("No se encontró la categoría N° " + id + "."));
@@ -60,7 +62,8 @@ public class CategoriaService {
      * @throws AccesoDenegadoException si el rol no es Coordinador
      * @throws ValidacionException     con todos los errores de los datos
      */
-    public int registrar(Categoria categoria) throws AccesoDenegadoException, ValidacionException {
+    public int registrar(Categoria categoria)
+            throws AccesoDenegadoException, ValidacionException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR);
         ValidacionException.lanzarSiHayErrores(validar(categoria));
         return categorias.insertar(categoria);
@@ -76,7 +79,7 @@ public class CategoriaService {
      * @throws ValidacionException          con todos los errores de los datos
      */
     public void modificar(Categoria cambios)
-            throws AccesoDenegadoException, EntidadNoEncontradaException, ValidacionException {
+            throws AccesoDenegadoException, EntidadNoEncontradaException, ValidacionException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR);
         Categoria actual = categorias.buscarPorId(cambios.getId()).orElseThrow(
                 () -> new EntidadNoEncontradaException("No se encontró la categoría N° " + cambios.getId() + "."));
@@ -88,7 +91,7 @@ public class CategoriaService {
     }
 
     /** Nombre obligatorio, único y de hasta 40 caracteres; rango 0 a 99 con mínimo no mayor que máximo. */
-    private List<String> validar(Categoria categoria) {
+    private List<String> validar(Categoria categoria) throws PersistenciaException {
         List<String> errores = new ArrayList<>();
         Validaciones.texto(errores, categoria.getNombre(), "nombre", true, Categoria.MAX_NOMBRE);
         Optional<Categoria> mismoNombre = categorias.buscarPorNombre(categoria.getNombre());

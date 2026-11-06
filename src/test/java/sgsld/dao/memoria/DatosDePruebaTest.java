@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import sgsld.dao.FabricaDAO;
 import sgsld.modelo.EstadoDisponibilidad;
 import sgsld.modelo.Tratamiento;
 import sgsld.modelo.dto.EstadoJugadorDTO;
@@ -18,7 +17,7 @@ import sgsld.modelo.dto.EstadoJugadorDTO;
 @DisplayName("DatosDePrueba · verificación de la carga (como el SELECT COUNT del script)")
 class DatosDePruebaTest {
 
-    private FabricaDAO fabrica;
+    private FabricaDAOMemoria fabrica;
 
     @BeforeEach
     void cargar() {

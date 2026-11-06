@@ -7,6 +7,7 @@ import sgsld.modelo.Categoria;
 import sgsld.servicio.CategoriaService;
 import sgsld.util.AccesoDenegadoException;
 import sgsld.util.EntidadNoEncontradaException;
+import sgsld.util.PersistenciaException;
 import sgsld.util.ValidacionException;
 import sgsld.vista.consola.Consola;
 import sgsld.vista.consola.TablaConsola;
@@ -33,7 +34,7 @@ public class CategoriaController {
      *
      * @throws AccesoDenegadoException si el rol no es Coordinador
      */
-    public void listar() throws AccesoDenegadoException {
+    public void listar() throws AccesoDenegadoException, PersistenciaException {
         List<Categoria> lista = categorias.listar();
         consola.titulo("Categorías");
         TablaConsola tabla = new TablaConsola("N°", "Categoría", "Edad mínima", "Edad máxima").alinearDerecha(0, 2, 3);
@@ -49,7 +50,7 @@ public class CategoriaController {
      *
      * @throws AccesoDenegadoException si el rol no es Coordinador
      */
-    public void alta() throws AccesoDenegadoException {
+    public void alta() throws AccesoDenegadoException, PersistenciaException {
         consola.titulo("Alta de categoría");
         Categoria base = null;
         while (true) {
@@ -74,7 +75,7 @@ public class CategoriaController {
      *
      * @throws AccesoDenegadoException si el rol no es Coordinador
      */
-    public void modificar() throws AccesoDenegadoException {
+    public void modificar() throws AccesoDenegadoException, PersistenciaException {
         Optional<Categoria> elegida = consola.elegirDeLista("Categoría a modificar:", categorias.listar(),
                 categoria -> categoria.getNombre() + " (" + categoria.getRangoEtario() + ")");
         if (elegida.isEmpty()) {

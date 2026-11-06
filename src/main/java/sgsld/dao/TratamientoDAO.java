@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import sgsld.modelo.Tratamiento;
+import sgsld.util.PersistenciaException;
 
 /** Acceso a datos de tratamientos. */
 public interface TratamientoDAO extends DAO<Tratamiento> {
@@ -15,7 +16,7 @@ public interface TratamientoDAO extends DAO<Tratamiento> {
      * @param idLesion identificador de la lesión
      * @return {@code true} si existe un tratamiento en curso
      */
-    boolean existeActivo(int idLesion);
+    boolean existeActivo(int idLesion) throws PersistenciaException;
 
     /**
      * Registra la finalización de un tratamiento (estado "Finalizado" y fecha
@@ -24,12 +25,12 @@ public interface TratamientoDAO extends DAO<Tratamiento> {
      * @param idTratamiento identificador del tratamiento
      * @param fechaFin      fecha de fin
      */
-    void finalizar(int idTratamiento, LocalDate fechaFin);
+    void finalizar(int idTratamiento, LocalDate fechaFin) throws PersistenciaException;
 
     /**
      * Lista los tratamientos en curso.
      *
      * @return tratamientos con estado "En curso"
      */
-    List<Tratamiento> listarEnCurso();
+    List<Tratamiento> listarEnCurso() throws PersistenciaException;
 }

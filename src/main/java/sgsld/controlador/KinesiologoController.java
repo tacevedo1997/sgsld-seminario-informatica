@@ -10,6 +10,7 @@ import sgsld.modelo.Usuario;
 import sgsld.servicio.KinesiologoService;
 import sgsld.util.AccesoDenegadoException;
 import sgsld.util.EntidadNoEncontradaException;
+import sgsld.util.PersistenciaException;
 import sgsld.util.ValidacionException;
 import sgsld.vista.consola.Consola;
 import sgsld.vista.consola.TablaConsola;
@@ -39,7 +40,7 @@ public class KinesiologoController {
      *
      * @throws AccesoDenegadoException si el rol no puede consultar kinesiólogos
      */
-    public void listar() throws AccesoDenegadoException {
+    public void listar() throws AccesoDenegadoException, PersistenciaException {
         List<Kinesiologo> lista = kinesiologos.listar();
         consola.titulo("Kinesiólogos");
         TablaConsola tabla = new TablaConsola("N°", "Kinesiólogo", "Matrícula", "Usuario").alinearDerecha(0);
@@ -56,7 +57,7 @@ public class KinesiologoController {
      *
      * @throws AccesoDenegadoException si el rol no es Coordinador
      */
-    public void alta() throws AccesoDenegadoException {
+    public void alta() throws AccesoDenegadoException, PersistenciaException {
         consola.titulo("Alta de kinesiólogo");
         Kinesiologo base = null;
         while (true) {
@@ -93,7 +94,7 @@ public class KinesiologoController {
      *
      * @throws AccesoDenegadoException si el rol no es Coordinador
      */
-    public void modificar() throws AccesoDenegadoException {
+    public void modificar() throws AccesoDenegadoException, PersistenciaException {
         Optional<Kinesiologo> elegido = consola.elegirDeLista("Kinesiólogo a modificar:", kinesiologos.listar(),
                 kinesiologo -> kinesiologo.getNombreCompleto() + " (" + kinesiologo.getIdentificacion() + ")");
         if (elegido.isEmpty()) {

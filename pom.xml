@@ -6,21 +6,49 @@
 
     <groupId>sgsld</groupId>
     <artifactId>sgsld</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
     <packaging>jar</packaging>
 
     <name>SGSLD</name>
-    <description>Sistema de Gestión y Seguimiento de Lesiones Deportivas - prototipo de consola (entrega 3)</description>
+    <description>Sistema de Gestión y Seguimiento de Lesiones Deportivas - versión final (entrega 4): JavaFX y MySQL</description>
 
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <javafx.version>17.0.13</javafx.version>
+        <mysql.version>8.4.0</mysql.version>
         <junit.version>5.10.2</junit.version>
+        <sgsld.clase.principal>sgsld.App</sgsld.clase.principal>
+        <!-- Las pruebas con MySQL (@Tag("mysql")) se excluyen salvo con -Dgroups=mysql. -->
+        <sgsld.pruebas.excluidas>mysql</sgsld.pruebas.excluidas>
     </properties>
 
     <dependencies>
-        <!-- Única dependencia: JUnit 5, solo para las pruebas. -->
+        <!-- Interfaz gráfica: OpenJFX 17. -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <!-- Persistencia: controlador JDBC de MySQL, sin la X DevAPI (protobuf). -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- JUnit 5, solo para las pruebas. -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -60,6 +88,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
+                    <excludedGroups>${sgsld.pruebas.excluidas}</excludedGroups>
                     <!-- Informes con los @DisplayName (códigos del plan de pruebas). -->
                     <statelessTestsetReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
                         <disable>false</disable>
@@ -84,11 +113,74 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>sgsld.App</mainClass>
+                            <mainClass>${sgsld.clase.principal}</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
             </plugin>
+            <!-- JAR ejecutable con las dependencias (JavaFX para Windows y Connector/J). -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${sgsld.clase.principal}</mainClass>
+                                </transformer>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>module-info.class</exclude>
+                                        <exclude>META-INF/versions/*/module-info.class</exclude>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <!-- Configuración de GraalVM de JavaFX (Android/iOS): no se usa. -->
+                                        <exclude>META-INF/substrate/**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- mvn javafx:run -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>${sgsld.clase.principal}</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- mvn test -Dgroups=mysql: ejecuta solo las pruebas con MySQL (base sgsld_test). -->
+        <profile>
+            <id>pruebas-mysql</id>
+            <activation>
+                <property>
+                    <name>groups</name>
+                    <value>mysql</value>
+                </property>
+            </activation>
+            <properties>
+                <sgsld.pruebas.excluidas>ninguna</sgsld.pruebas.excluidas>
+            </properties>
+        </profile>
+    </profiles>
 </project>

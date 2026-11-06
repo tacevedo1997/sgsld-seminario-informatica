@@ -4,25 +4,23 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import sgsld.dao.LesionDAO;
 import sgsld.dao.ReporteDAO;
-import sgsld.dao.TratamientoDAO;
 import sgsld.modelo.Lesion;
 import sgsld.modelo.Tratamiento;
 
 /** Consultas de los reportes, resueltas sobre las tablas en memoria. */
 public class ReporteDAOMemoria implements ReporteDAO {
 
-    private final LesionDAO lesiones;
-    private final TratamientoDAO tratamientos;
+    private final LesionDAOMemoria lesiones;
+    private final TratamientoDAOMemoria tratamientos;
 
     /**
-     * Crea el DAO de reportes sobre las tablas de lesiones y tratamientos.
+     * Crea el DAO de reportes sobre las tablas en memoria de lesiones y tratamientos.
      *
-     * @param lesiones     DAO de lesiones
-     * @param tratamientos DAO de tratamientos
+     * @param lesiones     DAO de lesiones en memoria
+     * @param tratamientos DAO de tratamientos en memoria
      */
-    public ReporteDAOMemoria(LesionDAO lesiones, TratamientoDAO tratamientos) {
+    public ReporteDAOMemoria(LesionDAOMemoria lesiones, TratamientoDAOMemoria tratamientos) {
         this.lesiones = lesiones;
         this.tratamientos = tratamientos;
     }

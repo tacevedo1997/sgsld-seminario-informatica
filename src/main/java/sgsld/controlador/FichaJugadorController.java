@@ -12,6 +12,7 @@ import sgsld.servicio.ConsultaService;
 import sgsld.util.AccesoDenegadoException;
 import sgsld.util.EntidadNoEncontradaException;
 import sgsld.util.Fechas;
+import sgsld.util.PersistenciaException;
 import sgsld.vista.consola.Consola;
 import sgsld.vista.consola.TablaConsola;
 
@@ -44,7 +45,7 @@ public class FichaJugadorController {
      *
      * @throws AccesoDenegadoException si el rol no es Coordinador ni Kinesiólogo
      */
-    public void consultarFicha() throws AccesoDenegadoException {
+    public void consultarFicha() throws AccesoDenegadoException, PersistenciaException {
         consola.titulo("Ficha individual del jugador");
         Optional<Jugador> elegido = selector.seleccionar(false);
         if (elegido.isEmpty()) {

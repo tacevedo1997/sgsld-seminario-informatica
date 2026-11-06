@@ -3,6 +3,7 @@ package sgsld.dao;
 import java.util.List;
 
 import sgsld.modelo.Evolucion;
+import sgsld.util.PersistenciaException;
 
 /**
  * Acceso a datos de evoluciones. No extiende {@link DAO} porque
@@ -18,7 +19,7 @@ public interface EvolucionDAO {
      * @param evolucion     evolución a guardar
      * @return el identificador asignado
      */
-    int insertar(int idTratamiento, Evolucion evolucion);
+    int insertar(int idTratamiento, Evolucion evolucion) throws PersistenciaException;
 
     /**
      * Lista las evoluciones de un tratamiento.
@@ -26,5 +27,5 @@ public interface EvolucionDAO {
      * @param idTratamiento identificador del tratamiento
      * @return las evoluciones, en orden de registro
      */
-    List<Evolucion> buscarPorTratamiento(int idTratamiento);
+    List<Evolucion> buscarPorTratamiento(int idTratamiento) throws PersistenciaException;
 }

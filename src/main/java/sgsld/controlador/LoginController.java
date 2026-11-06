@@ -6,6 +6,7 @@ import java.util.Optional;
 import sgsld.modelo.Usuario;
 import sgsld.servicio.AutenticacionService;
 import sgsld.util.CredencialesInvalidasException;
+import sgsld.util.PersistenciaException;
 import sgsld.vista.consola.Consola;
 
 /** Inicio y cierre de sesión (CU-09). */
@@ -27,9 +28,9 @@ public class LoginController {
 
     /**
      * Pide usuario y contraseña hasta autenticar o hasta que el usuario
-     * desista. Ante credenciales inválidas muestra el error y permite
-     * reintentar (CU-09, 2a). La contraseña se limpia de la memoria después de
-     * usarla.
+     * desista. Ante credenciales inválidas (CU-09, 2a) o un problema con la
+     * base de datos muestra el error y permite reintentar. La contraseña se
+     * limpia de la memoria después de usarla.
      *
      * @return el usuario autenticado, o vacío si se canceló
      */
@@ -42,7 +43,7 @@ public class LoginController {
                 Usuario usuario = autenticacion.iniciarSesion(nombreUsuario, contrasena);
                 consola.mostrarOk("Sesión iniciada: " + usuario.getNombreUsuario() + " (" + usuario.getRol() + ").");
                 return Optional.of(usuario);
-            } catch (CredencialesInvalidasException e) {
+            } catch (CredencialesInvalidasException | PersistenciaException e) {
                 consola.mostrarError(e.getMessage());
             } finally {
                 Arrays.fill(contrasena, '\0');

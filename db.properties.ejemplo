@@ -1,0 +1,9 @@
+# SGSLD · Conexión a MySQL (ejemplo)
+# Copie este archivo como db.properties y complete db.clave con la clave que
+# eligió al ejecutar sql/usuario_local.sql. db.properties no se versiona.
+# La aplicación lo busca junto al JAR y, si no está, en el directorio desde
+# donde se ejecuta (por ejemplo, la raíz del proyecto). Con
+# -Dsgsld.config=<ruta> se puede indicar otro archivo.
+db.url=jdbc:mysql://localhost:3306/sgsld?sslMode=REQUIRED&connectionTimeZone=America/Argentina/Cordoba&connectTimeout=5000
+db.usuario=sgsld_app
+db.clave=

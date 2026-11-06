@@ -15,6 +15,7 @@ import sgsld.modelo.Rol;
 import sgsld.util.AccesoDenegadoException;
 import sgsld.util.Algoritmos;
 import sgsld.util.EntidadNoEncontradaException;
+import sgsld.util.PersistenciaException;
 import sgsld.util.SesionUsuario;
 import sgsld.util.Texto;
 import sgsld.util.ValidacionException;
@@ -54,7 +55,7 @@ public class JugadorService {
      * @return los jugadores
      * @throws AccesoDenegadoException si el rol no es Coordinador ni Kinesiólogo
      */
-    public List<Jugador> listar(boolean incluirInactivos) throws AccesoDenegadoException {
+    public List<Jugador> listar(boolean incluirInactivos) throws AccesoDenegadoException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR, Rol.KINESIOLOGO);
         List<Jugador> lista = incluirInactivos ? jugadores.listarTodos() : jugadores.listarActivos();
         Algoritmos.ordenarPorInsercion(lista, POR_APELLIDO_Y_NOMBRE);
@@ -69,7 +70,8 @@ public class JugadorService {
      * @throws AccesoDenegadoException      si el rol no es Coordinador ni Kinesiólogo
      * @throws EntidadNoEncontradaException si no hay un jugador con ese DNI
      */
-    public Jugador buscarPorDni(String dni) throws AccesoDenegadoException, EntidadNoEncontradaException {
+    public Jugador buscarPorDni(String dni)
+            throws AccesoDenegadoException, EntidadNoEncontradaException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR, Rol.KINESIOLOGO);
         return jugadores.buscarPorDni(dni).orElseThrow(
                 () -> new EntidadNoEncontradaException("No se encontró un jugador con DNI " + dni + "."));
@@ -82,7 +84,7 @@ public class JugadorService {
      * @return los jugadores encontrados, ordenados; vacía si no hay coincidencias
      * @throws AccesoDenegadoException si el rol no es Coordinador ni Kinesiólogo
      */
-    public List<Jugador> buscarPorApellido(String apellido) throws AccesoDenegadoException {
+    public List<Jugador> buscarPorApellido(String apellido) throws AccesoDenegadoException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR, Rol.KINESIOLOGO);
         if (Texto.estaVacio(apellido)) {
             return new ArrayList<>();
@@ -100,7 +102,8 @@ public class JugadorService {
      * @throws AccesoDenegadoException      si el rol no es Coordinador ni Kinesiólogo
      * @throws EntidadNoEncontradaException si no existe
      */
-    public Jugador buscarPorId(int id) throws AccesoDenegadoException, EntidadNoEncontradaException {
+    public Jugador buscarPorId(int id)
+            throws AccesoDenegadoException, EntidadNoEncontradaException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR, Rol.KINESIOLOGO);
         return jugadores.buscarPorId(id).orElseThrow(
                 () -> new EntidadNoEncontradaException("No se encontró el jugador N° " + id + "."));
@@ -114,7 +117,8 @@ public class JugadorService {
      * @throws AccesoDenegadoException si el rol no es Coordinador
      * @throws ValidacionException     con todos los errores de los datos
      */
-    public int registrar(Jugador jugador) throws AccesoDenegadoException, ValidacionException {
+    public int registrar(Jugador jugador)
+            throws AccesoDenegadoException, ValidacionException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR);
         List<String> errores = new ArrayList<>();
         if (categorias.listarTodos().isEmpty()) {
@@ -135,7 +139,7 @@ public class JugadorService {
      * @throws ValidacionException          con todos los errores de los datos
      */
     public void modificar(Jugador cambios)
-            throws AccesoDenegadoException, EntidadNoEncontradaException, ValidacionException {
+            throws AccesoDenegadoException, EntidadNoEncontradaException, ValidacionException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR);
         Jugador actual = jugadores.buscarPorId(cambios.getId()).orElseThrow(
                 () -> new EntidadNoEncontradaException("No se encontró el jugador N° " + cambios.getId() + "."));
@@ -162,7 +166,7 @@ public class JugadorService {
      * @throws ValidacionException          si ya estaba dado de baja
      */
     public void darDeBaja(int idJugador)
-            throws AccesoDenegadoException, EntidadNoEncontradaException, ValidacionException {
+            throws AccesoDenegadoException, EntidadNoEncontradaException, ValidacionException, PersistenciaException {
         SesionUsuario.getInstancia().exigir(Rol.COORDINADOR);
         Jugador jugador = jugadores.buscarPorId(idJugador).orElseThrow(
                 () -> new EntidadNoEncontradaException("No se encontró el jugador N° " + idJugador + "."));
@@ -182,7 +186,7 @@ public class JugadorService {
         return LocalDate.now(reloj);
     }
 
-    private void validar(Jugador jugador, List<String> errores) {
+    private void validar(Jugador jugador, List<String> errores) throws PersistenciaException {
         errores.addAll(jugador.validar());
         if (jugador.getFechaNacimiento() != null && jugador.getFechaNacimiento().isAfter(hoy())) {
             errores.add("La fecha de nacimiento no puede ser posterior a la fecha actual.");

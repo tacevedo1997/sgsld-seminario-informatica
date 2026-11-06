@@ -2,8 +2,6 @@ package sgsld.dao.memoria;
 
 import java.time.LocalDate;
 
-import sgsld.dao.FabricaDAO;
-import sgsld.dao.TratamientoDAO;
 import sgsld.modelo.Categoria;
 import sgsld.modelo.Evolucion;
 import sgsld.modelo.Gravedad;
@@ -21,7 +19,7 @@ import sgsld.modelo.ZonaCorporal;
 /**
  * Lote de prueba de la sección 14.5 de la entrega 2, idéntico a los
  * {@code INSERT} de {@code sgsld_script.sql} (mismos identificadores, datos y
- * hashes de contraseña). Se carga a través de las interfaces DAO.
+ * hashes de contraseña). Se carga en los DAO de una {@link FabricaDAOMemoria}.
  * <p>
  * Los tratamientos finalizados se reconstruyen como en el diagrama de estados:
  * se crean en curso, se les agregan sus evoluciones y luego se finalizan.
@@ -46,7 +44,7 @@ public final class DatosDePrueba {
      *
      * @param fabrica fábrica con los DAO vacíos
      */
-    public static void cargar(FabricaDAO fabrica) {
+    public static void cargar(FabricaDAOMemoria fabrica) {
         Categoria primera = new Categoria(1, "Primera", 18, 40);
         Categoria reserva = new Categoria(2, "Reserva", 18, 23);
         Categoria sub17 = new Categoria(3, "Sub-17", 16, 17);
@@ -143,7 +141,7 @@ public final class DatosDePrueba {
         evolucion(fabrica, 11, t9, "2026-09-10", "Estabilidad articular en progreso", ResultadoEvolucion.ESTABLE);
 
         // Tratamientos 7 y 9 quedan en curso.
-        TratamientoDAO tratamientos = fabrica.getTratamientoDAO();
+        TratamientoDAOMemoria tratamientos = fabrica.getTratamientoDAO();
         finalizar(tratamientos, t1, "2025-11-05");
         finalizar(tratamientos, t2, "2026-02-20");
         finalizar(tratamientos, t3, "2025-12-10");
@@ -154,7 +152,7 @@ public final class DatosDePrueba {
         finalizar(tratamientos, t10, "2026-09-04");
     }
 
-    private static Jugador jugador(FabricaDAO fabrica, int id, String dni, String nombre, String apellido,
+    private static Jugador jugador(FabricaDAOMemoria fabrica, int id, String dni, String nombre, String apellido,
                                    String nacimiento, int camiseta, String posicion, Categoria categoria) {
         Jugador jugador = new Jugador(id, dni, nombre, apellido, LocalDate.parse(nacimiento), camiseta,
                 posicion, true, categoria);
@@ -162,14 +160,14 @@ public final class DatosDePrueba {
         return jugador;
     }
 
-    private static Lesion lesion(FabricaDAO fabrica, int id, Jugador jugador, TipoLesion tipo,
+    private static Lesion lesion(FabricaDAOMemoria fabrica, int id, Jugador jugador, TipoLesion tipo,
                                  ZonaCorporal zona, Gravedad gravedad, String fecha, String descripcion) {
         Lesion lesion = new Lesion(id, jugador, tipo, zona, gravedad, LocalDate.parse(fecha), descripcion);
         fabrica.getLesionDAO().insertar(lesion);
         return lesion;
     }
 
-    private static Tratamiento tratamiento(FabricaDAO fabrica, int id, Lesion lesion, Kinesiologo kinesiologo,
+    private static Tratamiento tratamiento(FabricaDAOMemoria fabrica, int id, Lesion lesion, Kinesiologo kinesiologo,
                                            String inicio, String tipo, String observaciones) {
         Tratamiento tratamiento = new Tratamiento(id, lesion, kinesiologo, LocalDate.parse(inicio), tipo,
                 observaciones);
@@ -178,14 +176,14 @@ public final class DatosDePrueba {
         return tratamiento;
     }
 
-    private static void evolucion(FabricaDAO fabrica, int id, Tratamiento tratamiento, String fecha,
+    private static void evolucion(FabricaDAOMemoria fabrica, int id, Tratamiento tratamiento, String fecha,
                                   String observacion, ResultadoEvolucion resultado) {
         Evolucion evolucion = new Evolucion(id, LocalDate.parse(fecha), observacion, resultado);
         tratamiento.agregarEvolucion(evolucion);
         fabrica.getEvolucionDAO().insertar(tratamiento.getId(), evolucion);
     }
 
-    private static void finalizar(TratamientoDAO tratamientos, Tratamiento tratamiento, String fechaFin) {
+    private static void finalizar(TratamientoDAOMemoria tratamientos, Tratamiento tratamiento, String fechaFin) {
         LocalDate fin = LocalDate.parse(fechaFin);
         tratamiento.finalizar(fin);
         tratamientos.finalizar(tratamiento.getId(), fin);

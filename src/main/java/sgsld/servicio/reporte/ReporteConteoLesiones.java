@@ -11,6 +11,7 @@ import sgsld.dao.ReporteDAO;
 import sgsld.modelo.Lesion;
 import sgsld.modelo.dto.FilaReporteDTO;
 import sgsld.util.Algoritmos;
+import sgsld.util.PersistenciaException;
 import sgsld.util.Texto;
 
 /**
@@ -63,7 +64,7 @@ public abstract class ReporteConteoLesiones extends Reporte {
     }
 
     @Override
-    public final List<FilaReporteDTO> generar(LocalDate desde, LocalDate hasta) {
+    public final List<FilaReporteDTO> generar(LocalDate desde, LocalDate hasta) throws PersistenciaException {
         Map<String, Long> conteo = new HashMap<>();
         for (Lesion lesion : getDatos().lesionesEntre(desde, hasta)) {
             conteo.merge(clasificar(lesion), 1L, Long::sum);

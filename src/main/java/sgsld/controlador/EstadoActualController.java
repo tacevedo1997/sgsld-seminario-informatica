@@ -9,6 +9,7 @@ import sgsld.modelo.Persona;
 import sgsld.modelo.dto.EstadoJugadorDTO;
 import sgsld.servicio.ConsultaService;
 import sgsld.util.AccesoDenegadoException;
+import sgsld.util.PersistenciaException;
 import sgsld.util.Texto;
 import sgsld.vista.consola.Consola;
 import sgsld.vista.consola.TablaConsola;
@@ -39,7 +40,7 @@ public class EstadoActualController {
      *
      * @throws AccesoDenegadoException si no hay sesión iniciada
      */
-    public void consultarEstado() throws AccesoDenegadoException {
+    public void consultarEstado() throws AccesoDenegadoException, PersistenciaException {
         consola.titulo("Estado actual de disponibilidad");
         List<EstadoJugadorDTO> filas = consultas.consultarEstadoActual();
         Optional<String> categoria = Optional.empty();

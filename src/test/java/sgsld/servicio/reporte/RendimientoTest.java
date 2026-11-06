@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import sgsld.EscenarioPrueba;
-import sgsld.dao.FabricaDAO;
 import sgsld.dao.memoria.FabricaDAOMemoria;
 import sgsld.modelo.Categoria;
 import sgsld.modelo.Evolucion;
@@ -50,7 +49,7 @@ class RendimientoTest {
     private static final int EJECUCIONES = 10;
     private static final Duration LIMITE = Duration.ofSeconds(3);
 
-    private final FabricaDAO fabrica = new FabricaDAOMemoria();
+    private final FabricaDAOMemoria fabrica = new FabricaDAOMemoria();
     private ReporteService servicio;
 
     @BeforeEach

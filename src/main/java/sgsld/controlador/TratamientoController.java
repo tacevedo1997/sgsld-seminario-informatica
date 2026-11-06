@@ -19,6 +19,7 @@ import sgsld.servicio.TratamientoService;
 import sgsld.util.AccesoDenegadoException;
 import sgsld.util.EntidadNoEncontradaException;
 import sgsld.util.Fechas;
+import sgsld.util.PersistenciaException;
 import sgsld.util.SesionUsuario;
 import sgsld.util.ValidacionException;
 import sgsld.vista.consola.Consola;
@@ -61,7 +62,7 @@ public class TratamientoController {
      *
      * @throws AccesoDenegadoException si el rol no es Kinesiólogo
      */
-    public void registrarTratamiento() throws AccesoDenegadoException {
+    public void registrarTratamiento() throws AccesoDenegadoException, PersistenciaException {
         consola.titulo("Registro de tratamiento");
         Optional<Jugador> jugador = selector.seleccionar(true);
         if (jugador.isEmpty()) {
@@ -92,7 +93,7 @@ public class TratamientoController {
      * @param lesion lesión a tratar
      * @throws AccesoDenegadoException si el rol no es Kinesiólogo
      */
-    public void registrarTratamiento(Lesion lesion) throws AccesoDenegadoException {
+    public void registrarTratamiento(Lesion lesion) throws AccesoDenegadoException, PersistenciaException {
         consola.mostrar("Tratamiento para la lesión N° " + lesion.getId() + ": " + Formatos.lesion(lesion));
         Optional<Kinesiologo> responsable = elegirResponsable();
         if (responsable.isEmpty()) {
@@ -131,7 +132,7 @@ public class TratamientoController {
      *
      * @throws AccesoDenegadoException si el rol no es Kinesiólogo
      */
-    public void registrarEvolucion() throws AccesoDenegadoException {
+    public void registrarEvolucion() throws AccesoDenegadoException, PersistenciaException {
         consola.titulo("Registro de evolución");
         List<Tratamiento> enCurso = tratamientos.listarEnCurso();
         if (enCurso.isEmpty()) {
@@ -154,7 +155,7 @@ public class TratamientoController {
         }
     }
 
-    private Optional<Kinesiologo> elegirResponsable() throws AccesoDenegadoException {
+    private Optional<Kinesiologo> elegirResponsable() throws AccesoDenegadoException, PersistenciaException {
         Usuario usuario = SesionUsuario.getInstancia().getUsuario();
         Optional<Kinesiologo> propio = kinesiologos.buscarPorUsuario(usuario.getId());
         if (propio.isPresent() && consola.leerSiNo("Responsable: " + propio.get().getNombreCompleto() + " ("
@@ -179,7 +180,7 @@ public class TratamientoController {
     }
 
     /** Pide el número de tratamiento hasta que corresponda a uno en curso (0 cancela). */
-    private Optional<Tratamiento> elegirTratamiento() throws AccesoDenegadoException {
+    private Optional<Tratamiento> elegirTratamiento() throws AccesoDenegadoException, PersistenciaException {
         while (true) {
             int numero = consola.leerEntero("N° de tratamiento (0 = cancelar): ");
             if (numero == 0) {
@@ -213,7 +214,9 @@ public class TratamientoController {
         tabla.imprimir(consola);
     }
 
-    private Optional<Evolucion> pedirEvolucion(Tratamiento tratamiento) throws AccesoDenegadoException {
+    private Optional<Evolucion> pedirEvolucion(Tratamiento tratamiento)
+
+            throws AccesoDenegadoException, PersistenciaException {
         Evolucion base = null;
         while (true) {
             LocalDate fecha = consola.leerFecha("Fecha de la evolución ",
@@ -245,7 +248,9 @@ public class TratamientoController {
         }
     }
 
-    private void finalizar(Tratamiento tratamiento, LocalDate fechaEvolucion) throws AccesoDenegadoException {
+    private void finalizar(Tratamiento tratamiento, LocalDate fechaEvolucion)
+
+            throws AccesoDenegadoException, PersistenciaException {
         LocalDate fin = consola.leerFecha("Fecha de fin ", fechaEvolucion);
         if (!consola.leerSiNo("¿Confirma la finalización del tratamiento N° " + tratamiento.getId() + " con fecha "
                 + Fechas.formatear(fin) + "? (S/N): ")) {
