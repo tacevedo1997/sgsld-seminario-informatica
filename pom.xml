@@ -19,7 +19,8 @@
         <javafx.version>17.0.13</javafx.version>
         <mysql.version>8.4.0</mysql.version>
         <junit.version>5.10.2</junit.version>
-        <sgsld.clase.principal>sgsld.App</sgsld.clase.principal>
+        <!-- Lanzador abre la interfaz JavaFX; con la opción "consola", la consola de la entrega 3 (sgsld.App). -->
+        <sgsld.clase.principal>sgsld.vista.fx.Lanzador</sgsld.clase.principal>
         <!-- Las pruebas con MySQL (@Tag("mysql")) se excluyen salvo con -Dgroups=mysql. -->
         <sgsld.pruebas.excluidas>mysql</sgsld.pruebas.excluidas>
     </properties>
@@ -135,6 +136,11 @@
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>${sgsld.clase.principal}</mainClass>
+                                    <manifestEntries>
+                                        <!-- JavaFX carga sus bibliotecas nativas: evita la advertencia de acceso
+                                             nativo de Java 24 y posteriores (Java 17 ignora el atributo). -->
+                                        <Enable-Native-Access>ALL-UNNAMED</Enable-Native-Access>
+                                    </manifestEntries>
                                 </transformer>
                             </transformers>
                             <filters>

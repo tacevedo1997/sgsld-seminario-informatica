@@ -1,0 +1,363 @@
+/*
+ * SGSLD · hoja de estilo de la interfaz JavaFX.
+ * Paleta tomada de los prototipos del informe (Figuras 11 a 13, sección 6.2):
+ *   menú lateral #23403D · verde principal #0F8A74 · fondo del contenido #FAFBFB
+ *   texto #1F2A2A · encabezado de tabla #E1E7E7 · separador de filas #EEEEEE
+ *   chip "En tratamiento" #FEEBD6 / #9A5B13 · chip "Disponible" #E0F1EA / #1E7B55
+ */
+
+.root {
+    -fx-font-family: "Segoe UI", "DejaVu Sans", "Helvetica", sans-serif;
+    -fx-font-size: 14px;
+    -fx-accent: #0F8A74;
+    -fx-focus-color: #0F8A74;
+    -fx-faint-focus-color: #0F8A7422;
+    -fx-selection-bar: #D5ECE6;
+    -fx-selection-bar-non-focused: #E3F1ED;
+    -fx-text-background-color: #1F2A2A;
+    verde: #0F8A74;
+    verde-oscuro: #0C7462;
+    menu-fondo: #23403D;
+    texto: #1F2A2A;
+    texto-suave: #6B7676;
+    borde-campo: #C3CCCC;
+}
+
+/* ---------- Menú lateral ---------- */
+
+.menu-lateral {
+    -fx-background-color: menu-fondo;
+    -fx-min-width: 240px;
+    -fx-pref-width: 240px;
+    -fx-max-width: 240px;
+    -fx-padding: 0 0 18 0;
+}
+
+.menu-cabecera {
+    -fx-padding: 22 18 16 18;
+    -fx-spacing: 2;
+    -fx-border-color: transparent transparent #2F524E transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.menu-marca {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.menu-usuario {
+    -fx-text-fill: #A9BEBA;
+    -fx-font-size: 13px;
+}
+
+.menu-opciones {
+    -fx-padding: 10 0 0 0;
+}
+
+.menu-opcion {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-alignment: center-left;
+    -fx-padding: 10 18 10 18;
+    -fx-cursor: hand;
+}
+
+.menu-opcion:hover {
+    -fx-background-color: #2D504C;
+}
+
+.menu-opcion.activa,
+.menu-opcion.activa:hover {
+    -fx-background-color: verde;
+    -fx-font-weight: bold;
+}
+
+.menu-opcion:disabled {
+    -fx-opacity: 1;
+    -fx-text-fill: #6F8986;
+}
+
+.menu-opcion:focused {
+    -fx-background-insets: 0;
+}
+
+/* ---------- Contenido ---------- */
+
+.contenido,
+.contenido-desplazable,
+.contenido-desplazable > .viewport {
+    -fx-background-color: #FAFBFB;
+}
+
+.contenido-desplazable {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.pantalla {
+    -fx-padding: 22 26 26 26;
+    -fx-spacing: 12;
+}
+
+.titulo-pantalla {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: texto;
+    -fx-padding: 0 0 4 0;
+}
+
+/* Subtítulos de sección: el texto se escribe en mayúsculas en el FXML. */
+.subtitulo {
+    -fx-font-size: 13.5px;
+    -fx-font-weight: bold;
+    -fx-text-fill: texto;
+    -fx-padding: 6 0 0 0;
+}
+
+.fila-campos {
+    -fx-spacing: 24;
+    -fx-alignment: bottom-left;
+}
+
+.campo {
+    -fx-spacing: 4;
+}
+
+.etiqueta-campo {
+    -fx-text-fill: #3A4747;
+    -fx-font-size: 13.5px;
+}
+
+.nota {
+    -fx-text-fill: texto-suave;
+    -fx-font-size: 12.5px;
+}
+
+/* ---------- Campos ---------- */
+
+.text-field,
+.password-field,
+.text-area,
+.combo-box-base {
+    -fx-background-color: borde-campo, white;
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 3, 2;
+    -fx-prompt-text-fill: #9AA5A5;
+}
+
+.text-field:focused,
+.password-field:focused,
+.text-area:focused,
+.combo-box-base:focused {
+    -fx-background-color: verde, white;
+    -fx-background-insets: 0, 1.5;
+}
+
+.text-field,
+.password-field {
+    -fx-padding: 7 10 7 10;
+}
+
+.combo-box > .list-cell {
+    -fx-padding: 7 10 7 10;
+}
+
+.combo-box-base .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.combo-box-base .arrow {
+    -fx-background-color: #4A5656;
+}
+
+.text-area .content {
+    -fx-background-color: white;
+}
+
+/* ---------- Botones ---------- */
+
+.boton-primario {
+    -fx-background-color: verde;
+    -fx-background-radius: 3;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14.5px;
+    -fx-padding: 8 22 8 22;
+    -fx-cursor: hand;
+}
+
+.boton-primario:hover {
+    -fx-background-color: verde-oscuro;
+}
+
+.boton-primario:disabled {
+    -fx-opacity: 0.55;
+}
+
+.boton-secundario {
+    -fx-background-color: verde, white;
+    -fx-background-insets: 0, 1.5;
+    -fx-background-radius: 3, 2;
+    -fx-text-fill: verde;
+    -fx-font-weight: bold;
+    -fx-font-size: 14.5px;
+    -fx-padding: 8 22 8 22;
+    -fx-cursor: hand;
+}
+
+.boton-secundario:hover {
+    -fx-background-color: verde, #EEF7F5;
+}
+
+/* ---------- Tablas ---------- */
+
+.table-view {
+    -fx-background-color: #DCE3E3, white;
+    -fx-background-insets: 0, 1;
+    -fx-padding: 1;
+}
+
+.table-view:focused {
+    -fx-background-color: #DCE3E3, white;
+}
+
+.table-view .column-header-background,
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: #E1E7E7;
+}
+
+.table-view .column-header-background {
+    -fx-border-color: transparent transparent #D2DADA transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .column-header {
+    -fx-border-color: transparent #D2DADA transparent transparent;
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 0;
+}
+
+.table-view .column-header .label {
+    -fx-font-weight: bold;
+    -fx-text-fill: texto;
+    -fx-alignment: center-left;
+    -fx-padding: 0 12 0 12;
+    -fx-min-height: 41px;
+    -fx-pref-height: 41px;
+}
+
+.table-view .column-header.columna-numero .label {
+    -fx-alignment: center-right;
+}
+
+.table-row-cell {
+    -fx-background-color: #EEEEEE, white;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-text-background-color: texto;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #EEEEEE, #DDEFEA;
+}
+
+.table-row-cell:empty {
+    -fx-background-color: white;
+}
+
+.table-cell {
+    -fx-padding: 0 12 0 12;
+    -fx-alignment: center-left;
+    -fx-border-color: transparent #EEEEEE transparent transparent;
+    -fx-border-width: 0 1 0 0;
+    -fx-text-fill: texto;
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: texto;
+}
+
+.table-cell.columna-numero {
+    -fx-alignment: center-right;
+}
+
+.table-view .placeholder .label {
+    -fx-text-fill: texto-suave;
+}
+
+/* ---------- Chips de estado ---------- */
+
+.chip {
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 2 11 2 11;
+    -fx-font-weight: bold;
+    -fx-font-size: 13.5px;
+}
+
+.chip-en-tratamiento {
+    -fx-background-color: #FEEBD6;
+    -fx-border-color: #F5CB9C;
+    -fx-text-fill: #9A5B13;
+}
+
+.chip-disponible {
+    -fx-background-color: #E0F1EA;
+    -fx-border-color: #B5DCC9;
+    -fx-text-fill: #1E7B55;
+}
+
+/* ---------- Inicio de sesión ---------- */
+
+.login-fondo {
+    -fx-background-color: menu-fondo;
+}
+
+.login-tarjeta {
+    -fx-background-color: white;
+    -fx-background-radius: 6;
+    -fx-padding: 30 36 28 36;
+    -fx-spacing: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.30), 22, 0, 0, 6);
+}
+
+.login-marca {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: menu-fondo;
+}
+
+.login-error {
+    -fx-text-fill: #B3261E;
+    -fx-font-weight: bold;
+}
+
+/* ---------- Diálogos ---------- */
+
+.dialog-pane {
+    -fx-background-color: white;
+}
+
+.dialog-pane > .header-panel {
+    -fx-background-color: #F1F4F4;
+}
+
+.dialog-pane > .header-panel .label {
+    -fx-font-weight: bold;
+    -fx-text-fill: texto;
+}
+
+.dialog-pane > .button-bar > .container > .button {
+    -fx-font-weight: bold;
+}
+
+.dialog-pane > .button-bar > .container > .button:default {
+    -fx-background-color: verde;
+    -fx-text-fill: white;
+    -fx-background-radius: 3;
+}

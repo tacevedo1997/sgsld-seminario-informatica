@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<!-- Estado actual de disponibilidad (CU-08, Figura 12). -->
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="sgsld.vista.fx.EstadoActualController" styleClass="pantalla">
+    <Label text="Estado actual de disponibilidad" styleClass="titulo-pantalla"/>
+    <HBox styleClass="fila-campos">
+        <VBox styleClass="campo">
+            <Label text="Categoría" styleClass="etiqueta-campo"/>
+            <ComboBox fx:id="comboCategoria" prefWidth="230"/>
+        </VBox>
+        <VBox styleClass="campo">
+            <Label text="Buscar jugador" styleClass="etiqueta-campo"/>
+            <TextField fx:id="campoBusqueda" promptText="Apellido o nombre…" prefWidth="340"/>
+        </VBox>
+    </HBox>
+    <TableView fx:id="tabla"/>
+    <Label text="Vista de solo lectura. No se muestran lesiones, tratamientos, evoluciones ni diagnósticos (RF12, RNF13)."
+           styleClass="nota" wrapText="true"/>
+</VBox>
