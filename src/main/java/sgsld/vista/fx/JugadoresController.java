@@ -22,8 +22,8 @@ import sgsld.util.SgsldException;
 /**
  * Gestión de jugadores (CU-01, {@code jugadores.fxml}). Rol: Coordinador.
  * <p>
- * Búsqueda por DNI exacto (el servicio usa búsqueda binaria sobre el índice
- * ordenado por DNI) o por parte del apellido (búsqueda secuencial), alta,
+ * Búsqueda por DNI exacto o por parte del apellido (en memoria, búsqueda
+ * binaria y secuencial; en MySQL, el índice único y un {@code LIKE}), alta,
  * modificación y baja lógica con confirmación: el jugador dado de baja deja de
  * figurar en los listados y en el estado de disponibilidad, pero conserva su
  * historial. "Incluir dados de baja" los muestra en la tabla.

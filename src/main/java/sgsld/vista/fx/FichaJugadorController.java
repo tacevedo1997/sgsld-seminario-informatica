@@ -24,8 +24,8 @@ import sgsld.util.Texto;
 /**
  * Consultar ficha (CU-10, {@code ficha_jugador.fxml}). Roles: Coordinador y Kinesiólogo.
  * <p>
- * Búsqueda por DNI exacto (búsqueda binaria en el servicio) o por parte del
- * apellido (secuencial); muestra los datos del jugador, su estado (chip) y su
+ * Búsqueda por DNI exacto o por parte del apellido (como en
+ * {@code JugadorService}); muestra los datos del jugador, su estado (chip) y su
  * historial (CU-12). Al elegir una lesión se ven sus tratamientos y, al
  * elegir un tratamiento, sus evoluciones. Incluye a los dados de baja, cuyo
  * historial se conserva.

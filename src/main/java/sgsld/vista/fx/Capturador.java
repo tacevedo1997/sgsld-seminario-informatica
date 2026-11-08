@@ -74,7 +74,8 @@ import sgsld.util.Texto;
  * Uso: {@code java -cp target/sgsld.jar sgsld.vista.fx.Capturador [carpeta]}
  * (por defecto, {@code target/capturas}). Con {@code -Dsgsld.datos=mysql} y
  * {@code -Dsgsld.config=db-test.properties} recorre los mismos escenarios
- * sobre una base {@code sgsld_test} recién creada.
+ * sobre una base {@code sgsld_test} recién creada; con otra base se niega a
+ * ejecutar, porque los escenarios registran datos.
  */
 public final class Capturador {
 
@@ -82,6 +83,8 @@ public final class Capturador {
     private static final String CONTRASENA_LOTE = "Sgsld2026!";
     private static final String[] USUARIOS = {"mlopez", "lfernandez", "ctecnico"};
     private static final double ESCALA = 2;
+    /** Única base MySQL sobre la que puede trabajar: los escenarios registran datos. */
+    private static final String BASE_DE_PRUEBAS = "sgsld_test";
     /** Mensaje de ejemplo para la captura del diálogo de error de conexión. */
     private static final String MENSAJE_SIN_SERVIDOR = "No se pudo conectar con el servidor MySQL. "
             + "Verifique que el servicio esté en ejecución y que la dirección de db.properties sea correcta.";
@@ -147,6 +150,11 @@ public final class Capturador {
         List<String> avisos = new ArrayList<>();
         Clock reloj = App.crearReloj(avisos);
         App.ModoDatos modo = App.modoDatos(avisos);
+        if (modo == App.ModoDatos.MYSQL && !BASE_DE_PRUEBAS.equals(App.baseConfigurada())) {
+            throw new IllegalStateException("Por seguridad, con MySQL el Capturador solo usa la base "
+                    + BASE_DE_PRUEBAS + " (registra datos de prueba); la configuración apunta a '"
+                    + App.baseConfigurada() + "'. Use -Dsgsld.config=db-test.properties.");
+        }
         ventana = new Stage();
         contexto = new ContextoFX(ventana, reloj, modo, avisos, Runnable::run);
         contexto.usarPresentador(this::presentar);

@@ -25,6 +25,7 @@ import sgsld.dao.FabricaDAO;
 import sgsld.dao.memoria.DatosDePrueba;
 import sgsld.dao.memoria.FabricaDAOMemoria;
 import sgsld.dao.mysql.ConexionBD;
+import sgsld.dao.mysql.ConfiguracionBD;
 import sgsld.dao.mysql.FabricaDAOMySQL;
 import sgsld.servicio.Servicios;
 import sgsld.util.Fechas;
@@ -178,7 +179,28 @@ public final class App {
     public static String describirDatos(ModoDatos modo) {
         return modo == ModoDatos.MEMORIA
                 ? "Modo demostración: datos de prueba en memoria; los cambios no se conservan al salir."
-                : "Datos: base MySQL configurada en db.properties; los cambios se guardan.";
+                : "Datos: base MySQL configurada en " + archivoDeConfiguracion() + "; los cambios se guardan.";
+    }
+
+    /** Nombre del archivo de configuración: el de {@code -Dsgsld.config} (sin la carpeta) o {@code db.properties}. */
+    private static String archivoDeConfiguracion() {
+        String ruta = System.getProperty(ConfiguracionBD.PROPIEDAD_RUTA);
+        if (ruta == null || ruta.isBlank()) {
+            return ConfiguracionBD.ARCHIVO;
+        }
+        String limpia = ruta.trim();
+        return limpia.substring(Math.max(limpia.lastIndexOf('/'), limpia.lastIndexOf('\\')) + 1);
+    }
+
+    /**
+     * Nombre de la base a la que apunta la configuración de MySQL (lo usa el
+     * {@code Capturador} para trabajar solo sobre {@code sgsld_test}).
+     *
+     * @return el nombre de la base de la URL configurada
+     * @throws PersistenciaException si falta la configuración o es inválida
+     */
+    public static String baseConfigurada() throws PersistenciaException {
+        return ConexionBD.getInstancia().getConfiguracion().getNombreBase();
     }
 
     /**

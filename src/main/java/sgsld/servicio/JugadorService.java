@@ -63,7 +63,8 @@ public class JugadorService {
     }
 
     /**
-     * Busca un jugador por DNI (búsqueda binaria en el índice por DNI).
+     * Busca un jugador por DNI: búsqueda binaria en el índice por DNI (datos en
+     * memoria) o el índice único {@code uq_jugador_dni} de la base (MySQL).
      *
      * @param dni DNI exacto
      * @return el jugador
@@ -78,7 +79,8 @@ public class JugadorService {
     }
 
     /**
-     * Busca jugadores por coincidencia parcial del apellido (búsqueda secuencial).
+     * Busca jugadores por coincidencia parcial del apellido: búsqueda secuencial
+     * (datos en memoria) o {@code LIKE} parametrizado (MySQL).
      *
      * @param apellido texto a buscar, sin distinguir mayúsculas ni tildes
      * @return los jugadores encontrados, ordenados; vacía si no hay coincidencias
