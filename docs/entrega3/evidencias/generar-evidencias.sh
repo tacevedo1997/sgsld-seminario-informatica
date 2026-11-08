@@ -2,8 +2,12 @@
 # Regenera las evidencias de la entrega 3 a partir del código actual:
 #   1. mvn -B clean package (compila, ejecuta las pruebas y genera target/sgsld.jar)
 #      y resume el resultado en resultados-pruebas.txt.
-#   2. Ejecuta la aplicación con cada archivo de entradas/ y guarda la transcripción:
-#      java -Dsgsld.eco=true -Dsgsld.hoy=2026-09-26 -jar target/sgsld.jar < entradas/<escenario>.txt
+#   2. Ejecuta la consola con cada archivo de entradas/ y guarda la transcripción:
+#      java -Dsgsld.datos=memoria -Dsgsld.eco=true -Dsgsld.hoy=2026-09-26 \
+#           -jar target/sgsld.jar --consola < entradas/<escenario>.txt
+#      Desde la versión final, el JAR abre la interfaz JavaFX y usa MySQL por
+#      defecto: --consola elige la vista de consola y -Dsgsld.datos=memoria el
+#      lote de prueba en memoria, como en la entrega 3 (no hace falta MySQL).
 # Pensado para Git Bash en Windows; también funciona en Linux y macOS.
 set -euo pipefail
 
@@ -46,7 +50,8 @@ mvn -B clean package 2>&1 | a_utf8 > "$salida_maven"
 
 for entrada in "$DESTINO"/entradas/*.txt; do
     nombre="$(basename "$entrada" .txt)"
-    java -Dsgsld.eco=true -Dsgsld.hoy=2026-09-26 -jar target/sgsld.jar < "$entrada" | a_utf8 > "$DESTINO/$nombre.txt"
+    java -Dsgsld.datos=memoria -Dsgsld.eco=true -Dsgsld.hoy=2026-09-26 -jar target/sgsld.jar --consola \
+        < "$entrada" | a_utf8 > "$DESTINO/$nombre.txt"
     echo "Generada: docs/entrega3/evidencias/$nombre.txt"
 done
 echo "Generado: docs/entrega3/evidencias/resultados-pruebas.txt"

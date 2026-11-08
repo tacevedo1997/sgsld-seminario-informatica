@@ -1,16 +1,24 @@
 # Evidencias de ejecución · Entrega 3
 
-Transcripciones **reales** de la aplicación, generadas con la entrada redirigida desde los archivos de `entradas/`, el eco activado y la fecha fijada en la del plan de pruebas:
+Transcripciones **reales** de la aplicación de consola de la entrega 3 (etiqueta `entrega-3`), generadas con la entrada redirigida desde los archivos de `entradas/`, el eco activado y la fecha fijada en la del plan de pruebas:
 
 ```bash
 java -Dsgsld.eco=true -Dsgsld.hoy=2026-09-26 -jar target/sgsld.jar < entradas/<escenario>.txt
 ```
 
-Para regenerarlas junto con `resultados-pruebas.txt`, desde Git Bash en la raíz del repositorio:
+Desde la versión final (entrega 4), el JAR abre la interfaz JavaFX y usa MySQL por defecto. La misma consola, con el lote de prueba en memoria y sin servidor, se ejecuta con:
+
+```bash
+java -Dsgsld.datos=memoria -Dsgsld.eco=true -Dsgsld.hoy=2026-09-26 -jar target/sgsld.jar --consola < entradas/<escenario>.txt
+```
+
+Para regenerarlas junto con `resultados-pruebas.txt`, desde Git Bash en la raíz del repositorio (el script ya usa el comando anterior):
 
 ```bash
 bash docs/entrega3/evidencias/generar-evidencias.sh
 ```
+
+Con la versión final, las transcripciones regeneradas solo difieren de estas en la primera línea de la pantalla inicial ("Modo demostración: datos de prueba en memoria…"), y `resultados-pruebas.txt` incluye las pruebas agregadas en la entrega 4.
 
 En Windows, Java escribe la salida redirigida en `windows-1252`; el script la convierte a UTF-8 con `iconv`, sin otro cambio. Como no hay una terminal interactiva, la aplicación avisa que la contraseña será visible y el eco la muestra como `********`. Los archivos de entrada están en ASCII; las búsquedas no distinguen tildes, por eso "suarez" encuentra a "Suarez" y "gomez" a "Gómez".
 
