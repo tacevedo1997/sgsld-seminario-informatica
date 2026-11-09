@@ -173,6 +173,7 @@ java -cp target/sgsld.jar sgsld.vista.fx.Capturador
 - La consola del SGSLD **no fuerza UTF-8**: lee con el juego de caracteres de la consola y escribe con el del sistema, de modo que las tildes se ven bien en `cmd` y PowerShell. Los símbolos de la interfaz son solo ASCII (`+ - |`, `#`, `[OK]`, `[ERROR]`, `[ALERTA]`).
 - Con la entrada o la salida redirigidas en Windows, Java usa `windows-1252`. Las evidencias de `docs/entrega3/evidencias` se convirtieron a UTF-8 con `iconv`, sin otro cambio.
 - PowerShell 5.1 no admite `<` para redirigir la entrada; usar Git Bash o `cmd /c "java -Dsgsld.datos=memoria -jar target\sgsld.jar --consola < archivo.txt"`.
+- En PowerShell, las propiedades `-D` que tienen puntos o comas van entre comillas, porque si no PowerShell las parte (error "Could not find or load main class .hoy=2026-09-26"). Ejemplo: `java "-Dsgsld.hoy=2026-09-26" -jar target\sgsld.jar`.
 - Al agotarse la entrada, la aplicación termina ordenadamente.
 
 Ejemplo con la fecha del plan de pruebas y la entrada redirigida (desde Git Bash o `cmd`):
